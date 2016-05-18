@@ -271,7 +271,6 @@ public final class TextureS3TCAssetLoader implements AssetLoader<Texture, Textur
 
     /**
      * (NON-DOCUMENTED)
-     * (PRIVATE)
      */
     private int readIntLittleEndian(DataInputStream in) throws IOException {
         final int int1 = in.readByte();
