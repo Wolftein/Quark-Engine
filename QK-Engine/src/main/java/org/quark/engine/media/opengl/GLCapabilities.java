@@ -168,7 +168,7 @@ public final class GLCapabilities {
     }
 
     /**
-     * <p>Check whenever the given extension of the <b>OpenGL framework</b> is supported</p>
+     * <p>Check if the given extension of the <b>OpenGL framework</b> is supported</p>
      *
      * @param extension the extension to check if supported
      *

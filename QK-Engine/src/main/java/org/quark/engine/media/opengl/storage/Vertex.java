@@ -86,7 +86,7 @@ public final class Vertex {
     }
 
     /**
-     * <p>Check whenever the vertex is normalised</p>
+     * <p>Check if the vertex is normalised</p>
      *
      * @return <code>true</code> if the vertex is normalised, <code>false</code> otherwise
      */

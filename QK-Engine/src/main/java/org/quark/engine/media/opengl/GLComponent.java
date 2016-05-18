@@ -74,7 +74,7 @@ public abstract class GLComponent {
     }
 
     /**
-     * <p>Check whenever the component requires update</p>
+     * <p>Check if the component requires update</p>
      *
      * @return <code>true</code> if the component requires update, <code>false</code> otherwise
      */
@@ -83,7 +83,7 @@ public abstract class GLComponent {
     }
 
     /**
-     * <p>Check whenever the component's concept given requires update</p>
+     * <p>Check if the component's concept given requires update</p>
      *
      * @param concept the component's concept to be check
      *

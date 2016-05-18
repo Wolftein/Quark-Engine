@@ -54,7 +54,7 @@ public final class Attribute {
     }
 
     /**
-     * <p>Check whenever the given attribute is being used as input</p>
+     * <p>Check if the given attribute is being used as input</p>
      *
      * @return <code>true</code> if the attribute is being used as input, <code>false</code> otherwise
      */
@@ -63,7 +63,7 @@ public final class Attribute {
     }
 
     /**
-     * <p>Check whenever the given attribute is being used as output</p>
+     * <p>Check if the given attribute is being used as output</p>
      *
      * @return <code>true</code> if the attribute is being used as output, <code>false</code> otherwise
      */

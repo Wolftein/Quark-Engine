@@ -163,7 +163,7 @@ public final class DefaultAssetManager implements AssetManager {
                         key = loader.load(this, pDescriptor, input);
 
                         //!
-                        //! Check whenever we should close the descriptor or not.
+                        //! Check if we should close the descriptor or not.
                         //!
                         if (pDescriptor.isCloseable()) {
                             try {
@@ -174,7 +174,7 @@ public final class DefaultAssetManager implements AssetManager {
                         }
 
                         //!
-                        //! Check whenever the asset can be cached.
+                        //! Check if the asset can be cached.
                         //!
                         if (pDescriptor.isCacheable()) {
                             mCache.put(filename, key);

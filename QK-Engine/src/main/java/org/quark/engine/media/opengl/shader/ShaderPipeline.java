@@ -77,7 +77,7 @@ public final class ShaderPipeline extends GLComponent {
     }
 
     /**
-     * <p>Check whenever the given attribute is present</p>
+     * <p>Check if the given attribute is present</p>
      *
      * @param name the name of the attribute
      *
@@ -88,7 +88,7 @@ public final class ShaderPipeline extends GLComponent {
     }
 
     /**
-     * <p>Check whenever the given uniform is present</p>
+     * <p>Check if the given uniform is present</p>
      *
      * @param name the name of the uniform
      *

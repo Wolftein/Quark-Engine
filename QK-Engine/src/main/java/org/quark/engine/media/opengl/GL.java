@@ -269,7 +269,7 @@ public interface GL {
     void unmap(Buffer buffer);
 
     /**
-     * <p>Check whenever the given {@link Texture} is active</p>
+     * <p>Check if the given {@link Texture} is active</p>
      *
      * @param texture the texture component
      *
@@ -278,7 +278,7 @@ public interface GL {
     boolean isActive(Texture texture);
 
     /**
-     * <p>Check whenever the given {@link Texture} is active</p>
+     * <p>Check if the given {@link Texture} is active</p>
      *
      * @param texture the texture component
      * @param unit    the texture's unit
@@ -288,7 +288,7 @@ public interface GL {
     boolean isActive(Texture texture, int unit);
 
     /**
-     * <p>Check whenever the given {@link VertexDescriptor} is bound</p>
+     * <p>Check if the given {@link VertexDescriptor} is bound</p>
      *
      * @param descriptor the descriptor component
      *
@@ -297,7 +297,7 @@ public interface GL {
     boolean isActive(VertexDescriptor descriptor);
 
     /**
-     * <p>Check whenever the given {@link ShaderPipeline} is bound</p>
+     * <p>Check if the given {@link ShaderPipeline} is bound</p>
      *
      * @param pipeline the pipeline component
      *

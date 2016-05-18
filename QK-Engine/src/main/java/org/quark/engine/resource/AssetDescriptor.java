@@ -35,7 +35,7 @@ public class AssetDescriptor {
     }
 
     /**
-     * <p>Check whenever the asset can be cacheable in memory</p>
+     * <p>Check if the asset can be cacheable in memory</p>
      *
      * @return <code>true</code> if the asset can be cacheable in memory, <code>false</code> otherwise
      */
@@ -44,7 +44,7 @@ public class AssetDescriptor {
     }
 
     /**
-     * <p>Check whenever the asset should be closed automatically</p>
+     * <p>Check if the asset should be closed automatically</p>
      *
      * @return <code>true</code> if the asset should be closed automatically, <code>false</code> otherwise
      */

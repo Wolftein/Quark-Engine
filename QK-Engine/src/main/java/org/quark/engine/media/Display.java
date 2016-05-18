@@ -96,7 +96,7 @@ public interface Display {
         }
 
         /**
-         * <p>Check whenever the display will be limited</p>
+         * <p>Check if the display will be limited</p>
          *
          * @return <code>true</code> if the display will be limited, <code>false</code> otherwise
          */
@@ -105,7 +105,7 @@ public interface Display {
         }
 
         /**
-         * <p>Check whenever the display will be decorated</p>
+         * <p>Check if the display will be decorated</p>
          *
          * @return <code>true</code> if the display will be decorated, <code>false</code> otherwise
          */
@@ -114,7 +114,7 @@ public interface Display {
         }
 
         /**
-         * <p>Check whenever the display will be resizable</p>
+         * <p>Check if the display will be resizable</p>
          *
          * @return <code>true</code> if the display will be resizable, <code>false</code> otherwise
          */
@@ -123,7 +123,7 @@ public interface Display {
         }
 
         /**
-         * <p>Check whenever the display will be created in fullscreen</p>
+         * <p>Check if the display will be created in fullscreen</p>
          *
          * @return <code>true</code> if the display will be created in fullscreen, <code>false</code> otherwise
          */
@@ -157,7 +157,7 @@ public interface Display {
     /**
      * <p>Change the display to limit the operation(s) to the monitor's refresh rate</p>
      *
-     * @param activate indicates whenever to limit the device or not
+     * @param activate <code>true</code> to limit the display, <code>false</code> otherwise
      */
     void setLimited(boolean activate);
 
@@ -203,49 +203,49 @@ public interface Display {
     int getHeight();
 
     /**
-     * <p>Check whenever the display is limited to refresh rate</p>
+     * <p>Check if the display is limited to refresh rate</p>
      *
      * @return <code>true</code> if the display is limited to refresh rate, <code>false</code> otherwise
      */
     boolean isLimited();
 
     /**
-     * <p>Check whenever the display is resizable</p>
+     * <p>Check if the display is resizable</p>
      *
      * @return <code>true</code> if the display is resizable, <code>false</code> otherwise
      */
     boolean isResizable();
 
     /**
-     * <p>Check whenever the display is decorated</p>
+     * <p>Check if the display is decorated</p>
      *
      * @return <code>true</code> if the display is decorated, <code>false</code> otherwise
      */
     boolean isDecorated();
 
     /**
-     * <p>Check whenever the display is in displayed mode</p>
+     * <p>Check if the display is in displayed mode</p>
      *
      * @return <code>true</code> if the display is in displayed mode, <code>false</code> otherwise
      */
     boolean isWindowed();
 
     /**
-     * <p>Check whenever the display is in fullscreen mode</p>
+     * <p>Check if the display is in fullscreen mode</p>
      *
      * @return <code>true</code> if the display is in fullscreen mode, <code>false</code> otherwise
      */
     boolean isFullscreen();
 
     /**
-     * <p>Check whenever the display is visible</p>
+     * <p>Check if the display is visible</p>
      *
      * @return <code>true</code> if the display is visible, <code>false</code> otherwise
      */
     boolean isVisible();
 
     /**
-     * <p>Check whenever the display is active</p>
+     * <p>Check if the display is active</p>
      *
      * @return <code>true</code> if the display is active, <code>false</code> otherwise
      */
