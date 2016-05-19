@@ -47,13 +47,13 @@ public interface Display {
         public final static int FLAG_FULLSCREEN = (1 << 3);
 
         /**
-         * Encapsulate a flag to define the limited feature.
+         * Encapsulate a flag to define the synchronise feature.
          */
-        public final static int FLAG_LIMITED = (1 << 4);
+        public final static int FLAG_SYNCHRONISED = (1 << 4);
 
         private final DisplayMode mMode;
         private final String mTitle;
-        private final boolean mLimited;
+        private final boolean mSynchronised;
         private final boolean mDecorated;
         private final boolean mResizable;
         private final boolean mFullscreen;
@@ -67,7 +67,7 @@ public interface Display {
             mDecorated = (features & FLAG_DECORATED) != 0;
             mResizable = (features & FLAG_RESIZABLE) != 0;
             mFullscreen = (features & FLAG_FULLSCREEN) != 0;
-            mLimited = (features & FLAG_LIMITED) != 0;
+            mSynchronised = (features & FLAG_SYNCHRONISED) != 0;
         }
 
         /**
@@ -96,12 +96,12 @@ public interface Display {
         }
 
         /**
-         * <p>Check if the display will be limited</p>
+         * <p>Check if the display will be synchronised</p>
          *
-         * @return <code>true</code> if the display will be limited, <code>false</code> otherwise
+         * @return <code>true</code> if the display will be synchronised, <code>false</code> otherwise
          */
-        public boolean isLimited() {
-            return mLimited;
+        public boolean isSynchronised() {
+            return mSynchronised;
         }
 
         /**
@@ -155,11 +155,11 @@ public interface Display {
     void setVisibility(boolean visibility);
 
     /**
-     * <p>Change the display to limit the operation(s) to the monitor's refresh rate</p>
+     * <p>Change the display to synchronise to the monitor's refresh rate</p>
      *
-     * @param activate <code>true</code> to limit the display, <code>false</code> otherwise
+     * @param activate <code>true</code> to synchronise the display, <code>false</code> otherwise
      */
-    void setLimited(boolean activate);
+    void setSynchronised(boolean activate);
 
     /**
      * <p>Change the display mode to windowed mode using the given {@link DisplayMode}</p>
@@ -203,11 +203,11 @@ public interface Display {
     int getHeight();
 
     /**
-     * <p>Check if the display is limited to refresh rate</p>
+     * <p>Check if the display is synchronised to refresh rate</p>
      *
-     * @return <code>true</code> if the display is limited to refresh rate, <code>false</code> otherwise
+     * @return <code>true</code> if the display is synchronised to refresh rate, <code>false</code> otherwise
      */
-    boolean isLimited();
+    boolean isSynchronised();
 
     /**
      * <p>Check if the display is resizable</p>
