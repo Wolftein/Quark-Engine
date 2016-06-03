@@ -96,4 +96,9 @@ public abstract class Manageable {
     public final boolean hasUpdate(int concept) {
         return (mFlag & concept) != 0;
     }
+
+    /**
+     * <p>Handle when the object requires to release</p>
+     */
+    public abstract void release();
 }

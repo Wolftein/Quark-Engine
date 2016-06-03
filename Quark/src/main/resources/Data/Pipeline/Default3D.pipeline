@@ -35,10 +35,10 @@
         <output     name="vyTexture"       type="vec2"/>
 
         <!--                                                                                                     -->
-        <!--                                        [UNIFORM]                                                    -->
+        <!--                                       [UNIFORM]                                                     -->
         <!--                                                                                                     -->
         <uniform    name="uProjectionView" type="mat4"     index="0"/>
-        <uniform    name="uModel"           type="mat4"     index="1"/>
+        <uniform    name="uModel"          type="mat4"     index="1"/>
 
         <!--                                                                                                     -->
         <!--                                        [MAIN]                                                       -->
@@ -63,10 +63,10 @@
         <!--                                                                                                     -->
         <!--                                        [OUTPUT]                                                     -->
         <!--                                                                                                     -->
-        <output     name="outFB0"          type="vec4"     index="0"/>
+        <output     name="outFB0"          type="vec4"          index="0"/>
 
         <!--                                                                                                     -->
-        <!--                                        [UNIFORM]                                                    -->
+        <!--                                       [UNIFORM]                                                     -->
         <!--                                                                                                     -->
         <uniform    name="uTexture0"       type="sampler2D"     index="2"/>
 

@@ -105,17 +105,7 @@ public final class LWJGLRender implements Render {
         //!
         //! Dispose all object(s) being mark for dispose.
         //!
-        for (final Manageable manageable : mManageable) {
-            if (manageable instanceof Texture) {
-                ((Texture) manageable).release();
-            } else if (manageable instanceof Storage) {
-                ((Storage) manageable).release();
-            } else if (manageable instanceof Shader) {
-                ((Shader) manageable).release();
-            } else if (manageable instanceof VertexDescriptor) {
-                ((VertexDescriptor) manageable).release();
-            }
-        }
+        mManageable.forEach(Manageable::release);
         mManageable.clear();
     }
 

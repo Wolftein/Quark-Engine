@@ -158,8 +158,10 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
+     * @see Manageable#release()
      * @see Render#release(Storage)
      */
+    @Override
     public final void release() {
         QkRender.release(this);
     }

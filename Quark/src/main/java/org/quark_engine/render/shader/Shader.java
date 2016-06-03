@@ -175,8 +175,10 @@ public final class Shader extends Manageable implements Disposable {
     }
 
     /**
+     * @see Manageable#release()
      * @see Render#release(Shader)
      */
+    @Override
     public void release() {
         QkRender.release(this);
     }

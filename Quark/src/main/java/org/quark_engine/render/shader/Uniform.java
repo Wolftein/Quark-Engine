@@ -54,4 +54,12 @@ public abstract class Uniform extends Manageable {
     public final void update() {
         QkRender.update(this);
     }
+
+    /**
+     * @see Manageable#release()
+     */
+    @Override
+    public final void release() {
+
+    }
 }

@@ -139,8 +139,10 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
+     * @see Manageable#release()
      * @see Render#release(Texture)
      */
+    @Override
     public final void release() {
         QkRender.release(this);
     }

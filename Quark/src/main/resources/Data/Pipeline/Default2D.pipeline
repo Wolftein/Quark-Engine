@@ -35,8 +35,8 @@
         <output     name="vyTexture"       type="vec2"/>
 
         <!--                                                                                                     -->
-        <!--                                        [UNIFORM]                                                    -->
-        <!--                           `1                                                                          -->
+        <!--                                       [UNIFORM]                                                     -->
+        <!--                                                                                                     -->
         <uniform    name="uProjectionView" type="mat4"     index="0"/>
 
         <!--                                                                                                     -->
@@ -62,10 +62,10 @@
         <!--                                                                                                     -->
         <!--                                        [OUTPUT]                                                     -->
         <!--                                                                                                     -->
-        <output     name="outFB0"          type="vec4"     index="0"/>
+        <output     name="outFB0"          type="vec4"          index="0"/>
 
         <!--                                                                                                     -->
-        <!--                                        [UNIFORM]                                                    -->
+        <!--                                       [UNIFORM]                                                     -->
         <!--                                                                                                     -->
         <uniform    name="uTexture0"       type="sampler2D"     index="1"/>
 
