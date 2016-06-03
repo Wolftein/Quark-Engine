@@ -137,8 +137,9 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
-     * @see Render#create(Storage)
+     * @see Render#delete(Storage)
      */
+    @Override
     public final void delete() {
         QkRender.delete(this);
     }
@@ -158,10 +159,8 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
-     * @see Manageable#release()
      * @see Render#release(Storage)
      */
-    @Override
     public final void release() {
         QkRender.release(this);
     }

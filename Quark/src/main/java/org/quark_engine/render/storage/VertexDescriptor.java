@@ -108,6 +108,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     /**
      * @see Render#delete(VertexDescriptor)
      */
+    @Override
     public void delete() {
         QkRender.delete(this);
     }
@@ -127,10 +128,8 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     }
 
     /**
-     * @see Manageable#release()
      * @see Render#release(VertexDescriptor)
      */
-    @Override
     public void release() {
         QkRender.release(this);
     }

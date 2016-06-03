@@ -111,8 +111,9 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#create(Texture)
+     * @see Render#delete(Texture)
      */
+    @Override
     public final void delete() {
         QkRender.delete(this);
     }
@@ -139,10 +140,8 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
-     * @see Manageable#release()
      * @see Render#release(Texture)
      */
-    @Override
     public final void release() {
         QkRender.release(this);
     }

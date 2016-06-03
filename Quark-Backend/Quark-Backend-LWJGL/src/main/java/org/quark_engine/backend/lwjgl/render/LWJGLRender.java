@@ -105,7 +105,7 @@ public final class LWJGLRender implements Render {
         //!
         //! Dispose all object(s) being mark for dispose.
         //!
-        mManageable.forEach(Manageable::release);
+        mManageable.forEach(Manageable::delete);
         mManageable.clear();
     }
 

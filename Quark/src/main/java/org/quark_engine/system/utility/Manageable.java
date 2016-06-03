@@ -98,7 +98,7 @@ public abstract class Manageable {
     }
 
     /**
-     * <p>Handle when the object requires to release</p>
+     * <p>Handle when the object requires to delete</p>
      */
-    public abstract void release();
+    public abstract void delete();
 }

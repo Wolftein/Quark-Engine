@@ -56,10 +56,10 @@ public abstract class Uniform extends Manageable {
     }
 
     /**
-     * @see Manageable#release()
+     * @see Manageable#delete()
      */
     @Override
-    public final void release() {
+    public final void delete() {
 
     }
 }

@@ -152,8 +152,9 @@ public final class Shader extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#create(Shader)
+     * @see Render#delete(Shader)
      */
+    @Override
     public void delete() {
         QkRender.delete(this);
     }
@@ -175,10 +176,8 @@ public final class Shader extends Manageable implements Disposable {
     }
 
     /**
-     * @see Manageable#release()
      * @see Render#release(Shader)
      */
-    @Override
     public void release() {
         QkRender.release(this);
     }
