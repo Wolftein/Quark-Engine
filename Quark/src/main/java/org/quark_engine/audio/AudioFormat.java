@@ -15,43 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quark_engine.render.shader;
-
-import org.quark_engine.render.Render;
-import org.quark_engine.system.utility.Manageable;
-
-import static org.quark_engine.Quark.QkRender;
+package org.quark_engine.audio;
 
 /**
- * <code>Uniform</code> encapsulate a variable that resides in a {@link Stage}.
+ * <code>AudioFormat</code> enumerates the format of an {@link Audio}.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public abstract class Uniform extends Manageable {
-    public final static int CONCEPT_VALUE = (1 << 1);
+public enum AudioFormat {
+    /**
+     * Represent 8-Bit mono audio.
+     */
+    MONO_8(8),
 
-    private final UniformType mType;
+    /**
+     * Represent 16-Bit mono audio.
+     */
+    MONO_16(16),
+
+    /**
+     * Represent 8-Bit stereo audio.
+     */
+    STEREO_8(8),
+
+    /**
+     * Represent 16-Bit stereo audio.
+     */
+    STEREO_16(16);
+
+    public final int eComponent;
 
     /**
      * <p>Constructor</p>
      */
-    protected Uniform(UniformType type) {
-        mType = type;
-    }
-
-    /**
-     * <p>Get the type of the data</p>
-     *
-     * @return the type of the data
-     */
-    public final UniformType getType() {
-        return mType;
-    }
-
-    /**
-     * @see Render#update(Uniform)
-     */
-    public final void update() {
-        QkRender.update(this);
+    AudioFormat(int component) {
+        eComponent = component;
     }
 }

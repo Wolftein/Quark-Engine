@@ -40,6 +40,12 @@ public abstract class Manageable {
     }
 
     /**
+     * <p>Handle when the object requires to delete</p>
+     */
+    public void delete() {
+    }
+
+    /**
      * <p>Change the unique identifier of the component</p>
      *
      * @param handle the new unique identifier of the component
@@ -96,9 +102,4 @@ public abstract class Manageable {
     public final boolean hasUpdate(int concept) {
         return (mFlag & concept) != 0;
     }
-
-    /**
-     * <p>Handle when the object requires to delete</p>
-     */
-    public abstract void delete();
 }
