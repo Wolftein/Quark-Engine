@@ -17,6 +17,7 @@
  */
 package org.quark_engine.audio;
 
+import org.quark_engine.resource.AssetDescriptor;
 import org.quark_engine.system.utility.Disposable;
 import org.quark_engine.system.utility.Manageable;
 
@@ -201,9 +202,9 @@ public final class Audio extends Manageable implements Disposable {
         /**
          * <p>Constructor</p>
          */
-        public DynamicData(InputStream stream, int position) {
+        public DynamicData(InputStream stream) {
             mData = stream.markSupported() ? stream : new BufferedInputStream(stream);
-            mData.mark(position);
+            mData.mark(Integer.MAX_VALUE);
         }
 
         /**
@@ -248,6 +249,18 @@ public final class Audio extends Manageable implements Disposable {
                 mData.close();
             } catch (IOException ignored) {
             }
+        }
+    }
+
+    /**
+     * <code>Descriptor</code> encapsulate an {@link AssetDescriptor} for {@link Audio}.
+     */
+    public final static class Descriptor extends AssetDescriptor {
+        /**
+         * <p>Default constructor</p>
+         */
+        public Descriptor(boolean streaming) {
+            super(true, !streaming);
         }
     }
 }

@@ -41,12 +41,12 @@ public final class AudioSource extends Manageable {
     /**
      * Represent the minimum possible value of the pitch value.
      */
-    public final static float MIN_PITCH = 0.5f;
+    public final static float MIN_PITCH = 0.1f;
 
     /**
      * Represent the maximum possible value of the pitch value.
      */
-    public final static float MAX_PITCH = 2.0f;
+    public final static float MAX_PITCH = 3.0f;
 
     /**
      * Represent the minimum possible value of the volume value.
@@ -72,15 +72,15 @@ public final class AudioSource extends Manageable {
     private final MutableVector3f mPosition = MutableVector3f.zero();
     private final MutableVector3f mDirection = MutableVector3f.zero();
     private final MutableVector3f mVelocity = MutableVector3f.zero();
-    private float mPitch;
-    private float mVolume;
-    private float mInnerAngle;
-    private float mOuterAngle;
-    private float mDistance;
-    private float mMaxDistance;
-    private boolean mPositional;
-    private boolean mLooping;
-    private boolean mDirectional;
+    private float mPitch = 1.0f;
+    private float mVolume = 1.0f;
+    private float mInnerAngle = 360.0f;
+    private float mOuterAngle = 360.0f;
+    private float mDistance = 0.0f;
+    private float mMaxDistance = 0.0f;
+    private boolean mPositional = false;
+    private boolean mLooping = false;
+    private boolean mDirectional = false;
 
     /**
      * @see AudioManager#play(AudioSource)

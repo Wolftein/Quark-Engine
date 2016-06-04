@@ -19,7 +19,6 @@ package org.quark_engine.resource.loader;
 
 import org.quark_engine.audio.Audio;
 import org.quark_engine.audio.AudioFormat;
-import org.quark_engine.resource.AssetDescriptor;
 import org.quark_engine.resource.AssetKey;
 import org.quark_engine.resource.AssetLoader;
 import org.quark_engine.resource.AssetManager;
@@ -41,7 +40,7 @@ import java.nio.ByteOrder;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescriptor> {
+public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
     /**
      * <code>AudioHeader</code> represent the file format of a WAVE sound.
      */
@@ -57,8 +56,8 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescr
      * {@inheritDoc}
      */
     @Override
-    public AssetKey<Audio, AssetDescriptor> load(AssetManager manager, InputStream input,
-            AssetDescriptor descriptor) throws IOException {
+    public AssetKey<Audio, Audio.Descriptor> load(AssetManager manager, InputStream input,
+            Audio.Descriptor descriptor) throws IOException {
         return new AssetKey<>(readAudio(descriptor, new DataInputStream(input)), descriptor);
     }
 
@@ -72,7 +71,7 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescr
      *
      * @throws IOException indicates failing loading the audio
      */
-    private Audio readAudio(AssetDescriptor descriptor, DataInputStream input) throws IOException {
+    private Audio readAudio(Audio.Descriptor descriptor, DataInputStream input) throws IOException {
         if (readIntLittleEndian(input) != 0x46464952) {
             throw new IOException("Trying to read an invalid <WAVE> sound.");
         }
@@ -91,17 +90,14 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescr
         //!
         AudioHeader header = null;
 
-        int position = 0;
+
         do {
             final int type = readIntLittleEndian(input);
             final int length = readIntLittleEndian(input);
-            position += 4;
 
             switch (type) {
                 case 0x20746D66:
                     header = readHeader(input);
-
-                    position += length;
                     break;
                 case 0x61746164:
                     if (header == null) {
@@ -125,8 +121,7 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescr
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     } else {
-
-                        return new Audio(new Audio.DynamicData(input, position), getUncompressedFormat(header),
+                        return new Audio(new Audio.DynamicData(input), getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     }
@@ -134,7 +129,6 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescr
                     if (input.skipBytes(length) <= 0) {
                         throw new IOException("Failed to read the <WAVE> sound.");
                     }
-                    position += length;
                     break;
             }
         } while (true);
