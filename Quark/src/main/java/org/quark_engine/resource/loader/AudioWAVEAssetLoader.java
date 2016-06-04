@@ -19,6 +19,7 @@ package org.quark_engine.resource.loader;
 
 import org.quark_engine.audio.Audio;
 import org.quark_engine.audio.AudioFormat;
+import org.quark_engine.resource.AssetDescriptor;
 import org.quark_engine.resource.AssetKey;
 import org.quark_engine.resource.AssetLoader;
 import org.quark_engine.resource.AssetManager;
@@ -32,15 +33,15 @@ import java.nio.ByteOrder;
 /**
  * Encapsulate an {@link AssetLoader} for loading WAVE audio(s).
  * <p>
- * {@link org.quark_engine.audio.Audio}
- * {@link org.quark_engine.audio.AudioFormat#MONO_8}
- * {@link org.quark_engine.audio.AudioFormat#MONO_16}
- * {@link org.quark_engine.audio.AudioFormat#STEREO_8}
- * {@link org.quark_engine.audio.AudioFormat#STEREO_16}
+ * {@link Audio}
+ * {@link AudioFormat#MONO_8}
+ * {@link AudioFormat#MONO_16}
+ * {@link AudioFormat#STEREO_8}
+ * {@link AudioFormat#STEREO_16}
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
+public final class AudioWAVEAssetLoader implements AssetLoader<Audio, AssetDescriptor> {
     /**
      * <code>AudioHeader</code> represent the file format of a WAVE sound.
      */
@@ -56,8 +57,8 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
      * {@inheritDoc}
      */
     @Override
-    public AssetKey<Audio, Audio.Descriptor> load(AssetManager manager, InputStream input,
-            Audio.Descriptor descriptor) throws IOException {
+    public AssetKey<Audio, AssetDescriptor> load(AssetManager manager, InputStream input,
+            AssetDescriptor descriptor) throws IOException {
         return new AssetKey<>(readAudio(descriptor, new DataInputStream(input)), descriptor);
     }
 
@@ -71,7 +72,7 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
      *
      * @throws IOException indicates failing loading the audio
      */
-    private Audio readAudio(Audio.Descriptor descriptor, DataInputStream input) throws IOException {
+    private Audio readAudio(AssetDescriptor descriptor, DataInputStream input) throws IOException {
         if (readIntLittleEndian(input) != 0x46464952) {
             throw new IOException("Trying to read an invalid <WAVE> sound.");
         }
@@ -106,7 +107,7 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
                     if (header == null) {
                         throw new IOException("Missing <WAVE> header.");
                     }
-                    header.mAudioDuration = (length / header.mAudioBlock);
+                    header.mAudioDuration = (length / header.mAudioBlock) * 1000;
 
                     if (descriptor.isCloseable()) {
                         final ByteBuffer content
@@ -120,14 +121,14 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
                         }
                         content.flip();
 
-                        return new Audio(new Audio.StaticFactory(content), getUncompressedFormat(header),
-                                header.mAudioRate,
-                                header.mAudioDuration);
+                        return new Audio(new Audio.StaticData(content), getUncompressedFormat(header),
+                                header.mAudioDuration,
+                                header.mAudioRate);
                     } else {
 
-                        return new Audio(new Audio.DynamicFactory(input, position), getUncompressedFormat(header),
-                                header.mAudioRate,
-                                header.mAudioDuration);
+                        return new Audio(new Audio.DynamicData(input, position), getUncompressedFormat(header),
+                                header.mAudioDuration,
+                                header.mAudioRate);
                     }
                 default:
                     if (input.skipBytes(length) <= 0) {

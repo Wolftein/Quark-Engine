@@ -26,29 +26,33 @@ public enum AudioFormat {
     /**
      * Represent 8-Bit mono audio.
      */
-    MONO_8(8),
+    MONO_8(0x1100, 0x01, 0x08),
 
     /**
      * Represent 16-Bit mono audio.
      */
-    MONO_16(16),
+    MONO_16(0x1101, 0x01, 0x10),
 
     /**
      * Represent 8-Bit stereo audio.
      */
-    STEREO_8(8),
+    STEREO_8(0x1102, 0x02, 0x08),
 
     /**
      * Represent 16-Bit stereo audio.
      */
-    STEREO_16(16);
+    STEREO_16(0x1103, 0x02, 0x10);
 
+    public final int eType;
+    public final int eChannel;
     public final int eComponent;
 
     /**
      * <p>Constructor</p>
      */
-    AudioFormat(int component) {
+    AudioFormat(int type, int channel, int component) {
+        eType = type;
+        eChannel = channel;
         eComponent = component;
     }
 }

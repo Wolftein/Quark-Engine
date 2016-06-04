@@ -23,6 +23,8 @@ package org.quark_engine.mathematic;
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableVector3f extends Vector3f {
+    public final static ImmutableVector3f ZERO = zero();
+
     /**
      * <p>Default constructor</p>
      */

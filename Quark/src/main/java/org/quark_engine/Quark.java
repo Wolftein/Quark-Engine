@@ -17,6 +17,8 @@
  */
 package org.quark_engine;
 
+import org.quark_engine.audio.Audio;
+import org.quark_engine.audio.AudioManager;
 import org.quark_engine.input.InputManager;
 import org.quark_engine.render.Render;
 import org.quark_engine.resource.AssetManager;
@@ -32,6 +34,11 @@ public final class Quark {
      * Hold the {@link Framework} implementation of the framework.
      */
     public static Framework Qk = null;
+
+    /**
+     * Hold the {@link Audio} implementation of the framework.
+     */
+    public static AudioManager QkAudioManager = null;
 
     /**
      * Hold the {@link Render} implementation of the framework.

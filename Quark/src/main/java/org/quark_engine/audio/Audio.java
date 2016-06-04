@@ -17,42 +17,49 @@
  */
 package org.quark_engine.audio;
 
-import org.quark_engine.resource.AssetDescriptor;
 import org.quark_engine.system.utility.Disposable;
+import org.quark_engine.system.utility.Manageable;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import static org.quark_engine.Quark.QkAudioManager;
+
 /**
  * <code>Audio</code> encapsulate the data of a sound.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class Audio implements Disposable {
-    private final Factory mFactory;
+public final class Audio extends Manageable implements Disposable {
+    public final static int CONCEPT_DATA = (1 << 0);
+
+    private final Data mData;
     private final int mDuration;
     private final int mRate;
     private final AudioFormat mFormat;
 
+
     /**
      * <p>Constructor</p>
      */
-    public Audio(Factory factory, AudioFormat format, int duration, int rate) {
-        mFactory = factory;
+    public Audio(Data data, AudioFormat format, int duration, int rate) {
+        mData = data;
         mFormat = format;
         mDuration = duration;
         mRate = rate;
+
+        setUpdate(CONCEPT_DATA);
     }
 
     /**
-     * <p>Get the factory of the audio (which serve the audio's data)</p>
+     * <p>Get the data of the audio</p>
      *
-     * @return the factory of the audio (which serve the audio's data)
+     * @return the data of the audio
      */
-    public Factory getFactory() {
-        return mFactory;
+    public Data getData() {
+        return mData;
     }
 
     /**
@@ -91,12 +98,11 @@ public final class Audio implements Disposable {
      * @see AudioFormat#MONO_16
      */
     public boolean isMono() {
-        return mFormat.eComponent == 0x08;
+        return mFormat.eChannel == 0x01;
     }
 
     /**
      * <p>Check if the audio have stereo channel</p>
-     * s
      *
      * @return <code>true</code> if the audio have stereo channel, <code>false</code> otherwise
      *
@@ -104,21 +110,32 @@ public final class Audio implements Disposable {
      * @see AudioFormat#STEREO_16
      */
     public boolean isStereo() {
-        return mFormat.eComponent == 0x10;
+        return mFormat.eChannel == 0x02;
     }
 
     /**
-     * {@inheritDoc}
+     * <p>Check if the audio is being streaming</p>
+     *
+     * @return <code>true</code> if the audio is being streaming, <code>false</code> otherwise
+     */
+    public boolean isStreaming() {
+        return mData instanceof DynamicData;
+    }
+
+    /**
+     * @see AudioManager#dispose(Manageable)
      */
     @Override
     public void dispose() {
-        mFactory.close();
+        QkAudioManager.dispose(this);
     }
 
     /**
-     * <code>Factory</code> encapsulate the definition of a buffer within an <code>Audio</code>.
+     * <code>Data</code> encapsulate the definition of a buffer within an <code>Audio</code>.
      */
-    public interface Factory {
+    public interface Data {
+        ByteBuffer direct();
+
         int read(byte[] buffer, int offset, int length);
 
         void reset();
@@ -127,15 +144,15 @@ public final class Audio implements Disposable {
     }
 
     /**
-     * <code>StaticFactory</code> encapsulate a {@link Factory} which contain(s) the data in a static container.
+     * <code>StaticData</code> encapsulate a {@link Data} which contain(s) the data in a static container.
      */
-    public final static class StaticFactory implements Factory {
+    public final static class StaticData implements Data {
         private final ByteBuffer mData;
 
         /**
          * <p>Constructor</p>
          */
-        public StaticFactory(ByteBuffer data) {
+        public StaticData(ByteBuffer data) {
             mData = data;
         }
 
@@ -143,15 +160,19 @@ public final class Audio implements Disposable {
          * {@inheritDoc}
          */
         @Override
+        public ByteBuffer direct() {
+            return mData;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public int read(byte[] buffer, int offset, int length) {
-            final int position = mData.position();
+            mData.position(offset);
+            mData.get(buffer, 0, length);
 
-            //!
-            //! Read the data from the given offset.
-            //!
-            mData.get(buffer, offset, length);
-
-            return mData.position() - position;
+            return mData.position() - offset;
         }
 
         /**
@@ -172,17 +193,25 @@ public final class Audio implements Disposable {
     }
 
     /**
-     * <code>DynamicFactory</code> encapsulate a {@link Factory} which contain(s) the data in a dynamic container.
+     * <code>DynamicData</code> encapsulate a {@link Data} which contain(s) the data in a dynamic container.
      */
-    public final static class DynamicFactory implements Factory {
+    public final static class DynamicData implements Data {
         private final InputStream mData;
 
         /**
          * <p>Constructor</p>
          */
-        public DynamicFactory(InputStream stream, int position) {
+        public DynamicData(InputStream stream, int position) {
             mData = stream.markSupported() ? stream : new BufferedInputStream(stream);
             mData.mark(position);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public ByteBuffer direct() {
+            return null;
         }
 
         /**
@@ -219,18 +248,6 @@ public final class Audio implements Disposable {
                 mData.close();
             } catch (IOException ignored) {
             }
-        }
-    }
-
-    /**
-     * <code>Descriptor</code> encapsulate an {@link AssetDescriptor} for {@link Audio}.
-     */
-    public final static class Descriptor extends AssetDescriptor {
-        /**
-         * <p>constructor</p>
-         */
-        public Descriptor(boolean streaming) {
-            super(true, !streaming);
         }
     }
 }
