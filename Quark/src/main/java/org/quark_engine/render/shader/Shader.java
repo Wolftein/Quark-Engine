@@ -152,7 +152,7 @@ public final class Shader extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#delete(Shader)
+     * @see Manageable#delete()
      */
     @Override
     public void delete() {
@@ -183,7 +183,7 @@ public final class Shader extends Manageable implements Disposable {
     }
 
     /**
-     * {@inheritDoc}
+     * @see Disposable#dispose()
      */
     @Override
     public void dispose() {

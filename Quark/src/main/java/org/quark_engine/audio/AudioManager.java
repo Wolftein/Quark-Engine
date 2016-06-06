@@ -17,42 +17,15 @@
  */
 package org.quark_engine.audio;
 
-import org.quark_engine.system.utility.ManageableManager;
-
-import java.util.List;
+import org.quark_engine.audio.factory.FactoryAudioStatic;
+import org.quark_engine.audio.factory.FactoryAudioStreaming;
 
 /**
- * <code>AudioManager</code> encapsulate a service for managing {@link Audio}(s).
+ * <code>AudioManager</code> encapsulate a service for managing {@link Audio}.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public interface AudioManager extends ManageableManager {
-    /**
-     * <p>Change the default device</p>
-     *
-     * @param name     the device
-     * @param playback <code>true</code> if should change playback device, <code>false</code> if record device
-     */
-    void setDevice(String name, boolean playback);
-
-    /**
-     * <p>Get default device</p>
-     *
-     * @param playback <code>true</code> if should return playback device, <code>false</code> if record device
-     *
-     * @return the device queried
-     */
-    String getDevice(boolean playback);
-
-    /**
-     * <p>Get all available device(s)</p>
-     *
-     * @param playback <code>true</code> if should return playback device, <code>false</code> if record device
-     *
-     * @return a collection that contain(s) all device(s) queried
-     */
-    List<String> getDevices(boolean playback);
-
+public interface AudioManager {
     /**
      * <p>Play the given {@link AudioSource}</p>
      *
@@ -95,4 +68,18 @@ public interface AudioManager extends ManageableManager {
      * <p>Stop all {@link AudioSource}</p>
      */
     void stop();
+
+    /**
+     * <p>Delete the given {@link FactoryAudioStatic}</p>
+     *
+     * @param audio the audio
+     */
+    void delete(FactoryAudioStatic audio);
+
+    /**
+     * <p>Delete the given {@link FactoryAudioStreaming}</p>
+     *
+     * @param audio the audio
+     */
+    void delete(FactoryAudioStreaming audio);
 }

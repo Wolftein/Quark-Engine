@@ -25,7 +25,7 @@ import org.quark_engine.system.utility.Manageable;
 import static org.quark_engine.Quark.QkAudioManager;
 
 /**
- * <code>AudioSource</code> an audio source that can be manipulated.
+ * <code>AudioSource</code> encapsulate an audio source that can be manipulated.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
@@ -36,7 +36,6 @@ public final class AudioSource extends Manageable {
     public final static int CONCEPT_PITCH = (1 << 3);
     public final static int CONCEPT_VOLUME = (1 << 4);
     public final static int CONCEPT_LOOPING = (1 << 5);
-
 
     /**
      * Represent the minimum possible value of the pitch value.
@@ -86,6 +85,9 @@ public final class AudioSource extends Manageable {
      * @see AudioManager#play(AudioSource)
      */
     public void play(Audio audio) {
+        //!
+        //! Attach the audio to the source.
+        //!
         mAudio = audio;
 
         QkAudioManager.play(this);

@@ -111,7 +111,7 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#delete(Texture)
+     * @see Manageable#delete()
      */
     @Override
     public final void delete() {
@@ -154,7 +154,7 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
-     * {@inheritDoc}
+     * @see Disposable#dispose()
      */
     @Override
     public final void dispose() {

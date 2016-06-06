@@ -19,6 +19,8 @@ package org.quark_engine.resource.loader;
 
 import org.quark_engine.audio.Audio;
 import org.quark_engine.audio.AudioFormat;
+import org.quark_engine.audio.factory.FactoryAudioStatic;
+import org.quark_engine.audio.factory.FactoryAudioStreaming;
 import org.quark_engine.resource.AssetKey;
 import org.quark_engine.resource.AssetLoader;
 import org.quark_engine.resource.AssetManager;
@@ -117,11 +119,11 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
                         }
                         content.flip();
 
-                        return new Audio(new Audio.StaticData(content), getUncompressedFormat(header),
+                        return new FactoryAudioStatic(content, getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     } else {
-                        return new Audio(new Audio.DynamicData(input), getUncompressedFormat(header),
+                        return new FactoryAudioStreaming(input, getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     }
@@ -133,7 +135,6 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
             }
         } while (true);
     }
-
 
     /**
      * <p>Read audio header from the {@link DataInputStream} given</p>

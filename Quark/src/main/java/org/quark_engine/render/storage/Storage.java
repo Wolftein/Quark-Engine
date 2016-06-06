@@ -137,7 +137,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
-     * @see Render#delete(Storage)
+     * @see Manageable#delete()
      */
     @Override
     public final void delete() {
@@ -194,7 +194,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
-     * {@inheritDoc}
+     * @see Disposable#dispose()
      */
     @Override
     public final void dispose() {

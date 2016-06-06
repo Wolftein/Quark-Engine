@@ -18,7 +18,7 @@
 package org.quark_engine.audio;
 
 /**
- * <code>AudioFormat</code> enumerates the format of an {@link Audio}.
+ * <code>AudioFormat</code> enumerate the format of an {@link Audio}.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */

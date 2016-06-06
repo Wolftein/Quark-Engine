@@ -106,7 +106,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#delete(VertexDescriptor)
+     * @see Manageable#delete()
      */
     @Override
     public void delete() {
@@ -135,7 +135,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     }
 
     /**
-     * {@inheritDoc}
+     * @see Disposable#dispose()
      */
     @Override
     public void dispose() {
