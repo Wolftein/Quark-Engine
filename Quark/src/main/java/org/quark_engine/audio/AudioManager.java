@@ -70,6 +70,13 @@ public interface AudioManager {
     void stop();
 
     /**
+     * <p>Update the listener of the manager</p>
+     *
+     * @param listener the listener
+     */
+    void update(AudioListener listener);
+
+    /**
      * <p>Delete the given {@link FactoryAudioStatic}</p>
      *
      * @param audio the audio

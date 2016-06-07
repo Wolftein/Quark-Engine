@@ -30,12 +30,12 @@ import static org.quark_engine.Quark.QkAudioManager;
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class AudioSource extends Manageable {
-    public final static int CONCEPT_POSITION = (1 << 0);
-    public final static int CONCEPT_DIRECTION = (1 << 1);
-    public final static int CONCEPT_VELOCITY = (1 << 2);
-    public final static int CONCEPT_PITCH = (1 << 3);
-    public final static int CONCEPT_VOLUME = (1 << 4);
-    public final static int CONCEPT_LOOPING = (1 << 5);
+    public final static int CONCEPT_POSITION = (1 << 1);
+    public final static int CONCEPT_DIRECTION = (1 << 2);
+    public final static int CONCEPT_VELOCITY = (1 << 3);
+    public final static int CONCEPT_PITCH = (1 << 4);
+    public final static int CONCEPT_VOLUME = (1 << 5);
+    public final static int CONCEPT_LOOPING = (1 << 6);
 
     /**
      * Represent the minimum possible value of the pitch value.
