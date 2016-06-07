@@ -42,6 +42,8 @@ import java.util.Map;
  * Encapsulate an {@link AssetLoader} for loading OGG audio(s).
  * <p>
  * {@link Audio}
+ * {@link AudioFormat#MONO_16}
+ * {@link AudioFormat#STEREO_16}
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
@@ -275,8 +277,6 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
         @Override
         public void close() throws IOException {
             mVorbis.close();
-            mLogical.close();
-            mStream.close();
         }
 
         /**
