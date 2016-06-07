@@ -92,14 +92,13 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
         //!
         AudioHeader header = null;
 
-
         do {
             final int type = readIntLittleEndian(input);
             final int length = readIntLittleEndian(input);
 
             switch (type) {
                 case 0x20746D66:
-                    header = readHeader(input);
+                    header = readHeader(input, length);
                     break;
                 case 0x61746164:
                     if (header == null) {
@@ -139,11 +138,12 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
     /**
      * <p>Read audio header from the {@link DataInputStream} given</p>
      *
-     * @param input the input that contain(s) the header
+     * @param input  the input that contain(s) the header
+     * @param length the length of the header
      *
      * @throws IOException indicates if the audio has invalid header
      */
-    private AudioHeader readHeader(DataInputStream input) throws IOException {
+    private AudioHeader readHeader(DataInputStream input, int length) throws IOException {
         //!
         //! Check if we support the compression of the sound
         //!
@@ -176,11 +176,20 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
             throw new IOException("Invalid bytes per second value");
         }
 
+        //!
+        //! Some header are different.
+        //!
+        final int skip = length - 16;
+        if (skip > 0) {
+            input.skipBytes(skip);
+        }
+
         final AudioHeader header = new AudioHeader();
         header.mAudioBit = hBit;
         header.mAudioBlock = hBlock;
         header.mAudioChannel = hChannel;
         header.mAudioRate = hRate;
+
         return header;
     }
 
