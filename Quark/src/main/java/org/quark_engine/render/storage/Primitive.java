@@ -87,37 +87,37 @@ public enum Primitive {
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
      * {@since OpenGL    3.2}
-     * {@since OpenGL ES 3.1}
+     * {@since OpenGL ES 3.2}
      * {@since GL_EXT_geometry_shader4}
      */
-    LINES_ADJACENCY(Render.GLES31.GL_LINES_ADJACENCY),
+    LINES_ADJACENCY(Render.GLES32.GL_LINES_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
      * {@since OpenGL    3.2}
-     * {@since OpenGL ES 3.1}
+     * {@since OpenGL ES 3.2}
      * {@since GL_EXT_geometry_shader4}
      */
-    LINE_STRIP_ADJACENCY(Render.GLES31.GL_LINE_STRIP_ADJACENCY),
+    LINE_STRIP_ADJACENCY(Render.GLES32.GL_LINE_STRIP_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
      * {@since OpenGL    3.2}
-     * {@since OpenGL ES 3.1}
+     * {@since OpenGL ES 3.2}
      * {@since GL_EXT_geometry_shader4}
      */
-    TRIANGLES_ADJACENCY(Render.GLES31.GL_TRIANGLES_ADJACENCY),
+    TRIANGLES_ADJACENCY(Render.GLES32.GL_TRIANGLES_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
      * {@since OpenGL    3.2}
-     * {@since OpenGL ES 3.1}
+     * {@since OpenGL ES 3.2}
      * {@since GL_EXT_geometry_shader4}
      */
-    TRIANGLE_STRIP_ADJACENCY(Render.GLES31.GL_TRIANGLE_STRIP_ADJACENCY);
+    TRIANGLE_STRIP_ADJACENCY(Render.GLES32.GL_TRIANGLE_STRIP_ADJACENCY);
 
     public final int eValue;
 

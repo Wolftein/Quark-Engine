@@ -154,18 +154,18 @@ public interface Render extends ManageableManager {
      * <code>GLES31</code> encapsulate all feature(s) supported by OpenGL ES 3.1.
      */
     interface GLES31 extends GLES3 {
-        int GL_GEOMETRY_SHADER = 0x8DD9;
-        int GL_LINES_ADJACENCY = 0x0A;
-        int GL_LINE_STRIP_ADJACENCY = 0x0B;
-        int GL_TRIANGLES_ADJACENCY = 0x0C;
-        int GL_TRIANGLE_STRIP_ADJACENCY = 0x0D;
     }
 
     /**
      * <code>GLES32</code> encapsulate all feature(s) supported by OpenGL ES 3.2.
      */
     interface GLES32 extends GLES31 {
+        int GL_GEOMETRY_SHADER = 0x8DD9;
+        int GL_LINES_ADJACENCY = 0x0A;
+        int GL_LINE_STRIP_ADJACENCY = 0x0B;
         int GL_TEXTURE_BUFFER = 0x8C2A;
+        int GL_TRIANGLES_ADJACENCY = 0x0C;
+        int GL_TRIANGLE_STRIP_ADJACENCY = 0x0D;
     }
 
     /**

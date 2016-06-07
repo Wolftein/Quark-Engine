@@ -45,10 +45,10 @@ public enum StageType {
      * A shader that is intended to run on the programmable geometry processor.
      * <p>
      * {@since OpenGL    3.2}
-     * {@since OpenGL ES 3.1}
+     * {@since OpenGL ES 3.2}
      * {@since GL_EXT_geometry_shader4}
      */
-    GEOMETRY(Render.GLES31.GL_GEOMETRY_SHADER);
+    GEOMETRY(Render.GLES32.GL_GEOMETRY_SHADER);
 
     public final int eValue;
 
