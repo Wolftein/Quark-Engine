@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.shader;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>StageType</code> enumerate {@link Stage} type(s).
  *
@@ -26,24 +28,27 @@ public enum StageType {
     /**
      * A shader that is intended to run on the programmable fragment processor.
      * <p>
-     * {@since OpenGL 2.0}
+     * {@since OpenGL    2.0}
+     * {@since OpenGL ES 2.0}
      */
-    FRAGMENT(0x8B30),
+    FRAGMENT(Render.GLES2.GL_FRAGMENT_SHADER),
 
     /**
      * A shader that is intended to run on the programmable vertex processor.
      * <p>
-     * {@since OpenGL 2.0}
+     * {@since OpenGL    2.0}
+     * {@since OpenGL ES 2.0}
      */
-    VERTEX(0x8B31),
+    VERTEX(Render.GLES2.GL_VERTEX_SHADER),
 
     /**
      * A shader that is intended to run on the programmable geometry processor.
      * <p>
-     * {@since OpenGL 3.2}
+     * {@since OpenGL    3.2}
+     * {@since OpenGL ES 3.1}
      * {@since GL_EXT_geometry_shader4}
      */
-    GEOMETRY(0x8DD9);
+    GEOMETRY(Render.GLES31.GL_GEOMETRY_SHADER);
 
     public final int eValue;
 

@@ -34,7 +34,6 @@ import java.util.zip.Inflater;
  * Encapsulate an {@link AssetLoader} for loading PNG image(s).
  * <p>
  * {@link Texture}
- * {@link Texture1D}
  * {@link Texture2D}
  * {@link ImageFormat#RED}
  * {@link ImageFormat#RG}
@@ -138,22 +137,14 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
         } while (input.available() > 0);
 
         //!
-        //! Either support 1D or 2D texture
+        //! Load the texture.
         //!
-        if (header.mImageHeight == -1) {
-            return new Texture1D(
-                    descriptor.getFormat(),
-                    descriptor.getFilter(),
-                    descriptor.getBorderX(),
-                    Collections.singletonList(readImage(header, data.toByteArray())));
-        } else {
-            return new Texture2D(
-                    descriptor.getFormat(),
-                    descriptor.getFilter(),
-                    descriptor.getBorderX(),
-                    descriptor.getBorderY(),
-                    Collections.singletonList(readImage(header, data.toByteArray())));
-        }
+        return new Texture2D(
+                descriptor.getFormat(),
+                descriptor.getFilter(),
+                descriptor.getBorderX(),
+                descriptor.getBorderY(),
+                Collections.singletonList(readImage(header, data.toByteArray())));
     }
 
     /**
@@ -197,7 +188,7 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
 
         try (final DataInputStream stream = new DataInputStream(new ByteArrayInputStream(chunk.mData))) {
             header.mImageWidth = stream.readInt();
-            header.mImageHeight = stream.readInt();
+            header.mImageHeight = Math.max(stream.readInt(), 1);
             header.mImageDepth = stream.readByte();
             header.mPixelType = stream.readByte();
             header.mPixelCompression = stream.readByte();

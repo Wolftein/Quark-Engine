@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.texture;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>TextureType</code> enumerate {@link Texture} type(s).
  *
@@ -24,25 +26,20 @@ package org.quark_engine.render.texture;
  */
 public enum TextureType {
     /**
-     * Images in this texture all are 1-dimensional. They have width, but no height or depth.
-     * <p>
-     * {@since OpenGL 1.1}
-     */
-    TEXTURE_1D(0xDE0),
-
-    /**
      * Images in this texture all are 2-dimensional. They have width and height, but no depth.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    TEXTURE_2D(0xDE1),
+    TEXTURE_2D(Render.GLES2.GL_TEXTURE_2D),
 
     /**
      * Images in this texture all are 3-dimensional. They have width, height, and depth.
      * <p>
-     * {@since OpenGL 1.2}
+     * {@since OpenGL    1.2}
+     * {@since OpenGL ES 3.0}
      */
-    TEXTURE_3D(0x806F);
+    TEXTURE_3D(Render.GLES3.GL_TEXTURE_3D);
 
     public final int eValue;
 

@@ -35,8 +35,8 @@ import java.util.List;
  * Encapsulate an {@link AssetLoader} for loading DDS texture(s).
  * <p>
  * {@link Texture}
- * {@link Texture1D}
  * {@link Texture2D}
+ * {@link Texture3D}
  * {@link ImageFormat#RED}
  * {@link ImageFormat#RG}
  * {@link ImageFormat#RGB}
@@ -123,17 +123,12 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
                     descriptor.getBorderX(),
                     descriptor.getBorderY(),
                     descriptor.getBorderZ(), readImages(header, input));
-        } else if (header.mImageHeight > 0) {
+        } else {
             return new Texture2D(
                     descriptor.getFormat(),
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
                     descriptor.getBorderY(), readImages(header, input));
-        } else {
-            return new Texture1D(
-                    descriptor.getFormat(),
-                    descriptor.getFilter(),
-                    descriptor.getBorderX(), readImages(header, input));
         }
     }
 
@@ -206,7 +201,7 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
     private List<Image> readImages(ImageHeader header, DataInputStream input) throws IOException {
         int imageDepth = header.mImageDepth;
         int imageWidth = header.mImageWidth;
-        int imageHeight = header.mImageHeight;
+        int imageHeight = Math.max(header.mImageHeight, 1);
 
         //!
         //! Translate DDS format to native format

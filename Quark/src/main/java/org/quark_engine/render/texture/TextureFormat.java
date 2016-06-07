@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.texture;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>TextureFormat</code> enumerate {@link Texture} format(s).
  *
@@ -26,172 +28,161 @@ public enum TextureFormat {
     /**
      * Color value represented as red in 8-bit integer(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    R8(0x8229, false),
+    R8(Render.GLES3.GL_R8),
 
     /**
      * Color value represented as red in 16-bit integer(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    R16(0x822A, false),
+    R16(Render.GLES3.GL_R16),
 
     /**
      * Color value represented as red in 16-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    R16F(0x822D, false),
+    R16F(Render.GLES3.GL_R16F),
 
     /**
      * Color value represented as red in 32-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    R32F(0x822E, false),
+    R32F(Render.GLES3.GL_R32F),
 
     /**
      * Color value represented as red/green in 8-bit integer(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RG8(0x822B, false),
+    RG8(Render.GLES3.GL_RG8),
 
     /**
      * Color value represented as red/green in 16-bit integer(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RG16(0x822C, false),
+    RG16(Render.GLES3.GL_RG16),
 
     /**
      * Color value represented as red/green in 16-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RG16F(0x822F, false),
+    RG16F(Render.GLES3.GL_R16F),
 
     /**
      * Color value represented as red/green in 32-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RG32F(0x8230, false),
+    RG32F(Render.GLES3.GL_RG32F),
 
     /**
      * Color value represented as red/green/blue in 8-bit integer(s).
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    RGB8(0x8051, false),
+    RGB8(Render.GLES3.GL_RGB8),
 
     /**
      * Color value represented as red/green/blue in 16-bit integer(s).
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    RGB16(32852, false),
+    RGB16(Render.GLES3.GL_RGB16),
 
     /**
      * Color value represented as red/green/blue in 16-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RGB16F(0x881B, false),
+    RGB16F(Render.GLES3.GL_RGB16F),
 
     /**
      * Color value represented as red/green/blue in 32-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RGB32F(0x8815, false),
+    RGB32F(Render.GLES3.GL_RGB32F),
 
     /**
      * Color value represented as red/green/blue/alpha in 8-bit integers(s).
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    RGBA8(0x8058, false),
+    RGBA8(Render.GLES3.GL_RGBA8),
 
     /**
      * Color value represented as red/green/blue/alpha in 16-bit integer(s).
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    RGBA16(0x805B, false),
+    RGBA16(Render.GLES3.GL_RGBA16),
 
     /**
      * Color value represented as red/green/blue/alpha in 16-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RGBA16F(0x881A, false),
+    RGBA16F(Render.GLES3.GL_RGBA16F),
 
     /**
      * Color value represented as red/green/blue/alpha in 32-bit float(s).
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RGBA32F(0x8814, false),
+    RGBA32F(Render.GLES3.GL_RGB32F),
 
     /**
      * Color value represented as depth in 16-bit integer.
      * <p>
-     * {@since OpenGL 1.4}
+     * {@since OpenGL    1.4}
+     * {@since OpenGL ES 3.0}
      */
-    DEPTH_COMPONENT16(0x81A5, false),
+    DEPTH_COMPONENT16(Render.GLES2.GL_DEPTH_COMPONENT16),
 
     /**
      * Color value represented as depth in 24-bit integer.
      * <p>
-     * {@since OpenGL 1.4}
+     * {@since OpenGL    1.4}
+     * {@since OpenGL ES 3.0}
      */
-    DEPTH_COMPONENT24(0x81A6, false),
+    DEPTH_COMPONENT24(Render.GLES3.GL_DEPTH_COMPONENT24),
 
     /**
      * Color value represented as depth in 32-bit integer.
      * <p>
-     * {@since OpenGL 1.4}
+     * {@since OpenGL    1.4}
+     * {@since OpenGL ES 3.0}
      */
-    DEPTH_COMPONENT32(0x81A7, false),
-
-    /**
-     * Color value represented as red compressed.
-     * <p>
-     * {@since OpenGL 3.0}
-     */
-    COMPRESSED_RED(0x8225, true),
-
-    /**
-     * Color value represented as red/green/ compressed.
-     * <p>
-     * {@since OpenGL 3.0}
-     */
-    COMPRESSED_RG(0x8226, true),
-
-    /**
-     * Color value represented as red/green/blue compressed.
-     * <p>
-     * {@since OpenGL 1.3}
-     */
-    COMPRESSED_RGB(0x84ED, true),
-
-    /**
-     * Color value represented as red/green/blue/alpha compressed.
-     * <p>
-     * {@since OpenGL 1.3}
-     */
-    COMPRESSED_RGBA(0x84EE, true);
+    DEPTH_COMPONENT32(Render.GLES3.GL_DEPTH_COMPONENT32);
 
     public final int eValue;
-    public final boolean eCompressed;
 
     /**
      * <p>Constructor</p>
      */
-    TextureFormat(int value, boolean compressed) {
+    TextureFormat(int value) {
         eValue = value;
-        eCompressed = compressed;
     }
 }

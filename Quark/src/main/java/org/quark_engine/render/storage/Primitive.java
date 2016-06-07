@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.storage;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>Primitive</code> enumerate all primitive(s).
  *
@@ -26,85 +28,96 @@ public enum Primitive {
     /**
      * Treats each vertex as a single point. VertexAttribute n defines point n. N points are drawn.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    POINTS(0x00),
+    POINTS(Render.GLES2.GL_POINTS),
 
     /**
      * Treats each pair of vertices as an independent line segment.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    LINES(0x01),
+    LINES(Render.GLES2.GL_LINES),
 
     /**
      * Draws a connected group of line segments from the first vertex to the last, then back to the first.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    LINE_LOOP(0x02),
+    LINE_LOOP(Render.GLES2.GL_LINE_LOOP),
 
     /**
      * Draws a connected group of line segments from the first vertex to the last.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    LINE_STRIP(0x03),
+    LINE_STRIP(Render.GLES2.GL_LINE_STRIP),
 
     /**
      * Treats each triplet of vertices as an independent triangle.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    TRIANGLES(0x04),
+    TRIANGLES(Render.GLES2.GL_TRIANGLES),
 
     /**
      * Draws a connected group of triangles. One triangle is defined for each vertex presented
      * after the first two vertices.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    TRIANGLE_FAN(0x05),
+    TRIANGLE_FAN(Render.GLES2.GL_TRIANGLE_FAN),
 
     /**
      * Draws a connected group of triangles. One triangle is defined for each vertex presented
      * after the first two vertices.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    TRIANGLE_STRIP(0x06),
+    TRIANGLE_STRIP(Render.GLES2.GL_TRIANGLE_STRIP),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
-     * {@since OpenGL 3.2}
+     * {@since OpenGL    3.2}
+     * {@since OpenGL ES 3.1}
      * {@since GL_EXT_geometry_shader4}
      */
-    LINES_ADJACENCY(0x0A),
+    LINES_ADJACENCY(Render.GLES31.GL_LINES_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
-     * {@since OpenGL 3.2}
+     * {@since OpenGL    3.2}
+     * {@since OpenGL ES 3.1}
      * {@since GL_EXT_geometry_shader4}
      */
-    LINE_STRIP_ADJACENCY(0x0B),
+    LINE_STRIP_ADJACENCY(Render.GLES31.GL_LINE_STRIP_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
-     * {@since OpenGL 3.2}
+     * {@since OpenGL    3.2}
+     * {@since OpenGL ES 3.1}
      * {@since GL_EXT_geometry_shader4}
      */
-    TRIANGLES_ADJACENCY(0x0C),
+    TRIANGLES_ADJACENCY(Render.GLES31.GL_TRIANGLES_ADJACENCY),
 
     /**
      * Expected to be used specifically with Geometry ShaderSource (GS).
      * <p>
-     * {@since OpenGL 3.2}
+     * {@since OpenGL    3.2}
+     * {@since OpenGL ES 3.1}
      * {@since GL_EXT_geometry_shader4}
      */
-    TRIANGLE_STRIP_ADJACENCY(0x0D);
+    TRIANGLE_STRIP_ADJACENCY(Render.GLES31.GL_TRIANGLE_STRIP_ADJACENCY);
 
     public final int eValue;
 

@@ -25,15 +25,11 @@ package org.quark_engine.render.storage;
 public enum StorageType {
     /**
      * The buffer of the storage is located in the client-side and never disposed.
-     * <p>
-     * {@since OpenGL 1.5}
      */
     CLIENT,
 
     /**
      * The buffer of the storage is located in the server-side (and access though mapping).
-     * <p>
-     * {@since OpenGL 3.0}
      */
     SERVER
 }

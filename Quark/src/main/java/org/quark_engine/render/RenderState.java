@@ -33,63 +33,71 @@ public final class RenderState {
         /**
          * Turn off.
          */
-        NONE(-1, -1),
+        NONE(Render.GLES2.GL_NONE, Render.GLES2.GL_NONE),
 
         /**
          * Result = source_colour + destination_colour.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ADD(0x0001, 0x0001),
+        ADD(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour * destination_colour.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        MULTIPLY(0x0306, 0x0000),
+        MULTIPLY(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_ZERO),
 
         /**
          * Result = source_colour * destination_colour * 2.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        MULTIPLY_TWICE(0x0306, 0x0300),
+        MULTIPLY_TWICE(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_SRC_COLOR),
 
         /**
          * Result = source_alpha * source_colour + (1 - source_alpha) * destination_colour.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ALPHA(0x0302, 0x0303),
+        ALPHA(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
 
         /**
          * Result = (source_alpha * source_colour) + destination_colour.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ALPHA_ADD(0x0302, 0x0001),
+        ALPHA_ADD(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour + (destination_colour * 1 - source_alpha).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ALPHA_PRE_MULTIPLY(0x0001, 0x0303),
+        ALPHA_PRE_MULTIPLY(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_ALPHA),
 
         /**
          * Result = source_colour + (1 - source_colour) * destination_colour.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        COLOR(0x0001, 0x0301),
+        COLOR(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
 
         /**
          * Result = (source_colour * (1 - destination_colour)) + (destination_colour * (1 - source_colour)).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        COLOR_EXCLUSION(0x0307, 0x0301);
+        COLOR_EXCLUSION(Render.GLES2.GL_ONE_MINUS_DST_COLOR, Render.GLES2.GL_ONE_MINUS_SRC_COLOR);
 
         public final int eSource;
         public final int eDestination;
@@ -110,37 +118,42 @@ public final class RenderState {
         /**
          * Result = source_rgba + destination_rgba.
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 2.0}
          */
-        ADD(0x8006),
+        ADD(Render.GLES2.GL_FUNC_ADD),
 
         /**
          * Result = source_rgba - destination_rgba.
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 2.0}
          */
-        SUBTRACT(0x800A),
+        SUBTRACT(Render.GLES2.GL_FUNC_SUBTRACT),
 
         /**
          * Result = destination_rgba - source_rgba.
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 2.0}
          */
-        SUBTRACT_REVERSE(0x800B),
+        SUBTRACT_REVERSE(Render.GLES2.GL_FUNC_REVERSE_SUBTRACT),
 
         /**
          * Result = min(source_rgba, destination_rgba).
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 3.0}
          */
-        MIN(0x8007),
+        MIN(Render.GLES3.GL_MIN),
 
         /**
          * Result = max(source_rgba, destination_rgba).
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 3.0}
          */
-        MAX(0x8008);
+        MAX(Render.GLES3.GL_MAX);
 
         public final int eValue;
 
@@ -159,28 +172,31 @@ public final class RenderState {
         /**
          * Turn off.
          */
-        NONE(-1),
+        NONE(Render.GLES2.GL_NONE),
 
         /**
          * Cull only front-face</p>
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        FRONT(0x0404),
+        FRONT(Render.GLES2.GL_FRONT),
 
         /**
          * Cull front- and back- face</p>
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        FRONT_BACK(0x0408),
+        FRONT_BACK(Render.GLES2.GL_FRONT_BACK),
 
         /**
          * Cull only back-face</p>
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        BACK(0x0405);
+        BACK(Render.GLES2.GL_BACK);
 
         public final int eValue;
 
@@ -199,60 +215,68 @@ public final class RenderState {
         /**
          * Keeps the current value.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        KEEP(0x1E00),
+        KEEP(Render.GLES2.GL_KEEP),
 
         /**
          * Sets the stencil buffer value to 0.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ZERO(0x0000),
+        ZERO(Render.GLES2.GL_ZERO),
 
         /**
          * Replace the stencil buffer value.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        REPLACE(0x1E01),
+        REPLACE(Render.GLES2.GL_REPLACE),
 
         /**
          * Increments the current stencil buffer value. Clamps to the maximum representable unsigned value.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        INCREMENT(0x1E02),
+        INCREMENT(Render.GLES2.GL_INCREMENT),
 
         /**
          * Increments the current stencil buffer value. Wraps stencil buffer value to zero when incrementing
          * the maximum representable unsigned value.
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 2.0}
          */
-        INCREMENT_WRAP(0x8507),
+        INCREMENT_WRAP(Render.GLES2.GL_INCREMENT_WRAP),
 
         /**
          * Decrements the current stencil buffer value. Clamps to 0.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        DECREASE(0x1E03),
+        DECREASE(Render.GLES2.GL_DECREASE),
 
         /**
          * Decrements the current stencil buffer value. Wraps stencil buffer value to the maximum representable
          * unsigned value when decrementing a stencil buffer value of zero.
          * <p>
-         * {@since OpenGL 1.4}
+         * {@since OpenGL    1.4}
+         * {@since OpenGL ES 2.0}
          */
-        DECREASE_WRAP(0x8508),
+        DECREASE_WRAP(Render.GLES2.GL_DECREASE_WRAP),
 
         /**
          * Bitwise inverts the current stencil buffer value.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        INVERT(0x150A);
+        INVERT(Render.GLES2.GL_INVERT);
 
         public final int eValue;
 
@@ -271,58 +295,66 @@ public final class RenderState {
         /**
          * Always fails.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        NEVER(0x0200),
+        NEVER(Render.GLES2.GL_NEVER),
 
         /**
          * Always passes.
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        ALWAYS(0x0207),
+        ALWAYS(Render.GLES2.GL_ALWAYS),
 
         /**
          * Passes if ( ref & mask ) < ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        LESS(0x0201),
+        LESS(Render.GLES2.GL_LESS),
 
         /**
          * Passes if ( ref & mask ) <= ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        LESS_EQUAL(0x0203),
+        LESS_EQUAL(Render.GLES2.GL_LESS_EQUAL),
 
         /**
          * Passes if ( ref & mask ) > ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        GREATER(0x0204),
+        GREATER(Render.GLES2.GL_GREATER),
 
         /**
          * Passes if ( ref & mask ) >= ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        GREAT_EQUAL(0x0206),
+        GREATER_EQUAL(Render.GLES2.GL_GREATER_EQUAL),
 
         /**
          * Passes if ( ref & mask ) = ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        EQUAL(0x0202),
+        EQUAL(Render.GLES2.GL_EQUAL),
 
         /**
          * Passes if ( ref & mask ) != ( stencil & mask ).
          * <p>
-         * {@since OpenGL 1.1}
+         * {@since OpenGL    1.1}
+         * {@since OpenGL ES 2.0}
          */
-        NOT_EQUAL(0x0205);
+        NOT_EQUAL(Render.GLES2.GL_NOT_EQUAL);
 
         public final int eValue;
 

@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.texture;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>ImageFormat</code> enumerate possible {@link Image} format(s).
  *
@@ -26,72 +28,78 @@ public enum ImageFormat {
     /**
      * Each element is an RED component.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RED(0x1903, 1, false, false, false, false),
+    RED(Render.GLES3.GL_RED, 1, false, false, false, false),
 
     /**
      * Each element is an RGB triple.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    RGB(0x1907, 3, false, false, false, false),
+    RGB(Render.GLES2.GL_RGB, 3, false, false, false, false),
 
     /**
      * Each element contains all four components.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    RGBA(0x1908, 4, false, true, false, false),
+    RGBA(Render.GLES2.GL_RGBA, 4, false, true, false, false),
 
     /**
      * Only contains the depth component.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    DEPTH_COMPONENT(0x1902, 1, false, false, false, true),
+    DEPTH_COMPONENT(Render.GLES3.GL_DEPTH_COMPONENT, 1, false, false, false, true),
 
     /**
      * Only contains the red and green component.
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    RG(0x8227, 2, false, false, false, false),
+    RG(Render.GLES3.GL_RG, 2, false, false, false, false),
 
     /**
      * Only contains the stencil and depth component.
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    DEPTH_STENCIL(0x1902, 2, false, false, true, true),
+    DEPTH_STENCIL(Render.GLES3.GL_DEPTH_STENCIL, 2, false, false, true, true),
 
     /**
      * Compressed texture using S3TC for RGB.
      * <p>
      * {@since EXT_texture_compression_s3tc}
      */
-    RGB_DXT1(0x83F0, 3, true, false, false, false),
+    RGB_DXT1(Render.GLESExtension.S3TC_RGB_DXT1, 3, true, false, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
      * <p>
      * {@since EXT_texture_compression_s3tc}
      */
-    RGBA_DXT1(0x83F1, 4, true, true, false, false),
+    RGBA_DXT1(Render.GLESExtension.S3TC_RGBA_DXT1, 4, true, true, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
      * <p>
      * {@since EXT_texture_compression_s3tc}
      */
-    RGBA_DXT3(0x83F2, 4, true, true, false, false),
+    RGBA_DXT3(Render.GLESExtension.S3TC_RGBA_DXT3, 4, true, true, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
      * <p>
      * {@since EXT_texture_compression_s3tc}
      */
-    RGBA_DXT5(0x83F3, 4, true, true, false, false);
+    RGBA_DXT5(Render.GLESExtension.S3TC_RGBA_DXT5, 4, true, true, false, false);
 
     public final int eValue;
     public final int eComponent;

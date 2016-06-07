@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.storage;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>VertexFormat</code> enumerate {@link Vertex} type(s).
  *
@@ -26,58 +28,65 @@ public enum VertexFormat {
     /**
      * <b>OpenGL</b> implementation of signed byte.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    BYTE(0x1400, 0x01),
+    BYTE(Render.GLES2.GL_BYTE, 0x01),
 
     /**
      * <b>OpenGL</b> implementation of unsigned byte.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    UNSIGNED_BYTE(0x1401, 0x01),
+    UNSIGNED_BYTE(Render.GLES2.GL_UNSIGNED_BYTE, 0x01),
 
     /**
      * <b>OpenGL</b> implementation of signed short.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    SHORT(0x1402, 0x02),
+    SHORT(Render.GLES2.GL_SHORT, 0x02),
 
     /**
      * <b>OpenGL</b> implementation of unsigned short.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    UNSIGNED_SHORT(0x1403, 0x02),
+    UNSIGNED_SHORT(Render.GLES2.GL_UNSIGNED_SHORT, 0x02),
 
     /**
      * <b>OpenGL</b> implementation of signed integer.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    INT(0x1404, 0x04),
+    INT(Render.GLES3.GL_INT, 0x04),
 
     /**
      * <b>OpenGL</b> implementation of unsigned integer.
-     * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 3.0}
      */
-    UNSIGNED_INT(0x1405, 0x04),
+    UNSIGNED_INT(Render.GLES3.GL_UNSIGNED_INT, 0x04),
 
     /**
      * <b>OpenGL</b> implementation of float.
      * <p>
-     * {@since OpenGL 1.1}
+     * {@since OpenGL    1.1}
+     * {@since OpenGL ES 2.0}
      */
-    FLOAT(0x1406, 0x04),
+    FLOAT(Render.GLES2.GL_FLOAT, 0x04),
 
     /**
      * <b>OpenGL</b> implementation of half float.
      * <p>
-     * {@since OpenGL 3.0}
+     * {@since OpenGL    3.0}
+     * {@since OpenGL ES 3.0}
      */
-    HALF_FLOAT(0x140B, 0x02);
+    HALF_FLOAT(Render.GLES3.GL_HALF_FLOAT, 0x02);
 
     public final int eValue;
     public final int eLength;

@@ -1,8 +1,9 @@
+// #####################################################################################################################
+//                                                 [CORE]
+// #####################################################################################################################
 include 'Quark'
 
-include 'Quark-Backend:Quark-Backend-LWJGL'
-findProject(':Quark-Backend:Quark-Backend-LWJGL')?.name = 'Quark-Backend-LWJGL'
-
-include 'Quark-Extension:Blueprint-2D'
-findProject(':Quark-Extension:Blueprint-2D')?.name = 'Quark-Extension/Blueprint-2D'
-
+// #####################################################################################################################
+//                                                [BACKEND]
+// #####################################################################################################################
+include ':Quark-Backend:Quark-Backend-LWJGL'

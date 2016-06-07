@@ -27,8 +27,8 @@ import org.quark_engine.mathematic.*;
 public final class AudioListener {
     private final MutableVector3f mPosition = MutableVector3f.zero();
     private final MutableVector3f mVelocity = MutableVector3f.zero();
-    private final MutableVector3f mUp = MutableVector3f.zero();
-    private final MutableVector3f mDirection = MutableVector3f.zero();
+    private final MutableVector3f mUp = MutableVector3f.unitY();
+    private final MutableVector3f mDirection = MutableVector3f.unitZ();
     private float mVolume = 1.0f;
 
     /**

@@ -17,6 +17,8 @@
  */
 package org.quark_engine.render.storage;
 
+import org.quark_engine.render.Render;
+
 /**
  * <code>StorageMode</code> enumerate {@link Storage} mode(s).
  *
@@ -26,65 +28,74 @@ public enum StorageMode {
     /**
      * The data store contents are modified repeatedly.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 2.0}
      */
-    DYNAMIC_DRAW(0x88E8, false, true),
+    DYNAMIC_DRAW(Render.GLES2.GL_DYNAMIC_DRAW, false, true),
 
     /**
      * The data store contents are queried repeatedly.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    DYNAMIC_READ(0x88E9, true, false),
+    DYNAMIC_READ(Render.GLES3.GL_DYNAMIC_READ, true, false),
 
     /**
      * The data store contents are copy between storage repeatedly.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    DYNAMIC_COPY(0x88EA, false, false),
+    DYNAMIC_COPY(Render.GLES3.GL_DYNAMIC_COPY, false, false),
 
     /**
      * The data store contents is modified once.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 2.0}
      */
-    STATIC_DRAW(0x88E4, false, true),
+    STATIC_DRAW(Render.GLES2.GL_STATIC_DRAW, false, true),
 
     /**
      * The data store contents is queried once.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    STATIC_READ(0x88E5, true, false),
+    STATIC_READ(Render.GLES3.GL_STATIC_READ, true, false),
 
     /**
      * The data store contents are copy between storage once.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    STATIC_COPY(0x88E6, false, false),
+    STATIC_COPY(Render.GLES3.GL_STATIC_COPY, false, false),
 
     /**
      * The data store contents are modified frequently.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 2.0}
      */
-    STREAM_DRAW(0x88E0, false, true),
+    STREAM_DRAW(Render.GLES2.GL_STREAM_DRAW, false, true),
 
     /**
      * The data store contents are queried frequently.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    STREAM_READ(0x88E1, true, false),
+    STREAM_READ(Render.GLES3.GL_STREAM_READ, true, false),
 
     /**
      * The data store contents are copy between storage frequently.
      * <p>
-     * {@since OpenGL 1.5}
+     * {@since OpenGL    1.5}
+     * {@since OpenGL ES 3.0}
      */
-    STREAM_COPY(0x88E2, false, false);
+    STREAM_COPY(Render.GLES3.GL_STREAM_COPY, false, false);
 
     public final int eValue;
     public final boolean eReadable;
