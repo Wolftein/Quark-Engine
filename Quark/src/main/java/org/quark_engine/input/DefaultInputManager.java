@@ -74,12 +74,12 @@ public final class DefaultInputManager implements InputManager {
         //!
         //! Initialise the <code>Keyboard</code> device
         //!
-        mKeyboard.create(mBuffer);
+        mKeyboard.create();
 
         //!
         //! Initialise the <code>Mouse</code> device
         //!
-        mMouse.create(mBuffer);
+        mMouse.create();
     }
 
     /**
@@ -108,12 +108,12 @@ public final class DefaultInputManager implements InputManager {
         //!
         //! Update <code>Keyboard</code> device.
         //!
-        mKeyboard.update();
+        mKeyboard.update(mBuffer);
 
         //!
         //! Update <code>Mouse</code> device.
         //!
-        mMouse.update();
+        mMouse.update(mBuffer);
 
         //!
         //! Process all input-event being queue by all device(s) attached.

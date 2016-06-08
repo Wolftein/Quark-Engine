@@ -27,15 +27,15 @@ import java.nio.IntBuffer;
 public interface Input {
     /**
      * <p>Create and initialise the device</p>
-     *
-     * @param buffer the buffer that will contain the input when updating
      */
-    void create(IntBuffer buffer);
+    void create();
 
     /**
      * <p>Update and poll all input event(s) from the device</p>
+     *
+     * @param buffer the buffer that will contain the input when updating
      */
-    void update();
+    void update(IntBuffer buffer);
 
     /**
      * <p>Destroy the device</p>

@@ -182,7 +182,7 @@ public final class QuarkOpenAL implements AudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void play(AudioSource source) {
+    public synchronized void play(AudioSource source) {
         //!
         //! Update the source if not valid.
         //!
@@ -198,10 +198,13 @@ public final class QuarkOpenAL implements AudioManager {
             mAttachments[source.getHandle() - 1] = source;
         } else {
             //!
-            //! Will stop the source (if needed).
+            //! Stop the audio.
             //!
             AL10.alSourceStop(source.getHandle());
 
+            //!
+            //! Detach the audio from the source.
+            //!
             onDetachSource(source, source.getAudio());
         }
 
@@ -211,6 +214,9 @@ public final class QuarkOpenAL implements AudioManager {
         onUpdateSource(source, true);
         onAttachSource(source, source.getAudio());
 
+        //!
+        //! Play the source.
+        //!
         AL10.alSourcePlay(source.getHandle());
     }
 
@@ -356,7 +362,7 @@ public final class QuarkOpenAL implements AudioManager {
     /**
      * <p>Handle when updating a source</p>
      */
-    private void onUpdateSource(AudioSource source) {
+    private synchronized void onUpdateSource(AudioSource source) {
         if (AL10.alGetSourcei(source.getHandle(), AL10.AL_SOURCE_STATE) == AL10.AL_STOPPED) {
             //!
             //! The source has stopped.

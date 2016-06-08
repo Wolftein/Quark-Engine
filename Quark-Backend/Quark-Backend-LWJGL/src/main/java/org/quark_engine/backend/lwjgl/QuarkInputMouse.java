@@ -30,6 +30,11 @@ import java.nio.IntBuffer;
  */
 public final class QuarkInputMouse implements InputMouse {
     /**
+     * Hold the mutex for allowing polling from another thread.
+     */
+    private final Object mLock = new Object();
+
+    /**
      * Hold the display handle.
      */
     private final long mHandle;
@@ -37,7 +42,7 @@ public final class QuarkInputMouse implements InputMouse {
     /**
      * Hold the device buffer.
      */
-    private IntBuffer mBuffer = null;
+    private IntBuffer mBuffer = IntBuffer.allocate(1024);
 
     /**
      * <p>Constructor</p>
@@ -50,9 +55,7 @@ public final class QuarkInputMouse implements InputMouse {
      * {@inheritDoc}
      */
     @Override
-    public void create(IntBuffer buffer) {
-        mBuffer = buffer;
-
+    public void create() {
         GLFW.glfwSetCursorPosCallback(mHandle, this::glfwCursorPosCallback);
         GLFW.glfwSetScrollCallback(mHandle, this::glfwScrollCallback);
         GLFW.glfwSetMouseButtonCallback(mHandle, this::glfwMouseButtonCallback);
@@ -62,7 +65,14 @@ public final class QuarkInputMouse implements InputMouse {
      * {@inheritDoc}
      */
     @Override
-    public void update() {
+    public void update(IntBuffer buffer) {
+        synchronized (mLock) {
+            mBuffer.flip();
+
+            buffer.put(mBuffer);
+
+            mBuffer.clear();
+        }
     }
 
     /**
@@ -96,14 +106,18 @@ public final class QuarkInputMouse implements InputMouse {
      * <p>Handle GLFWCursorPosCallback</p>
      */
     private void glfwCursorPosCallback(long window, double x, double y) {
-        InputMouse.onFactoryMove(mBuffer, (int) x, (int) y);
+        synchronized (mLock) {
+            InputMouse.onFactoryMove(mBuffer, (int) x, (int) y);
+        }
     }
 
     /**
      * <p>Handle GLFWScrollCallback</p>
      */
     private void glfwScrollCallback(long window, double x, double y) {
-        InputMouse.onFactoryWheel(mBuffer, (int) y);
+        synchronized (mLock) {
+            InputMouse.onFactoryWheel(mBuffer, (int) y);
+        }
     }
 
     /**
@@ -113,9 +127,13 @@ public final class QuarkInputMouse implements InputMouse {
         final InputMouseButton input = transform(button);
         if (input != null) {
             if (action == GLFW.GLFW_REPEAT || action == GLFW.GLFW_PRESS) {
-                InputMouse.onFactoryButtonDown(mBuffer, input);
+                synchronized (mLock) {
+                    InputMouse.onFactoryButtonDown(mBuffer, input);
+                }
             } else {
-                InputMouse.onFactoryButtonUp(mBuffer, input);
+                synchronized (mLock) {
+                    InputMouse.onFactoryButtonUp(mBuffer, input);
+                }
             }
         }
     }

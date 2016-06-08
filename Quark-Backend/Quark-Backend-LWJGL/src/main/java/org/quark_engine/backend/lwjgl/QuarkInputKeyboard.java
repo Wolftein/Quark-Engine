@@ -30,6 +30,11 @@ import java.nio.IntBuffer;
  */
 public final class QuarkInputKeyboard implements InputKeyboard {
     /**
+     * Hold the mutex for allowing polling from another thread.
+     */
+    private final Object mLock = new Object();
+
+    /**
      * Hold the display handle.
      */
     private final long mHandle;
@@ -37,7 +42,7 @@ public final class QuarkInputKeyboard implements InputKeyboard {
     /**
      * Hold the device buffer.
      */
-    private IntBuffer mBuffer = null;
+    private IntBuffer mBuffer = IntBuffer.allocate(1024);
 
     /**
      * <p>Constructor</p>
@@ -50,9 +55,7 @@ public final class QuarkInputKeyboard implements InputKeyboard {
      * {@inheritDoc}
      */
     @Override
-    public void create(IntBuffer buffer) {
-        mBuffer = buffer;
-
+    public void create() {
         GLFW.glfwSetKeyCallback(mHandle, this::glfwKeyCallback);
         GLFW.glfwSetCharCallback(mHandle, this::glfwCharCallback);
     }
@@ -61,7 +64,14 @@ public final class QuarkInputKeyboard implements InputKeyboard {
      * {@inheritDoc}
      */
     @Override
-    public void update() {
+    public void update(IntBuffer buffer) {
+        synchronized (mLock) {
+            mBuffer.flip();
+
+            buffer.put(mBuffer);
+
+            mBuffer.clear();
+        }
     }
 
     /**
@@ -80,9 +90,13 @@ public final class QuarkInputKeyboard implements InputKeyboard {
         final InputKey input = transform(key);
         if (input != null) {
             if (action == GLFW.GLFW_REPEAT || action == GLFW.GLFW_PRESS) {
-                InputKeyboard.onFactoryKeyDown(mBuffer, input);
+                synchronized (mLock) {
+                    InputKeyboard.onFactoryKeyDown(mBuffer, input);
+                }
             } else {
-                InputKeyboard.onFactoryKeyUp(mBuffer, input);
+                synchronized (mLock) {
+                    InputKeyboard.onFactoryKeyUp(mBuffer, input);
+                }
             }
         }
     }
@@ -91,7 +105,9 @@ public final class QuarkInputKeyboard implements InputKeyboard {
      * <p>Handle GLFWSetCharCallback</p>
      */
     private void glfwCharCallback(long window, int code) {
-        InputKeyboard.onFactoryKeyType(mBuffer, (char) code);
+        synchronized (mLock) {
+            InputKeyboard.onFactoryKeyType(mBuffer, (char) code);
+        }
     }
 
     /**
