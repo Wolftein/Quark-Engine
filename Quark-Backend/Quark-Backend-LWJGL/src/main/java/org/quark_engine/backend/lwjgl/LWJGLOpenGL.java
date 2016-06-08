@@ -1020,6 +1020,8 @@ public final class LWJGLOpenGL implements Render {
         //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
         //!
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indices.getHandle());
+
+        indices.update();
     }
 
     /**
@@ -1031,6 +1033,7 @@ public final class LWJGLOpenGL implements Render {
         {
             vertices.getAttributes().forEach(T -> onStorageDescriptorUpdate(vertices, T));
         }
+        vertices.update();
         vertices.release();
     }
 

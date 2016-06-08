@@ -105,6 +105,8 @@ public final class LWJGL {
      * <p>Called to initialise the module</p>
      */
     protected void onCreate() {
+        Thread.currentThread().setName("QK-Main");
+
         //!
         //! Initialise (LWJGLFramework)
         //!
