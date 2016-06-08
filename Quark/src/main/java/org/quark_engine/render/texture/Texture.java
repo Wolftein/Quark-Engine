@@ -43,15 +43,17 @@ public abstract class Texture extends Manageable implements Disposable {
     protected final TextureType mType;
     protected final TextureFormat mFormat;
     protected final List<Image> mImages;
+    protected final boolean mMipmap;
     protected TextureFilter mFilter;
 
     /**
      * <p>Constructor</p>
      */
-    protected Texture(TextureType type, TextureFormat format, List<Image> images) {
+    protected Texture(TextureType type, TextureFormat format, List<Image> images, boolean mipmap) {
         mType = type;
         mFormat = format;
         mImages = images;
+        mMipmap = mipmap;
         setUpdate(Texture.CONCEPT_IMAGE);
     }
 
@@ -101,6 +103,15 @@ public abstract class Texture extends Manageable implements Disposable {
      */
     public final TextureFilter getFilter() {
         return mFilter;
+    }
+
+    /**
+     * <p>Check if the texture has mipmap</p>
+     *
+     * @return <code>true</code> if the texture has mipmap, <code>false</code> otherwise
+     */
+    public final boolean hasMipmap() {
+        return mMipmap || mImages.size() > 0;
     }
 
     /**
@@ -170,17 +181,19 @@ public abstract class Texture extends Manageable implements Disposable {
         private final TextureBorder mBorderX;
         private final TextureBorder mBorderY;
         private final TextureBorder mBorderZ;
+        private final boolean mMipmap;
 
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter,
+        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap,
                 TextureBorder borderX,
                 TextureBorder borderY,
                 TextureBorder borderZ) {
             super(true, true);
             mFormat = format;
             mFilter = filter;
+            mMipmap = mipmap;
             mBorderX = borderX;
             mBorderY = borderY;
             mBorderZ = borderZ;
@@ -189,15 +202,15 @@ public abstract class Texture extends Manageable implements Disposable {
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter, TextureBorder border) {
-            this(format, filter, border, border, border);
+        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap, TextureBorder border) {
+            this(format, filter, mipmap, border, border, border);
         }
 
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter) {
-            this(format, filter, TextureBorder.REPEAT, TextureBorder.REPEAT, TextureBorder.REPEAT);
+        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap) {
+            this(format, filter, mipmap, TextureBorder.REPEAT, TextureBorder.REPEAT, TextureBorder.REPEAT);
         }
 
         /**
@@ -243,6 +256,15 @@ public abstract class Texture extends Manageable implements Disposable {
          */
         public TextureBorder getBorderZ() {
             return mBorderZ;
+        }
+
+        /**
+         * <p>Check if the texture has mipmap</p>
+         *
+         * @return <code>true</code> if the texture has mipmap, <code>false</code> otherwise
+         */
+        public boolean hasMipmap() {
+            return mMipmap;
         }
     }
 }

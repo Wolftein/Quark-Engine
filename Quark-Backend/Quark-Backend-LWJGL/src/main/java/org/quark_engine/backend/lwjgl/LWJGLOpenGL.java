@@ -88,10 +88,10 @@ public final class LWJGLOpenGL implements Render {
         //!
         final RenderCapabilities.LanguageVersion version
                 = RenderCapabilities.LanguageVersion.fromStringVersion(
-                        GL11.glGetString(GL11.GL_VERSION));
+                GL11.glGetString(GL11.GL_VERSION));
         final RenderCapabilities.ShaderLanguageVersion shaderVersion
                 = RenderCapabilities.ShaderLanguageVersion.fromStringVersion(
-                        GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
+                GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
         mCapabilities = new RenderCapabilities(version, shaderVersion, extension, limit);
 
         //!
@@ -649,6 +649,13 @@ public final class LWJGLOpenGL implements Render {
                             image.getBytes().clear();
                         }
                         break;
+                }
+
+                //!
+                //! Generate mip-map if required.
+                //!
+                if (texture.getImages().size() <= 1 && texture.hasMipmap()) {
+                    GL30.glGenerateMipmap(texture.getType().eValue);
                 }
             }
             texture.setUpdated();

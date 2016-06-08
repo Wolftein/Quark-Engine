@@ -31,16 +31,16 @@ public final class Texture2D extends Texture {
     /**
      * <p>Default constructor</p>
      */
-    public Texture2D(TextureFormat format, List<Image> images) {
-        super(TextureType.TEXTURE_2D, format, images);
+    public Texture2D(TextureFormat format, List<Image> images, boolean mipmap) {
+        super(TextureType.TEXTURE_2D, format, images, mipmap);
     }
 
     /**
      * <p>Complex constructor</p>
      */
     public Texture2D(TextureFormat format, TextureFilter filter, TextureBorder borderX, TextureBorder borderY,
-            List<Image> images) {
-        this(format, images);
+            List<Image> images, boolean mipmap) {
+        this(format, images, mipmap);
         setFilter(filter);
         setClamp(borderX, borderY);
     }

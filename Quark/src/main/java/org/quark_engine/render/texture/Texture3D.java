@@ -32,16 +32,16 @@ public final class Texture3D extends Texture {
     /**
      * <p>Default constructor</p>
      */
-    public Texture3D(TextureFormat format, List<Image> images) {
-        super(TextureType.TEXTURE_3D, format, images);
+    public Texture3D(TextureFormat format, List<Image> images, boolean mipmap) {
+        super(TextureType.TEXTURE_3D, format, images, mipmap);
     }
 
     /**
      * <p>Complex constructor</p>
      */
     public Texture3D(TextureFormat format, TextureFilter filter, TextureBorder borderX, TextureBorder borderY,
-            TextureBorder borderZ, List<Image> images) {
-        this(format, images);
+            TextureBorder borderZ, List<Image> images, boolean mipmap) {
+        this(format, images, mipmap);
         setFilter(filter);
         setClamp(borderX, borderY, borderZ);
     }

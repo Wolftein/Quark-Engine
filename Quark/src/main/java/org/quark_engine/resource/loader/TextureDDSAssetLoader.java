@@ -122,13 +122,15 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
                     descriptor.getBorderY(),
-                    descriptor.getBorderZ(), readImages(header, input));
+                    descriptor.getBorderZ(), readImages(header, input),
+                    descriptor.hasMipmap());
         } else {
             return new Texture2D(
                     descriptor.getFormat(),
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
-                    descriptor.getBorderY(), readImages(header, input));
+                    descriptor.getBorderY(), readImages(header, input),
+                    descriptor.hasMipmap());
         }
     }
 

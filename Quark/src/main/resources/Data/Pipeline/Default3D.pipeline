@@ -24,7 +24,7 @@
         <!--                                                                                                     -->
         <!--                                        [INPUT]                                                      -->
         <!--                                                                                                     -->
-        <input      name="inPosition"      type="vec2"     index="0"/>
+        <input      name="inPosition"      type="vec3"     index="0"/>
         <input      name="inColour"        type="vec4"     index="1"/>
         <input      name="inTexture"       type="vec2"     index="2"/>
 

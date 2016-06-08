@@ -144,7 +144,8 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
                 descriptor.getFilter(),
                 descriptor.getBorderX(),
                 descriptor.getBorderY(),
-                Collections.singletonList(readImage(header, data.toByteArray())));
+                Collections.singletonList(readImage(header, data.toByteArray())),
+                descriptor.hasMipmap());
     }
 
     /**

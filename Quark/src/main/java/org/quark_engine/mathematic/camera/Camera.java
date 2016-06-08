@@ -95,6 +95,7 @@ public class Camera {
         if (mDirty0.compareAndSet(true, false)) {
             mPosition.negate(mTemp2);
             mRotation.invert(mTemp3);
+
             mView = mTemp0.setRotation(mTemp3).mul(mTemp1.setTranslation(mTemp2));
         }
         return mView;
