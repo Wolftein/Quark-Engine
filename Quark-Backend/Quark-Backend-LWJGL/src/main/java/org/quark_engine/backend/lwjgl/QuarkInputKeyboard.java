@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quark_engine.backend.lwjgl.input;
+package org.quark_engine.backend.lwjgl;
 
 import org.lwjgl.glfw.GLFW;
 import org.quark_engine.input.device.InputKey;
@@ -28,7 +28,7 @@ import java.nio.IntBuffer;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class LWJGLInputKeyboard implements InputKeyboard {
+public final class QuarkInputKeyboard implements InputKeyboard {
     /**
      * Hold the display handle.
      */
@@ -42,7 +42,7 @@ public final class LWJGLInputKeyboard implements InputKeyboard {
     /**
      * <p>Constructor</p>
      */
-    public LWJGLInputKeyboard(long handle) {
+    protected QuarkInputKeyboard(long handle) {
         mHandle = handle;
     }
 
@@ -69,6 +69,8 @@ public final class LWJGLInputKeyboard implements InputKeyboard {
      */
     @Override
     public void destroy() {
+        GLFW.glfwSetKeyCallback(mHandle, null);
+        GLFW.glfwSetCharCallback(mHandle, null);
     }
 
     /**

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quark_engine.backend.lwjgl.render;
+package org.quark_engine.backend.lwjgl;
 
 import org.lwjgl.opengl.*;
 import org.quark_engine.mathematic.*;
@@ -27,6 +27,7 @@ import org.quark_engine.render.shader.Uniform;
 import org.quark_engine.render.shader.data.*;
 import org.quark_engine.render.storage.*;
 import org.quark_engine.render.storage.factory.FactoryStorageIndices;
+import org.quark_engine.render.storage.factory.FactoryStorageVertices;
 import org.quark_engine.render.texture.*;
 import org.quark_engine.system.utility.Manageable;
 
@@ -41,7 +42,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class LWJGLRender implements Render {
+public final class QuarkOpenGL implements Render {
     /**
      * Hold the capabilities of the renderer.
      */
@@ -63,9 +64,9 @@ public final class LWJGLRender implements Render {
     private final List<Manageable> mManageable = new CopyOnWriteArrayList<>();
 
     /**
-     * <p>Handle when the implementation requires to initialise</p>
+     * <p>Called to initialise the module</p>
      */
-    public void initialise() {
+    protected void create() {
         //!
         //! Get the capabilities of the context
         //!
@@ -85,10 +86,12 @@ public final class LWJGLRender implements Render {
         //!
         //! Calculate all the capabilities and limit(s).
         //!
-        final RenderCapabilities.LanguageVersion version = RenderCapabilities.LanguageVersion.fromStringVersion(
-                GL11.glGetString(GL11.GL_VERSION));
-        final RenderCapabilities.ShaderLanguageVersion shaderVersion = RenderCapabilities.ShaderLanguageVersion.fromStringVersion(
-                GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
+        final RenderCapabilities.LanguageVersion version
+                = RenderCapabilities.LanguageVersion.fromStringVersion(
+                        GL11.glGetString(GL11.GL_VERSION));
+        final RenderCapabilities.ShaderLanguageVersion shaderVersion
+                = RenderCapabilities.ShaderLanguageVersion.fromStringVersion(
+                        GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
         mCapabilities = new RenderCapabilities(version, shaderVersion, extension, limit);
 
         //!
@@ -99,14 +102,29 @@ public final class LWJGLRender implements Render {
     }
 
     /**
-     * <p>Handle when the implementation requires to update</p>
+     * <p>Called to update the module</p>
      */
-    public void update() {
+    protected void update() {
         //!
         //! Dispose all object(s) being mark for dispose.
         //!
         mManageable.forEach(Manageable::delete);
         mManageable.clear();
+    }
+
+    /**
+     * <p>Called to dispose the module</p>
+     */
+    protected void destroy() {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dispose(Manageable manageable) {
+        mManageable.add(manageable);
     }
 
     /**
@@ -119,6 +137,8 @@ public final class LWJGLRender implements Render {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * NOTE: !!! I Don't like this method !!!.
      */
     @Override
     public void apply(RenderState states) {
@@ -310,7 +330,7 @@ public final class LWJGLRender implements Render {
         if (stage > mTexture.length) {
             throw new IllegalStateException("Maximum possible texture stage is " + mTexture.length);
         }
-        return mTexture[stage] == (texture != null ? texture.getHandle() : 0);
+        return mTexture[stage] == texture.getHandle();
     }
 
     /**
@@ -363,66 +383,12 @@ public final class LWJGLRender implements Render {
     @Override
     public void create(Shader shader) {
         if (shader.getHandle() == Manageable.INVALID_HANDLE) {
-            int handle;
-            shader.setHandle(handle = GL20.glCreateProgram());
+            shader.setHandle(GL20.glCreateProgram());
 
             //!
-            //! Create each stage of the shader.
+            //! NOTE: Update the shader once.
             //!
-            final List<Integer> stages = new ArrayList<>(shader.getStages().size());
-            shader.getStages().forEach(T -> {
-                final int id = GL20.glCreateShader(T.getType().eValue);
-
-                GL20.glShaderSource(id, T.getSource());
-                GL20.glCompileShader(id);
-                GL20.glAttachShader(handle, id);
-
-                stages.add(id);
-            });
-
-            //!
-            //! Bind each attribute (if attribute-layout is not supported).
-            //!
-            if (!mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
-                shader.getAttributes().forEach((Name, Attribute) -> {
-                    if (Attribute.isInput()) {
-                        GL20.glBindAttribLocation(handle, Attribute.getID(), Name);
-                    } else {
-                        GL30.glBindFragDataLocation(handle, Attribute.getID(), Name);
-                    }
-                });
-            }
-
-            //!
-            //! Link the program and check if there was any error
-            //!
-            GL20.glLinkProgram(handle);
-            if (GL20.glGetProgrami(handle, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
-                //!
-                //! Notify the user why failed to compile
-                //!
-                throw new RuntimeException("Error linking program: " + GL20.glGetProgramInfoLog(handle));
-            } else {
-                GL20.glValidateProgram(handle);
-
-                if (GL20.glGetProgrami(handle, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-                    //!
-                    //! Notify the user why failed to compile
-                    //!
-                    throw new RuntimeException("Error validating program: " + GL20.glGetProgramInfoLog(handle));
-                }
-            }
-
-            //!
-            //! Bind each uniform
-            //!
-            shader.getUniforms().forEach((Name, Uniform) -> Uniform.setHandle(GL20.glGetUniformLocation(handle, Name)));
-
-            //!
-            //! Dispose all intermediary shader compiled
-            //!
-            stages.forEach(GL20::glDeleteShader);
-            shader.setUpdated();
+            onShaderUpdate(shader);
         }
     }
 
@@ -529,7 +495,8 @@ public final class LWJGLRender implements Render {
     @Override
     public void acquire(Storage<?> storage) {
         if (!isActive(storage)) {
-            GL15.glBindBuffer(storage.getTarget().eValue, mStorage[storage.getTarget().ordinal()] = storage.getHandle());
+            GL15.glBindBuffer(
+                    storage.getTarget().eValue, mStorage[storage.getTarget().ordinal()] = storage.getHandle());
         }
     }
 
@@ -563,14 +530,6 @@ public final class LWJGLRender implements Render {
             //! Check if wrap mode(s) require(s) update.
             //!
             switch (texture.getType().eValue) {
-                case GL11.GL_TEXTURE_1D:
-                    final Texture1D texture1D = (Texture1D) texture;
-                    if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
-                        GL11.glTexParameteri(
-                                GL11.GL_TEXTURE_1D,
-                                GL11.GL_TEXTURE_WRAP_T, texture1D.getBorderX().eValue);
-                    }
-                    break;
                 case GL11.GL_TEXTURE_2D:
                     final Texture2D texture2D = (Texture2D) texture;
                     if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
@@ -634,11 +593,12 @@ public final class LWJGLRender implements Render {
             //! Check if data require(s) update.
             //!
             if (texture.hasUpdate(Texture.CONCEPT_IMAGE)) {
-                GL11.glTexParameteri(texture.getType().eValue, GL12.GL_TEXTURE_BASE_LEVEL, 0);
-                GL11.glTexParameteri(texture.getType().eValue, GL12.GL_TEXTURE_MAX_LEVEL, texture.getImages().size());
+                GL11.glTexParameteri(texture.getType().eValue,
+                        GL12.GL_TEXTURE_BASE_LEVEL, 0);
+                GL11.glTexParameteri(texture.getType().eValue,
+                        GL12.GL_TEXTURE_MAX_LEVEL, texture.getImages().size());
 
                 switch (texture.getType()) {
-                    case TEXTURE_1D:
                     case TEXTURE_2D:
                         for (final Image image : texture.getImages()) {
                             if (image.getFormat().eCompressed) {
@@ -708,21 +668,30 @@ public final class LWJGLRender implements Render {
                 switch (storage.getFormat()) {
                     case BYTE:
                     case UNSIGNED_BYTE:
-                        GL15.glBufferData(storage.getTarget().eValue, (ByteBuffer) storage.map(), storage.getMode().eValue);
+                        GL15.glBufferData(
+                                storage.getTarget().eValue, (ByteBuffer) storage.map(), storage.getMode().eValue);
                         break;
                     case SHORT:
                     case UNSIGNED_SHORT:
                     case HALF_FLOAT:
-                        GL15.glBufferData(storage.getTarget().eValue, (ShortBuffer) storage.map(), storage.getMode().eValue);
+                        GL15.glBufferData(
+                                storage.getTarget().eValue, (ShortBuffer) storage.map(), storage.getMode().eValue);
                         break;
                     case INT:
                     case UNSIGNED_INT:
-                        GL15.glBufferData(storage.getTarget().eValue, (IntBuffer) storage.map(), storage.getMode().eValue);
+                        GL15.glBufferData(
+                                storage.getTarget().eValue, (IntBuffer) storage.map(), storage.getMode().eValue);
                         break;
                     case FLOAT:
-                        GL15.glBufferData(storage.getTarget().eValue, (FloatBuffer) storage.map(), storage.getMode().eValue);
+                        GL15.glBufferData(
+                                storage.getTarget().eValue, (FloatBuffer) storage.map(), storage.getMode().eValue);
                         break;
                 }
+
+                //!
+                //! Ease the memory disposing the buffer once it has been uploaded.
+                //!
+                storage.map().clear();
             } else {
                 //!
                 //! Server-side storage.
@@ -836,45 +805,19 @@ public final class LWJGLRender implements Render {
     @Override
     public void update(VertexDescriptor descriptor) {
         if (descriptor.hasUpdate()) {
+
+            //!
+            //! Bind all attribute(s) of the storage(s)
+            //!
             if (descriptor.hasVertices()) {
-                descriptor.getVertices().forEach(vertices ->
-                {
-                    //!
-                    //! Allocate and acquire the storage (which will remain in the descriptor).
-                    //!
-                    vertices.create();
-
-                    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertices.getHandle());
-
-                    vertices.update();
-
-                    //!
-                    //! Allocate each attribute.
-                    //!
-                    vertices.getAttributes().forEach(attribute ->
-                    {
-                        GL20.glEnableVertexAttribArray(
-                                attribute.getID());
-                        GL20.glVertexAttribPointer(
-                                attribute.getID(),
-                                attribute.getComponent(),
-                                attribute.getType().eValue,
-                                attribute.isNormalised(), vertices.getAttributesLength(),
-                                attribute.getOffset());
-                    });
-                });
+                descriptor.getVertices().forEach(this::onStorageDescriptorUpdate);
             }
 
+            //!
+            //! Bind indices storage.
+            //!
             if (descriptor.hasIndices()) {
-                //!
-                //! Allocate and acquire the storage (which will remain in the descriptor).
-                //!
-                final FactoryStorageIndices<?> indices = descriptor.getIndices();
-                indices.create();
-
-                GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indices.getHandle());
-
-                indices.update();
+                onStorageDescriptorUpdate(descriptor.getIndices());
             }
             descriptor.setUpdated();
         }
@@ -898,7 +841,7 @@ public final class LWJGLRender implements Render {
         }
         if (isActive(texture, stage)) {
             GL13.glActiveTexture(GL13.GL_TEXTURE0 + stage);
-            GL11.glBindTexture(texture.getType().eValue, mTexture[stage] = 0);
+            GL11.glBindTexture(texture.getType().eValue, mTexture[stage] = Manageable.INVALID_HANDLE);
         }
     }
 
@@ -908,7 +851,8 @@ public final class LWJGLRender implements Render {
     @Override
     public void release(Storage<?> storage) {
         if (isActive(storage)) {
-            GL15.glBindBuffer(storage.getTarget().eValue, mStorage[storage.getTarget().ordinal()] = 0);
+            GL15.glBindBuffer(
+                    storage.getTarget().eValue, mStorage[storage.getTarget().ordinal()] = Manageable.INVALID_HANDLE);
         }
     }
 
@@ -918,9 +862,8 @@ public final class LWJGLRender implements Render {
     @Override
     public void release(Shader shader) {
         if (isActive(shader)) {
-            GL20.glUseProgram(mShader = 0);
+            GL20.glUseProgram(mShader = Manageable.INVALID_HANDLE);
         }
-
     }
 
     /**
@@ -929,7 +872,7 @@ public final class LWJGLRender implements Render {
     @Override
     public void release(VertexDescriptor descriptor) {
         if (isActive(descriptor)) {
-            GL30.glBindVertexArray(mDescriptor = 0);
+            GL30.glBindVertexArray(mDescriptor = Manageable.INVALID_HANDLE);
         }
     }
 
@@ -992,10 +935,115 @@ public final class LWJGLRender implements Render {
     }
 
     /**
-     * {@inheritDoc}
+     * <p>Called to update a {@link Shader}</p>
+     * <p>
+     * NOTE: !!! I Don't like this method !!!.
      */
-    @Override
-    public void dispose(Manageable manageable) {
-        mManageable.add(manageable);
+    private void onShaderUpdate(Shader shader) {
+        final int handle = shader.getHandle();
+
+        //!
+        //! Create each stage of the shader.
+        //!
+        final List<Integer> stages = new ArrayList<>(shader.getStages().size());
+        shader.getStages().forEach(T -> {
+            final int id = GL20.glCreateShader(T.getType().eValue);
+
+            GL20.glShaderSource(id, T.getSource());
+            GL20.glCompileShader(id);
+            GL20.glAttachShader(handle, id);
+
+            stages.add(id);
+        });
+
+        //!
+        //! Bind each attribute (if attribute-layout is not supported).
+        //!
+        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
+            shader.getAttributes().forEach((Name, Attribute) -> {
+                if (Attribute.isInput()) {
+                    GL20.glBindAttribLocation(handle, Attribute.getID(), Name);
+                } else {
+                    GL30.glBindFragDataLocation(handle, Attribute.getID(), Name);
+                }
+            });
+        }
+
+        //!
+        //! Link the program and check if there was any error
+        //!
+        GL20.glLinkProgram(handle);
+        if (GL20.glGetProgrami(handle, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+            //!
+            //! Notify the user why failed to compile
+            //!
+            throw new RuntimeException("Error linking program: " + GL20.glGetProgramInfoLog(handle));
+        } else {
+            GL20.glValidateProgram(handle);
+
+            if (GL20.glGetProgrami(handle, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
+                //!
+                //! Notify the user why failed to compile
+                //!
+                throw new RuntimeException("Error validating program: " + GL20.glGetProgramInfoLog(handle));
+            }
+        }
+
+        //!
+        //! Bind each uniform
+        //!
+        if (mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM)) {
+            shader.getUniforms().forEach((Name, Uniform) ->
+            {
+                if (Uniform.getHandle() == Manageable.INVALID_HANDLE)
+                    Uniform.setHandle(GL20.glGetUniformLocation(handle, Name));
+            });
+        } else {
+            shader.getUniforms().forEach((Name, Uniform) ->
+                    Uniform.setHandle(GL20.glGetUniformLocation(handle, Name)));
+        }
+
+        //!
+        //! Dispose all intermediary shader compiled
+        //!
+        stages.forEach(GL20::glDeleteShader);
+        shader.setUpdated();
+    }
+
+    /**
+     * <p>Called to update a {@link FactoryStorageIndices} inside a {@link VertexDescriptor}</p>
+     */
+    private void onStorageDescriptorUpdate(FactoryStorageIndices<?> indices) {
+        indices.create();
+
+        //!
+        //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
+        //!
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indices.getHandle());
+    }
+
+    /**
+     * <p>Called to update a {@link FactoryStorageVertices} inside a {@link VertexDescriptor}</p>
+     */
+    private void onStorageDescriptorUpdate(FactoryStorageVertices<?> vertices) {
+        vertices.create();
+        vertices.acquire();
+        {
+            vertices.getAttributes().forEach(T -> onStorageDescriptorUpdate(vertices, T));
+        }
+        vertices.release();
+    }
+
+    /**
+     * <p>Called to update a {@link Vertex} inside a {@link FactoryStorageVertices}</p>
+     */
+    private void onStorageDescriptorUpdate(FactoryStorageVertices<?> vertices, Vertex vertex) {
+        GL20.glEnableVertexAttribArray(vertex.getID());
+        GL20.glVertexAttribPointer(
+                vertex.getID(),
+                vertex.getComponent(),
+                vertex.getType().eValue,
+                vertex.isNormalised(), vertices.getAttributesLength(),
+                vertex.getOffset());
     }
 }

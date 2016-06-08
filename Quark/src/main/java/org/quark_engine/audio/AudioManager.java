@@ -27,6 +27,16 @@ import org.quark_engine.audio.factory.FactoryAudioStreaming;
  */
 public interface AudioManager {
     /**
+     * <code>AL</code> encapsulate all feature(s) supported by OpenAL 1.0.
+     */
+    interface AL {
+        int AL_MONO_8 = 0x1100;
+        int AL_MONO_16 = 0x1101;
+        int AL_STEREO_8 = 0x1102;
+        int AL_STEREO_16 = 0x1103;
+    }
+
+    /**
      * <p>Play the given {@link AudioSource}</p>
      *
      * @param source the source
