@@ -19,6 +19,7 @@ package org.quark_engine.backend.lwjgl;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
@@ -35,7 +36,7 @@ import java.util.List;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class QuarkFramework implements Framework {
+public final class LWJGLFramework implements Framework {
     /**
      * Hold the underlying handle of the window implementation.
      */
@@ -49,7 +50,7 @@ public final class QuarkFramework implements Framework {
     /**
      * <p>Called to initialise the module</p>
      */
-    protected void create(FrameworkSetting setting) {
+    protected void create(FrameworkSetting setting, GLFWFramebufferSizeCallback callback) {
         if (GLFW.glfwInit()) {
             final DisplayMode displayMode = setting.getMode();
 
@@ -85,6 +86,11 @@ public final class QuarkFramework implements Framework {
                         (video.width() - displayMode.getWidth()) / 2, (video.height() - displayMode.getHeight()) / 2);
             }
             setSynchronised(setting.isSynchronised());
+
+            //!
+            //! Attach resizable callback.
+            //!
+            GLFW.glfwSetFramebufferSizeCallback(mHandle, callback);
 
             //!
             //! Initialise the context for OpenGL.

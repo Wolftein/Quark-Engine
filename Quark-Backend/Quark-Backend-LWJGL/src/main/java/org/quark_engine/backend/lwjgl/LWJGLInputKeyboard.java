@@ -28,7 +28,7 @@ import java.nio.IntBuffer;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class QuarkInputKeyboard implements InputKeyboard {
+public final class LWJGLInputKeyboard implements InputKeyboard {
     /**
      * Hold the mutex for allowing polling from another thread.
      */
@@ -47,7 +47,7 @@ public final class QuarkInputKeyboard implements InputKeyboard {
     /**
      * <p>Constructor</p>
      */
-    protected QuarkInputKeyboard(long handle) {
+    protected LWJGLInputKeyboard(long handle) {
         mHandle = handle;
     }
 

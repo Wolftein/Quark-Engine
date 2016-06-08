@@ -28,7 +28,7 @@ import java.nio.IntBuffer;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class QuarkInputMouse implements InputMouse {
+public final class LWJGLInputMouse implements InputMouse {
     /**
      * Hold the mutex for allowing polling from another thread.
      */
@@ -47,7 +47,7 @@ public final class QuarkInputMouse implements InputMouse {
     /**
      * <p>Constructor</p>
      */
-    protected QuarkInputMouse(long handle) {
+    protected LWJGLInputMouse(long handle) {
         mHandle = handle;
     }
 

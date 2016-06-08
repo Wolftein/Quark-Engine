@@ -40,7 +40,7 @@ import java.util.Queue;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class QuarkOpenAL implements AudioManager {
+public final class LWJGLOpenAL implements AudioManager {
     /**
      * Represent the max capacity of a streaming buffer.
      */

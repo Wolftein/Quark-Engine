@@ -42,7 +42,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class QuarkOpenGL implements Render {
+public final class LWJGLOpenGL implements Render {
     /**
      * Hold the capabilities of the renderer.
      */
