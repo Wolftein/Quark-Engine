@@ -167,24 +167,24 @@ public final class ImmutableMatrix4f extends Matrix4f {
      * @return a new matrix
      */
     public static ImmutableMatrix4f createPerspective(float fov, float aspect, float near, float far) {
-        final float scale = (float) (1.0f / Math.tan(Math.toRadians(fov * 0.5f)));
+        final float scale = (float) (Math.tan(Math.toRadians(fov) * 0.5f));
 
         return new ImmutableMatrix4f(
-                scale / aspect,
+                1.0f / (scale * aspect),
                 0.0f,
                 0.0f,
                 0.0f,
                 0.0f,
-                scale,
+                1.0f / scale,
                 0.0f,
                 0.0f,
                 0.0f,
                 0.0f,
                 (far + near) / (near - far),
-                (2.0f * far * near) / (near - far),
-                0.0f,
-                0.0f,
                 -1.0f,
+                0.0f,
+                0.0f,
+                (far + far) * near / (near - far),
                 0.0f);
     }
 

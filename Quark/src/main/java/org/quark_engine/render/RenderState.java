@@ -397,7 +397,7 @@ public final class RenderState {
      *
      * @see Cull
      */
-    private Cull mCull = Cull.BACK;
+    private Cull mCull = Cull.NONE;
 
     /**
      * If <code>true</code>, discard fragments that are outside the scissor rectangle.

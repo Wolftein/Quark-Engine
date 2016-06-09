@@ -18,13 +18,14 @@
 package org.quark_engine.render.texture;
 
 /**
- * <code>TextureCube</code> encapsulate a {@link Texture} of 2 dimension being use for cube-mapping.
+ * <code>Texture3D</code> encapsulate a {@link Texture} of 3 dimension.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class TextureCube extends Texture {
     protected TextureBorder mBorderX = TextureBorder.REPEAT;
     protected TextureBorder mBorderY = TextureBorder.REPEAT;
+    protected TextureBorder mBorderZ = TextureBorder.REPEAT;
 
     /**
      * <p>Constructor</p>
@@ -38,19 +39,21 @@ public final class TextureCube extends Texture {
      */
     public TextureCube(TextureFormat format, TextureFilter filter,
             TextureBorder borderX,
-            TextureBorder borderY, Image image) {
+            TextureBorder borderY,
+            TextureBorder borderZ, Image image) {
         this(format, image);
         setFilter(filter);
-        setClamp(borderX, borderY);
+        setClamp(borderX, borderY, borderZ);
     }
 
     /**
-     * <p>Change the border mode for the x and y coordinate</p>
+     * <p>Change the border mode for the x, y and z coordinate</p>
      *
      * @param xBorder the new border mode for the x coordinate
      * @param yBorder the new border mode for the y coordinate
+     * @param zBorder the new border mode for the z coordinate
      */
-    public void setClamp(TextureBorder xBorder, TextureBorder yBorder) {
+    public void setClamp(TextureBorder xBorder, TextureBorder yBorder, TextureBorder zBorder) {
         if (mBorderX != xBorder) {
             mBorderX = xBorder;
             setUpdate(CONCEPT_CLAMP_X);
@@ -58,6 +61,10 @@ public final class TextureCube extends Texture {
         if (mBorderY != yBorder) {
             mBorderY = yBorder;
             setUpdate(CONCEPT_CLAMP_Y);
+        }
+        if (mBorderZ != zBorder) {
+            mBorderZ = zBorder;
+            setUpdate(CONCEPT_CLAMP_Z);
         }
     }
 
@@ -77,5 +84,14 @@ public final class TextureCube extends Texture {
      */
     public TextureBorder getBorderY() {
         return mBorderY;
+    }
+
+    /**
+     * <p>Get the border mode for the z coordinate</p>
+     *
+     * @return the border mode for the y coordinate
+     */
+    public TextureBorder getBorderZ() {
+        return mBorderZ;
     }
 }

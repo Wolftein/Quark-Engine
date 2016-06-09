@@ -118,7 +118,8 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
                     descriptor.getFormat(),
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
-                    descriptor.getBorderY(), readImage(descriptor, header, input));
+                    descriptor.getBorderY(),
+                    descriptor.getBorderZ(), readImage(descriptor, header, input));
         } else if ((header.mImageCaps2 & DDSCAPS2_VOLUME) != 0) {
             return new Texture3D(
                     descriptor.getFormat(),

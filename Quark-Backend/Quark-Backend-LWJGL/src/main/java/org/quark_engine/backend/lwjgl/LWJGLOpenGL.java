@@ -174,7 +174,18 @@ public final class LWJGLOpenGL implements Render {
         //! Update CULL_FACE
         //!
         if (states.getCullFace() != mStates.getCullFace()) {
-            GL11.glCullFace(states.getCullFace().eValue);
+            if (states.getCullFace() == RenderState.Cull.NONE)
+            {
+                GL11.glDisable(GL11.GL_BLEND);
+            }
+            else
+            {
+                if (mStates.getCullFace() == RenderState.Cull.NONE)
+                {
+                    GL11.glEnable(GL11.GL_CULL_FACE);
+                }
+                GL11.glCullFace(states.getCullFace().eValue);
+            }
             mStates.setCullFace(states.getCullFace());
         }
 
@@ -529,8 +540,8 @@ public final class LWJGLOpenGL implements Render {
             //!
             //! Check if wrap mode(s) require(s) update.
             //!
-            switch (texture.getType().eValue) {
-                case GL11.GL_TEXTURE_2D:
+            switch (texture.getType()) {
+                case TEXTURE_2D:
                     final Texture2D texture2D = (Texture2D) texture;
                     if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
                         GL11.glTexParameteri(
@@ -543,7 +554,7 @@ public final class LWJGLOpenGL implements Render {
                                 GL11.GL_TEXTURE_WRAP_T, texture2D.getBorderY().eValue);
                     }
                     break;
-                case GL12.GL_TEXTURE_3D:
+                case TEXTURE_3D:
                     final Texture3D texture3D = (Texture3D) texture;
                     if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
                         GL11.glTexParameteri(
@@ -559,6 +570,23 @@ public final class LWJGLOpenGL implements Render {
                         GL11.glTexParameteri(
                                 GL12.GL_TEXTURE_3D,
                                 GL11.GL_TEXTURE_WRAP_T, texture3D.getBorderZ().eValue);
+                    }
+                case TEXTURE_CUBE:
+                    final TextureCube textureCube = (TextureCube) texture;
+                    if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
+                        GL11.glTexParameteri(
+                                GL13.GL_TEXTURE_CUBE_MAP,
+                                GL11.GL_TEXTURE_WRAP_T, textureCube.getBorderX().eValue);
+                    }
+                    if (texture.hasUpdate(Texture.CONCEPT_CLAMP_Y)) {
+                        GL11.glTexParameteri(
+                                GL13.GL_TEXTURE_CUBE_MAP,
+                                GL11.GL_TEXTURE_WRAP_T, textureCube.getBorderY().eValue);
+                    }
+                    if (texture.hasUpdate(Texture.CONCEPT_CLAMP_Z)) {
+                        GL11.glTexParameteri(
+                                GL13.GL_TEXTURE_CUBE_MAP,
+                                GL11.GL_TEXTURE_WRAP_T, textureCube.getBorderY().eValue);
                     }
                     break;
             }
@@ -615,14 +643,14 @@ public final class LWJGLOpenGL implements Render {
                         //!
                         //! Handle each mip-map
                         //!
-                        final int width = Math.max(1, image.getWidth() >> i);
-                        final int height = Math.max(1, image.getHeight() >> i);
-                        final int depth = Math.max(1, image.getDepth() >> i);
+                        final int width = Math.max(1, image.getWidth() >> k);
+                        final int height = Math.max(1, image.getHeight() >> k);
+                        final int depth = Math.max(1, image.getDepth() >> k);
 
                         //!
                         //! Limit the length of the buffer.
                         //!
-                        layer.data.limit(layer.data.position() + layer.images[i]);
+                        layer.data.limit(layer.data.position() + layer.images[k]);
 
                         //!
                         //! Upload the image.
@@ -674,21 +702,19 @@ public final class LWJGLOpenGL implements Render {
                                 break;
                             case TEXTURE_CUBE:
                                 if (image.getFormat().eCompressed) {
-                                    GL13.glCompressedTexImage3D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + k,
+                                    GL13.glCompressedTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                                             k,
                                             image.getFormat().eValue,
                                             width,
                                             height,
-                                            depth,
                                             0,
                                             layer.data);
                                 } else {
-                                    GL12.glTexImage3D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + k,
+                                    GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                                             k,
                                             texture.getFormat().eValue,
                                             width,
                                             height,
-                                            depth,
                                             0,
                                             image.getFormat().eValue,
                                             texture.getFormat().eType,
@@ -700,13 +726,12 @@ public final class LWJGLOpenGL implements Render {
                         //!
                         //! Change the position of the buffer.
                         //!
-                        layer.data.position(layer.data.position() + layer.images[i]);
+                        layer.data.position(layer.data.position() + layer.images[k]);
                     }
 
                     //!
                     //! Generate mip-map if required.
                     //!
-                    System.out.println(layer.mipmap);
                     if (layer.mipmap && layer.images.length <= 1) {
                         GL30.glGenerateMipmap(texture.getType().eValue);
                     }
