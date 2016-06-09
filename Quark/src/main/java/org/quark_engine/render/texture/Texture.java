@@ -18,11 +18,9 @@
 package org.quark_engine.render.texture;
 
 import org.quark_engine.render.Render;
+import org.quark_engine.resource.AssetDescriptor;
 import org.quark_engine.system.utility.Disposable;
 import org.quark_engine.system.utility.Manageable;
-import org.quark_engine.resource.AssetDescriptor;
-
-import java.util.List;
 
 import static org.quark_engine.Quark.QkRender;
 
@@ -40,20 +38,19 @@ public abstract class Texture extends Manageable implements Disposable {
     public final static int CONCEPT_CLAMP_Z = (1 << 3);
     public final static int CONCEPT_IMAGE = (1 << 4);
 
+    protected final Image mImage;
     protected final TextureType mType;
     protected final TextureFormat mFormat;
-    protected final List<Image> mImages;
-    protected final boolean mMipmap;
     protected TextureFilter mFilter;
 
     /**
      * <p>Constructor</p>
      */
-    protected Texture(TextureType type, TextureFormat format, List<Image> images, boolean mipmap) {
+    protected Texture(TextureType type, TextureFormat format, Image images) {
         mType = type;
         mFormat = format;
-        mImages = images;
-        mMipmap = mipmap;
+        mImage = images;
+
         setUpdate(Texture.CONCEPT_IMAGE);
     }
 
@@ -79,12 +76,12 @@ public abstract class Texture extends Manageable implements Disposable {
     }
 
     /**
-     * <p>Get the image(s) of the texture</p>
+     * <p>Get the image of the texture</p>
      *
-     * @return a collection that contain(s) all image(s) of the texture
+     * @return the image of the texture
      */
-    public final List<Image> getImages() {
-        return mImages;
+    public final Image getImage() {
+        return mImage;
     }
 
     /**
@@ -103,15 +100,6 @@ public abstract class Texture extends Manageable implements Disposable {
      */
     public final TextureFilter getFilter() {
         return mFilter;
-    }
-
-    /**
-     * <p>Check if the texture has mipmap</p>
-     *
-     * @return <code>true</code> if the texture has mipmap, <code>false</code> otherwise
-     */
-    public final boolean hasMipmap() {
-        return mMipmap || mImages.size() > 0;
     }
 
     /**
@@ -176,24 +164,26 @@ public abstract class Texture extends Manageable implements Disposable {
      * <code>Descriptor</code> represent the {@link AssetDescriptor} for {@link Texture}.
      */
     public final static class Descriptor extends AssetDescriptor {
+        public final static int FEATURE_MIPMAP = (1 << 0);
+
         private final TextureFormat mFormat;
         private final TextureFilter mFilter;
         private final TextureBorder mBorderX;
         private final TextureBorder mBorderY;
         private final TextureBorder mBorderZ;
-        private final boolean mMipmap;
+        private final int mFeatures;
 
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap,
+        public Descriptor(TextureFormat format, TextureFilter filter, int features,
                 TextureBorder borderX,
                 TextureBorder borderY,
                 TextureBorder borderZ) {
             super(true, true);
             mFormat = format;
             mFilter = filter;
-            mMipmap = mipmap;
+            mFeatures = features;
             mBorderX = borderX;
             mBorderY = borderY;
             mBorderZ = borderZ;
@@ -202,15 +192,29 @@ public abstract class Texture extends Manageable implements Disposable {
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap, TextureBorder border) {
-            this(format, filter, mipmap, border, border, border);
+        public Descriptor(TextureFormat format, TextureFilter filter, int features, TextureBorder border) {
+            this(format, filter, features, border, border, border);
         }
 
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(TextureFormat format, TextureFilter filter, boolean mipmap) {
-            this(format, filter, mipmap, TextureBorder.REPEAT, TextureBorder.REPEAT, TextureBorder.REPEAT);
+        public Descriptor(TextureFormat format, TextureFilter filter, TextureBorder border) {
+            this(format, filter, 0, border, border, border);
+        }
+
+        /**
+         * <p>Constructor</p>
+         */
+        public Descriptor(TextureFormat format, TextureFilter filter, int features) {
+            this(format, filter, features, TextureBorder.REPEAT, TextureBorder.REPEAT, TextureBorder.REPEAT);
+        }
+
+        /**
+         * <p>Constructor</p>
+         */
+        public Descriptor(TextureFormat format, TextureFilter filter) {
+            this(format, filter, 0, TextureBorder.REPEAT, TextureBorder.REPEAT, TextureBorder.REPEAT);
         }
 
         /**
@@ -259,12 +263,12 @@ public abstract class Texture extends Manageable implements Disposable {
         }
 
         /**
-         * <p>Check if the texture has mipmap</p>
+         * <p>Check if the texture has the given feature</p>
          *
-         * @return <code>true</code> if the texture has mipmap, <code>false</code> otherwise
+         * @return <code>true</code> if the texture has given feature, <code>false</code> otherwise
          */
-        public boolean hasMipmap() {
-            return mMipmap;
+        public boolean hasFeature(int feature) {
+            return (mFeatures & feature) != 0;
         }
     }
 }

@@ -95,6 +95,7 @@ public interface Render extends ManageableManager {
         int GL_STATIC_DRAW = 0x88E4;
         int GL_STREAM_DRAW = 0x88E0;
         int GL_TEXTURE_2D = 0xDE1;
+        int GL_TEXTURE_CUBE_MAP = 0x8513;
         int GL_TRIANGLES = 0x04;
         int GL_TRIANGLE_FAN = 0x05;
         int GL_TRIANGLE_STRIP = 0x06;
@@ -258,28 +259,28 @@ public interface Render extends ManageableManager {
     boolean isActive(VertexDescriptor descriptor);
 
     /**
-     * <p>Unbind the <code>Texture</code> given</p>
+     * <p>Create the <code>Texture</code> given</p>
      *
      * @param texture the texture
      */
     void create(Texture texture);
 
     /**
-     * <p>Unbind the <code>Storage</code> given</p>
+     * <p>Create the <code>Storage</code> given</p>
      *
      * @param storage the storage
      */
     void create(Storage<?> storage);
 
     /**
-     * <p>Unbind the <code>Shader</code> given</p>
+     * <p>Create the <code>Shader</code> given</p>
      *
      * @param shader the shader
      */
     void create(Shader shader);
 
     /**
-     * <p>Unbind the <code>VertexDescriptor</code> given</p>
+     * <p>Create the <code>VertexDescriptor</code> given</p>
      *
      * @param descriptor the descriptor
      */

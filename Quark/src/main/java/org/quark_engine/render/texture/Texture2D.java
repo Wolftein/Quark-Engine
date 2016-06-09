@@ -17,8 +17,6 @@
  */
 package org.quark_engine.render.texture;
 
-import java.util.List;
-
 /**
  * <code>Texture2D</code> encapsulate a {@link Texture} of 2 dimension.
  *
@@ -29,18 +27,19 @@ public final class Texture2D extends Texture {
     protected TextureBorder mBorderY = TextureBorder.REPEAT;
 
     /**
-     * <p>Default constructor</p>
+     * <p>Constructor</p>
      */
-    public Texture2D(TextureFormat format, List<Image> images, boolean mipmap) {
-        super(TextureType.TEXTURE_2D, format, images, mipmap);
+    public Texture2D(TextureFormat format, Image image) {
+        super(TextureType.TEXTURE_2D, format, image);
     }
 
     /**
-     * <p>Complex constructor</p>
+     * <p>Constructor</p>
      */
-    public Texture2D(TextureFormat format, TextureFilter filter, TextureBorder borderX, TextureBorder borderY,
-            List<Image> images, boolean mipmap) {
-        this(format, images, mipmap);
+    public Texture2D(TextureFormat format, TextureFilter filter,
+            TextureBorder borderX,
+            TextureBorder borderY, Image image) {
+        this(format, image);
         setFilter(filter);
         setClamp(borderX, borderY);
     }

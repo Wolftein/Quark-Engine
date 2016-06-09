@@ -17,9 +17,9 @@
  */
 package org.quark_engine.render.texture;
 
-import org.quark_engine.render.storage.VertexFormat;
-
 import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <code>Image</code> encapsulate an image in memory. It has a width, height and depth as well as a format specifying
@@ -31,25 +31,37 @@ import java.nio.ByteBuffer;
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Image {
-    private final ByteBuffer mBytes;
-    private final VertexFormat mBytesFormat;
+    private final List<Layer> mLayer;
     private final int mWidth;
     private final int mHeight;
     private final int mDepth;
-    private final int mLevel;
     private final ImageFormat mFormat;
 
     /**
      * <p>Constructor</p>
      */
-    public Image(ImageFormat format, int width, int height, VertexFormat type, int depth, int level, ByteBuffer bytes) {
+    public Image(ImageFormat format, int width, int height, int depth, List<Layer> data) {
         mFormat = format;
         mWidth = width;
         mHeight = height;
         mDepth = depth;
-        mLevel = level;
-        mBytes = bytes;
-        mBytesFormat = type;
+        mLayer = data;
+    }
+
+    /**
+     * <p>Constructor</p>
+     */
+    public Image(ImageFormat format, int width, int height, int depth, Layer data) {
+        this(format, width, height, depth, Collections.singletonList(data));
+    }
+
+    /**
+     * <p>Get all {@link Layer} of the image</p>
+     *
+     * @return all Layer of the image
+     */
+    public List<Layer> getLayer() {
+        return mLayer;
     }
 
     /**
@@ -80,38 +92,58 @@ public final class Image {
     }
 
     /**
-     * <p>Get the level of the image (as mip-map level)</p>
-     *
-     * @return the level of the image (as mip-map level)
-     */
-    public int getLevel() {
-        return mLevel;
-    }
-
-    /**
-     * <p>Get the buffer where all the pixel(s) are stored</p>
-     *
-     * @return the buffer that contain(s) every pixel of the image
-     */
-    public ByteBuffer getBytes() {
-        return mBytes;
-    }
-
-    /**
-     * <p>Get the format of the byte(s) of the image</p>
-     *
-     * @return the format of the byte(s) of the image
-     */
-    public VertexFormat getBytesFormat() {
-        return mBytesFormat;
-    }
-
-    /**
      * <p>Get the format of the image</p>
      *
      * @return the format of the image
      */
     public ImageFormat getFormat() {
         return mFormat;
+    }
+
+    /**
+     * <p>Layer</p> represent a layer within an {@link Image} which may contain another {@link Image}.
+     */
+    public final static class Layer {
+        /**
+         * Hold the data of the layer (The layer and all mip-map).
+         */
+        public final ByteBuffer data;
+
+        /**
+         * Hold the images of each image in the layer (in bytes, including mip-map).
+         */
+        public final int[] images;
+
+        /**
+         * Hold a flag that indicates whenever it should generate mip-map if not any.
+         */
+        public final boolean mipmap;
+
+        /**
+         * <p>Constructor</p>
+         */
+        public Layer(ByteBuffer data, int[] images) {
+            this.data = data;
+            this.images = images;
+            this.mipmap = false;
+        }
+
+        /**
+         * <p>Constructor</p>
+         */
+        public Layer(ByteBuffer data, boolean mipmap) {
+            this.data = data;
+            this.images = new int[]{data.capacity()};
+            this.mipmap = mipmap;
+        }
+
+        /**
+         * <p>Check if the layer has mip-map enabled</p>
+         *
+         * @return <code>true</code> if the layer has mip-map, <code>false</code> otherwise
+         */
+        public boolean hasMipmap() {
+            return mipmap || images.length > 1;
+        }
     }
 }

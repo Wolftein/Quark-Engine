@@ -17,8 +17,10 @@
  */
 package org.quark_engine.resource.loader;
 
-import org.quark_engine.render.storage.VertexFormat;
-import org.quark_engine.render.texture.*;
+import org.quark_engine.render.texture.Image;
+import org.quark_engine.render.texture.ImageFormat;
+import org.quark_engine.render.texture.Texture;
+import org.quark_engine.render.texture.Texture2D;
 import org.quark_engine.resource.AssetKey;
 import org.quark_engine.resource.AssetLoader;
 import org.quark_engine.resource.AssetManager;
@@ -27,7 +29,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.zip.Inflater;
 
 /**
@@ -143,9 +144,7 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
                 descriptor.getFormat(),
                 descriptor.getFilter(),
                 descriptor.getBorderX(),
-                descriptor.getBorderY(),
-                Collections.singletonList(readImage(header, data.toByteArray())),
-                descriptor.hasMipmap());
+                descriptor.getBorderY(), readImage(descriptor, header, data.toByteArray()));
     }
 
     /**
@@ -202,14 +201,15 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
     /**
      * <p>Parse the image from the byte(s) given</p>
      *
-     * @param header the header of the image
-     * @param input  the bytes  of the image
+     * @param descriptor the descriptor of the image
+     * @param header     the header of the image
+     * @param input      the bytes  of the image
      *
      * @return the image
      *
      * @throws IOException indicates failing loading the image
      */
-    private Image readImage(ImageHeader header, byte[] input) throws IOException {
+    private Image readImage(Texture.Descriptor descriptor, ImageHeader header, byte[] input) throws IOException {
         final ImageFormat imageFormat
                 = getUncompressedFormat(header);
         final ByteBuffer imageBuffer = ByteBuffer.allocateDirect(
@@ -330,7 +330,8 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
         }
         imageBuffer.flip();
 
-        return new Image(imageFormat, header.mImageWidth, header.mImageHeight, getVertexFormat(header), 0, 0, imageBuffer);
+        return new Image(imageFormat, header.mImageWidth, header.mImageHeight, 0,
+                new Image.Layer(imageBuffer, descriptor.hasFeature(Texture.Descriptor.FEATURE_MIPMAP)));
     }
 
     /**
@@ -572,29 +573,5 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
                 return 0x04;
         }
         throw new IOException("Uncompressed format not supported");
-    }
-
-    /**
-     * <p>Get the vertex format of the image</p>
-     *
-     * @param header the header of the image
-     *
-     * @return the vertex format of the image
-     *
-     * @throws IOException indicates if the format is unsupported
-     */
-    private VertexFormat getVertexFormat(ImageHeader header) throws IOException {
-        switch (header.mImageDepth) {
-            case 1:
-            case 2:
-            case 4:
-            case 8:
-                return VertexFormat.UNSIGNED_BYTE;
-            case 16:
-                return VertexFormat.UNSIGNED_SHORT;
-            case 32:
-                return VertexFormat.UNSIGNED_INT;
-        }
-        throw new IOException("Bit format not supported");
     }
 }

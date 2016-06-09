@@ -18,42 +18,39 @@
 package org.quark_engine.render.texture;
 
 /**
- * <code>Texture3D</code> encapsulate a {@link Texture} of 3 dimension.
+ * <code>TextureCube</code> encapsulate a {@link Texture} of 2 dimension being use for cube-mapping.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class Texture3D extends Texture {
+public final class TextureCube extends Texture {
     protected TextureBorder mBorderX = TextureBorder.REPEAT;
     protected TextureBorder mBorderY = TextureBorder.REPEAT;
-    protected TextureBorder mBorderZ = TextureBorder.REPEAT;
 
     /**
      * <p>Constructor</p>
      */
-    public Texture3D(TextureFormat format, Image image) {
-        super(TextureType.TEXTURE_3D, format, image);
+    public TextureCube(TextureFormat format, Image image) {
+        super(TextureType.TEXTURE_CUBE, format, image);
     }
 
     /**
      * <p>Constructor</p>
      */
-    public Texture3D(TextureFormat format, TextureFilter filter,
+    public TextureCube(TextureFormat format, TextureFilter filter,
             TextureBorder borderX,
-            TextureBorder borderY,
-            TextureBorder borderZ, Image image) {
+            TextureBorder borderY, Image image) {
         this(format, image);
         setFilter(filter);
-        setClamp(borderX, borderY, borderZ);
+        setClamp(borderX, borderY);
     }
 
     /**
-     * <p>Change the border mode for the x, y and z coordinate</p>
+     * <p>Change the border mode for the x and y coordinate</p>
      *
      * @param xBorder the new border mode for the x coordinate
      * @param yBorder the new border mode for the y coordinate
-     * @param zBorder the new border mode for the z coordinate
      */
-    public void setClamp(TextureBorder xBorder, TextureBorder yBorder, TextureBorder zBorder) {
+    public void setClamp(TextureBorder xBorder, TextureBorder yBorder) {
         if (mBorderX != xBorder) {
             mBorderX = xBorder;
             setUpdate(CONCEPT_CLAMP_X);
@@ -61,10 +58,6 @@ public final class Texture3D extends Texture {
         if (mBorderY != yBorder) {
             mBorderY = yBorder;
             setUpdate(CONCEPT_CLAMP_Y);
-        }
-        if (mBorderZ != zBorder) {
-            mBorderZ = zBorder;
-            setUpdate(CONCEPT_CLAMP_Z);
         }
     }
 
@@ -84,14 +77,5 @@ public final class Texture3D extends Texture {
      */
     public TextureBorder getBorderY() {
         return mBorderY;
-    }
-
-    /**
-     * <p>Get the border mode for the z coordinate</p>
-     *
-     * @return the border mode for the y coordinate
-     */
-    public TextureBorder getBorderZ() {
-        return mBorderZ;
     }
 }

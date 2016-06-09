@@ -17,7 +17,6 @@
  */
 package org.quark_engine.resource.loader;
 
-import org.quark_engine.render.storage.VertexFormat;
 import org.quark_engine.render.texture.*;
 import org.quark_engine.resource.AssetKey;
 import org.quark_engine.resource.AssetLoader;
@@ -115,22 +114,24 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
         final ImageHeader header = readHeader(input);
 
         if ((header.mImageCaps2 & DDSCAPS2_CUBEMAP) != 0) {
-            throw new IOException("DDS Cube-map texture(s) are not supported yet.");
+            return new TextureCube(
+                    descriptor.getFormat(),
+                    descriptor.getFilter(),
+                    descriptor.getBorderX(),
+                    descriptor.getBorderY(), readImage(descriptor, header, input));
         } else if ((header.mImageCaps2 & DDSCAPS2_VOLUME) != 0) {
             return new Texture3D(
                     descriptor.getFormat(),
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
                     descriptor.getBorderY(),
-                    descriptor.getBorderZ(), readImages(header, input),
-                    descriptor.hasMipmap());
+                    descriptor.getBorderZ(), readImage(descriptor, header, input));
         } else {
             return new Texture2D(
                     descriptor.getFormat(),
                     descriptor.getFilter(),
                     descriptor.getBorderX(),
-                    descriptor.getBorderY(), readImages(header, input),
-                    descriptor.hasMipmap());
+                    descriptor.getBorderY(), readImage(descriptor, header, input));
         }
     }
 
@@ -149,7 +150,7 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
         //!
         header.mImageSize = readIntLittleEndian(input);
         header.mImageFlag = readIntLittleEndian(input);
-        header.mImageHeight = readIntLittleEndian(input);
+        header.mImageHeight = Math.max(readIntLittleEndian(input), 0x01);
         header.mImageWidth = Math.max(1, readIntLittleEndian(input));
         header.mImagePitchOrLinear = readIntLittleEndian(input);
         header.mImageDepth = Math.max(1, readIntLittleEndian(input));
@@ -183,6 +184,13 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
         header.mImageCaps3 = readIntLittleEndian(input);
         header.mImageCaps4 = readIntLittleEndian(input);
 
+        if ((header.mImageCaps2 & DDSCAPS2_CUBEMAP) != 0) {
+            //!
+            //! Cube-map have six faces.
+            //!
+            header.mImageDepth = 0x06;
+        }
+
         //!
         //! Reserve field
         //!
@@ -193,55 +201,89 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
     /**
      * <p>Parse the image(s) from the {@link DataInputStream} given</p>
      *
-     * @param header the header of the image
-     * @param input  the stream of the image
+     * @param descriptor the descriptor of the image
+     * @param header     the header of the image
+     * @param input      the stream of the image
      *
      * @return a collection that contain(s) all image(s)
      *
      * @throws IOException indicates failing loading the image(s)
      */
-    private List<Image> readImages(ImageHeader header, DataInputStream input) throws IOException {
-        int imageDepth = header.mImageDepth;
-        int imageWidth = header.mImageWidth;
-        int imageHeight = Math.max(header.mImageHeight, 1);
+    private Image readImage(Texture.Descriptor descriptor, ImageHeader header, DataInputStream input) throws IOException {
+        final List<Image.Layer> layer = new ArrayList<>(header.mImageDepth);
 
         //!
-        //! Translate DDS format to native format
+        //! Translate DDS format into native format.
         //!
-        final ImageFormat imageFormat = header.mPixelFormatFourCC == null
-                ? getUncompressedFormat(header)
-                : getCompressedFormat(header);
-        final int imageFormatScanLength = (imageFormat == ImageFormat.RGB_DXT1 ? 0x08 : 0x10);
-        final int imageCount = ((header.mImageFlag & DDSD_MIPMAP_COUNT) == 0 ? 1 : header.mImageMipmapCount);
+        final ImageFormat format = getFormat(header);
 
         //!
-        //! Parse each mip-map of the image
+        //! Calculate the bpp of the format.
         //!
-        final List<Image> imageList = new ArrayList<>(imageCount);
+        final int length = (format == ImageFormat.RGB_DXT1 ? 0x04 : 0x08);
 
-        for (int i = 0; i < imageCount; ++i) {
-            //!
-            //! Calculate the length of the mip-map
-            //!
-            final int imageLength = imageFormat.eCompressed
-                    ? ((imageWidth + 3) / 4 * imageFormatScanLength) * ((imageHeight + 3) / 4) * ((imageDepth + 3) / 4)
-                    : ((imageWidth * imageFormat.eComponent * imageHeight * imageDepth));
+        //!
+        //! Load each layer of the image.
+        //!
+        for (int i = 0; i < header.mImageDepth; ++i) {
+            int imageWidth = header.mImageWidth;
+            int imageHeight = header.mImageHeight;
+            int imageLength = 0;
 
             //!
-            //! Read the image
+            //! Calculate the number of mip-mapping per image.
             //!
-            final byte data[] = new byte[imageLength];
-            input.readFully(data, 0, imageLength);
+            final int mipmap[] = new int[header.mImageMipmapCount];
 
+            //!
+            //! Calculate the offset of the mipmap.
+            //!
+            for (int k = 0; k < mipmap.length; ++k) {
+                if (format.eCompressed) {
+                    mipmap[k] = ((imageWidth + 3) / 4) * ((imageHeight + 3) / 4) * length * 2;
+                } else {
+                    mipmap[k] = ((imageWidth * imageHeight * length) / 8);
+                }
+                imageLength += mipmap[k];
+                imageWidth = Math.max(imageWidth / 2, 1);
+                imageHeight = Math.max(imageHeight / 2, 1);
+            }
+
+            //!
+            //! Read the layer and all mipmap at once.
+            //!
+            final byte[] content = new byte[imageLength];
+            input.readFully(content, 0, content.length);
+
+            //!
+            //! Create the buffer.
+            //!
             final ByteBuffer buffer = ByteBuffer.allocateDirect(imageLength).order(ByteOrder.nativeOrder());
-            buffer.put(data, 0, imageLength).flip();
-            imageList.add(new Image(imageFormat, imageWidth, imageHeight, VertexFormat.BYTE, imageDepth, i, buffer));
+            buffer.put(content, 0, imageLength).flip();
 
-            imageDepth = Math.max(imageDepth / 2, 1);
-            imageWidth = Math.max(imageWidth / 2, 1);
-            imageHeight = Math.max(imageHeight / 2, 1);
+            //!
+            //! Create the layer.
+            //!
+            if (mipmap.length == 1) {
+                layer.add(i, new Image.Layer(buffer, descriptor.hasFeature(Texture.Descriptor.FEATURE_MIPMAP)));
+            } else {
+                layer.add(i, new Image.Layer(buffer, mipmap));
+            }
         }
-        return imageList;
+        return new Image(format, header.mImageWidth, header.mImageHeight, header.mImageDepth, layer);
+    }
+
+    /**
+     * <p>Get the format of the image</p>
+     *
+     * @param header the header of the image
+     *
+     * @return the format of the image
+     *
+     * @throws IOException indicates if the format is unsupported
+     */
+    private ImageFormat getFormat(ImageHeader header) throws IOException {
+        return header.mPixelFormatFourCC == null ? getUncompressedFormat(header) : getCompressedFormat(header);
     }
 
     /**

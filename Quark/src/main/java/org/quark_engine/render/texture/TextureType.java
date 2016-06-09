@@ -39,7 +39,15 @@ public enum TextureType {
      * {@since OpenGL    1.2}
      * {@since OpenGL ES 3.0}
      */
-    TEXTURE_3D(Render.GLES3.GL_TEXTURE_3D);
+    TEXTURE_3D(Render.GLES3.GL_TEXTURE_3D),
+
+    /**
+     * Images in this texture consists of six 2D images. The images are arranged in a cube-shape.
+     * <p>
+     * {@since OpenGL    1.3}
+     * {@since OpenGL ES 2.0}
+     */
+    TEXTURE_CUBE(Render.GLES2.GL_TEXTURE_CUBE_MAP);
 
     public final int eValue;
 

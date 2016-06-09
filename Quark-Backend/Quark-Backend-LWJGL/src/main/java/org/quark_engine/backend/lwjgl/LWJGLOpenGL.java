@@ -569,7 +569,12 @@ public final class LWJGLOpenGL implements Render {
             if (texture.hasUpdate(Texture.CONCEPT_FILTER)) {
                 final TextureFilter filter = texture.getFilter();
 
-                if (texture.getImages().size() > 1) {
+                //!
+                //! Get the first layer to check.
+                //!
+                final Image.Layer layer = texture.getImage().getLayer().get(0);
+
+                if (layer.hasMipmap()) {
                     GL11.glTexParameteri(
                             texture.getType().eValue,
                             GL11.GL_TEXTURE_MIN_FILTER, filter.eMinFilterWithMipmap);
@@ -593,69 +598,118 @@ public final class LWJGLOpenGL implements Render {
             //! Check if data require(s) update.
             //!
             if (texture.hasUpdate(Texture.CONCEPT_IMAGE)) {
-                GL11.glTexParameteri(texture.getType().eValue,
-                        GL12.GL_TEXTURE_BASE_LEVEL, 0);
-                GL11.glTexParameteri(texture.getType().eValue,
-                        GL12.GL_TEXTURE_MAX_LEVEL, texture.getImages().size());
-
-                switch (texture.getType()) {
-                    case TEXTURE_2D:
-                        for (final Image image : texture.getImages()) {
-                            if (image.getFormat().eCompressed) {
-                                GL13.glCompressedTexImage2D(texture.getType().eValue,
-                                        image.getLevel(),
-                                        image.getFormat().eValue,
-                                        image.getWidth(),
-                                        image.getHeight(),
-                                        0,
-                                        image.getBytes());
-                            } else {
-                                GL11.glTexImage2D(texture.getType().eValue,
-                                        image.getLevel(),
-                                        texture.getFormat().eValue,
-                                        image.getWidth(),
-                                        image.getHeight(),
-                                        0,
-                                        image.getFormat().eValue,
-                                        image.getBytesFormat().eValue,
-                                        image.getBytes());
-                            }
-                            image.getBytes().clear();
-                        }
-                        break;
-                    case TEXTURE_3D:
-                        for (final Image image : texture.getImages()) {
-                            if (image.getFormat().eCompressed) {
-                                GL13.glCompressedTexImage3D(texture.getType().eValue,
-                                        image.getLevel(),
-                                        image.getFormat().eValue,
-                                        image.getWidth(),
-                                        image.getHeight(),
-                                        image.getDepth(),
-                                        0,
-                                        image.getBytes());
-                            } else {
-                                GL12.glTexImage3D(texture.getType().eValue,
-                                        image.getLevel(),
-                                        texture.getFormat().eValue,
-                                        image.getWidth(),
-                                        image.getHeight(),
-                                        image.getDepth(),
-                                        0,
-                                        image.getFormat().eValue,
-                                        image.getBytesFormat().eValue,
-                                        image.getBytes());
-                            }
-                            image.getBytes().clear();
-                        }
-                        break;
-                }
+                final Image image = texture.getImage();
 
                 //!
-                //! Generate mip-map if required.
+                //! Get all layer(s).
                 //!
-                if (texture.getImages().size() <= 1 && texture.hasMipmap()) {
-                    GL30.glGenerateMipmap(texture.getType().eValue);
+                final List<Image.Layer> layers = image.getLayer();
+
+                for (int i = 0, j = layers.size(); i < j; ++i) {
+                    //!
+                    //! Add a single layer.
+                    //!
+                    final Image.Layer layer = layers.get(i);
+
+                    for (int k = 0; k < layer.images.length; ++k) {
+                        //!
+                        //! Handle each mip-map
+                        //!
+                        final int width = Math.max(1, image.getWidth() >> i);
+                        final int height = Math.max(1, image.getHeight() >> i);
+                        final int depth = Math.max(1, image.getDepth() >> i);
+
+                        //!
+                        //! Limit the length of the buffer.
+                        //!
+                        layer.data.limit(layer.data.position() + layer.images[i]);
+
+                        //!
+                        //! Upload the image.
+                        //!
+                        switch (texture.getType()) {
+                            case TEXTURE_2D:
+                                if (image.getFormat().eCompressed) {
+                                    GL13.glCompressedTexImage2D(texture.getType().eValue,
+                                            k,
+                                            image.getFormat().eValue,
+                                            width,
+                                            height,
+                                            0,
+                                            layer.data);
+                                } else {
+                                    GL11.glTexImage2D(texture.getType().eValue,
+                                            k,
+                                            texture.getFormat().eValue,
+                                            width,
+                                            height,
+                                            0,
+                                            image.getFormat().eValue,
+                                            texture.getFormat().eType,
+                                            layer.data);
+                                }
+                                break;
+                            case TEXTURE_3D:
+                                if (image.getFormat().eCompressed) {
+                                    GL13.glCompressedTexImage3D(texture.getType().eValue,
+                                            k,
+                                            image.getFormat().eValue,
+                                            width,
+                                            height,
+                                            depth,
+                                            0,
+                                            layer.data);
+                                } else {
+                                    GL12.glTexImage3D(texture.getType().eValue,
+                                            k,
+                                            texture.getFormat().eValue,
+                                            width,
+                                            height,
+                                            depth,
+                                            0,
+                                            image.getFormat().eValue,
+                                            texture.getFormat().eType,
+                                            layer.data);
+                                }
+                                break;
+                            case TEXTURE_CUBE:
+                                if (image.getFormat().eCompressed) {
+                                    GL13.glCompressedTexImage3D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + k,
+                                            k,
+                                            image.getFormat().eValue,
+                                            width,
+                                            height,
+                                            depth,
+                                            0,
+                                            layer.data);
+                                } else {
+                                    GL12.glTexImage3D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + k,
+                                            k,
+                                            texture.getFormat().eValue,
+                                            width,
+                                            height,
+                                            depth,
+                                            0,
+                                            image.getFormat().eValue,
+                                            texture.getFormat().eType,
+                                            layer.data);
+                                }
+                                break;
+                        }
+
+                        //!
+                        //! Change the position of the buffer.
+                        //!
+                        layer.data.position(layer.data.position() + layer.images[i]);
+                    }
+
+                    //!
+                    //! Generate mip-map if required.
+                    //!
+                    System.out.println(layer.mipmap);
+                    if (layer.mipmap && layer.images.length <= 1) {
+                        GL30.glGenerateMipmap(texture.getType().eValue);
+                    }
                 }
             }
             texture.setUpdated();
