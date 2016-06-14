@@ -988,7 +988,6 @@ public final class QKOpenGL_3_0 implements Render {
     private void onUpdateTextureImage(Texture texture, Image image) {
         final List<Image.Layer> layers = image.getLayer();
 
-
         //!
         //! Iterate over all layer(s) in the image.
         //!
