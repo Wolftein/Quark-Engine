@@ -28,7 +28,7 @@ public interface Framework {
     /**
      * Describe display properties for {@link Framework}.
      */
-    final class DisplayMode {
+    final class Display {
         private final int mWidth;
         private final int mHeight;
         private final int mRate;
@@ -36,7 +36,7 @@ public interface Framework {
         /**
          * <p>Constructor</p>
          */
-        public DisplayMode(int width, int height, int rate) {
+        public Display(int width, int height, int rate) {
             mWidth = width;
             mHeight = height;
             mRate = rate;
@@ -93,27 +93,27 @@ public interface Framework {
     void setSynchronised(boolean activate);
 
     /**
-     * <p>Change the context mode to windowed mode using the given {@link DisplayMode}</p>
+     * <p>Change the context mode to windowed mode using the given {@link Display}</p>
      *
      * @param mode the new context mode of the context
      *
      * @see #getDisplayMode()
      * @see #getAvailableDisplayModes()
      */
-    void switchToWindowed(DisplayMode mode);
+    void switchToWindowed(Display mode);
 
     /**
-     * <p>Change the context mode to full-screen mode using the given {@link DisplayMode}</p>
+     * <p>Change the context mode to full-screen mode using the given {@link Display}</p>
      *
      * @param mode the new context mode of the context
      *
      * @see #getDisplayMode()
      * @see #getAvailableDisplayModes()
      */
-    void switchToFullscreen(DisplayMode mode);
+    void switchToFullscreen(Display mode);
 
     /**
-     * <p>Change the context mode to full-screen mode using the current {@link DisplayMode}</p>
+     * <p>Change the context mode to full-screen mode using the current {@link Display}</p>
      *
      * @see #getDisplayMode()
      */
@@ -169,16 +169,16 @@ public interface Framework {
     boolean isActive();
 
     /**
-     * <p>Get the {@link DisplayMode} of the primary device</p>
+     * <p>Get the {@link Display} of the primary device</p>
      *
      * @return the context mode of the primary device
      */
-    DisplayMode getDisplayMode();
+    Display getDisplayMode();
 
     /**
-     * <p>Get all available {@link DisplayMode} of the primary device</p>
+     * <p>Get all available {@link Display} of the primary device</p>
      *
      * @return all available context mode of the primary device
      */
-    Collection<DisplayMode> getAvailableDisplayModes();
+    Collection<Display> getAvailableDisplayModes();
 }

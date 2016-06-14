@@ -21,7 +21,6 @@ import org.quark.audio.factory.FactoryAudioStatic;
 import org.quark.audio.factory.FactoryAudioStreaming;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * <code>AudioManager</code> encapsulate a service for managing {@link Audio}.
@@ -123,7 +122,7 @@ public interface AudioManager {
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
          */
-        void alListenerf(int type, FloatBuffer value);
+        void alListenerf(int type, float value1, float value2, float value3, float value4, float value5, float value6);
 
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
@@ -153,12 +152,12 @@ public interface AudioManager {
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
          */
-        long alcCreateContext();
+        boolean alcCreateContext();
 
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
          */
-        void alcDestroyContext(long context);
+        void alcDestroyContext();
     }
 
     /**

@@ -48,7 +48,7 @@ public final class FrameworkSetting {
      */
     public final static int FLAG_SRGB = (1 << 5);
 
-    private final Framework.DisplayMode mMode;
+    private final Framework.Display mMode;
     private final String mTitle;
     private final int mSamples;
     private final boolean mSynchronised;
@@ -60,7 +60,7 @@ public final class FrameworkSetting {
     /**
      * <p>Constructor</p>
      */
-    public FrameworkSetting(Framework.DisplayMode mode, String title, int samples, int features) {
+    public FrameworkSetting(Framework.Display mode, String title, int samples, int features) {
         mMode = mode;
         mTitle = title;
         mSamples = samples;
@@ -74,7 +74,7 @@ public final class FrameworkSetting {
     /**
      * <p>Constructor</p>
      */
-    public FrameworkSetting(Framework.DisplayMode mode, String title) {
+    public FrameworkSetting(Framework.Display mode, String title) {
         this(mode, title, 0, 0);
     }
 
@@ -83,7 +83,7 @@ public final class FrameworkSetting {
      *
      * @return the display mode of the display
      */
-    public Framework.DisplayMode getMode() {
+    public Framework.Display getMode() {
         return mMode;
     }
 
