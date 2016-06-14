@@ -269,12 +269,12 @@ public interface Render extends ManageableManager {
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
          */
-        void glBufferData(int target, int size, ByteBuffer data, int usage);
+        void glBufferData(int target, ByteBuffer data, int usage);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
          */
-        void glBufferSubData(int target, int size, ByteBuffer data, int usage);
+        void glBufferSubData(int target, long offset, ByteBuffer data);
 
         /**
          * (OES_map_buffer)
@@ -335,7 +335,7 @@ public interface Render extends ManageableManager {
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml"/>
          */
-        void glVertexAttribPointer(int name, int component, int type, boolean normalised, long offset);
+        void glVertexAttribPointer(int name, int component, int type, boolean normalised, int stride, long offset);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glLinkProgram.xml"/>
@@ -355,7 +355,7 @@ public interface Render extends ManageableManager {
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateShader.xml"/>
          */
-        void glCreateShader(int name, int type);
+        int glCreateShader(int type);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glShaderSource.xml"/>
