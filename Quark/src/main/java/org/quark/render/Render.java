@@ -28,6 +28,9 @@ import org.quark.render.texture.frame.Frame;
 import org.quark.system.utility.ManageableManager;
 
 import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * <code>Render</code> encapsulate the render module.
@@ -107,6 +110,342 @@ public interface Render extends ManageableManager {
         int GL_UNSIGNED_SHORT = 0x1403;
         int GL_VERTEX_SHADER = 0x8B31;
         int GL_ZERO = 0x0000;
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml"/>
+         */
+        void glEnable(int value);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisable.xml"/>
+         */
+        void glDisable(int value);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendFunc.xml"/>
+         */
+        void glBlendFunc(int source, int destination);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendEquationSeparate.xml"/>
+         */
+        void glBlendEquationSeparate(int rgb, int alpha);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCullFace.xml"/>
+         */
+        void glCullFace(int mode);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDepthMask.xml"/>
+         */
+        void glDepthMask(boolean activate);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glColorMask.xml"/>
+         */
+        void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glScissor.xml"/>
+         */
+        void glScissor(int x1, int y1, int x2, int y2);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilOpSeparate.xml"/>
+         */
+        void glStencilOpSeparate(int face, int stencilFail, int depthFail, int depthPass);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilFuncSeparate.xml"/>
+         */
+        void glStencilFuncSeparate(int face, int func, int ref, int mask);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClear.xml"/>
+         */
+        void glClear(int value);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClearColor.xml"/>
+         */
+        void glClearColor(float red, float green, float blue, float alpha);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glViewport.xml"/>
+         */
+        void glViewport(int x, int y, int width, int height);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenTextures.xml"/>
+         */
+        int glGenTextures();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenBuffers.xml"/>
+         */
+        int glGenBuffers();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateProgram.xml"/>
+         */
+        int glCreateProgram();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenFramebuffers.xml"/>
+         */
+        int glGenFramebuffers();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenRenderbuffers.xml"/>
+         */
+        int glGenRenderbuffers();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteTextures.xml"/>
+         */
+        void glDeleteTextures(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteBuffers.xml"/>
+         */
+        void glDeleteBuffers(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteProgram.xml"/>
+         */
+        void glDeleteProgram(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteFramebuffers.xml"/>
+         */
+        void glDeleteFramebuffers(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteRenderbuffers.xml"/>
+         */
+        void glDeleteRenderbuffers(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glActiveTexture.xml"/>
+         */
+        void glActiveTexture(int stage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindTexture.xml"/>
+         */
+        void glBindTexture(int target, int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindBuffer.xml"/>
+         */
+        void glBindBuffer(int target, int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUseProgram.xml"/>
+         */
+        void glUseProgram(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindFramebuffer.xml"/>
+         */
+        void glBindFramebuffer(int type, int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindRenderbuffer.xml"/>
+         */
+        void glBindRenderbuffer(int type, int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawArrays.xml"/>
+         */
+        void glDrawArrays(int primitive, long offset, long count);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawElements.xml"/>
+         */
+        void glDrawElements(int primitive, long count, int format, long offset);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         */
+        void glBufferData(int target, int size, ByteBuffer data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         */
+        void glBufferSubData(int target, int size, ByteBuffer data, int usage);
+
+        /**
+         * (OES_map_buffer)
+         *
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUnmapBuffer.xml"/>
+         */
+        void glUnmapBuffer(int target);
+
+        /**
+         * (OES_map_buffer)
+         *
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glMapBuffer.xml"/>
+         */
+        ByteBuffer glMapBuffer(int target, int access);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml"/>
+         */
+        void glTexParameter(int target, int type, int value);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml"/>
+         */
+        void glTexParameter(int target, int type, float value);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexImage2D.xml"/>
+         */
+        void glTexImage2D(int target, int level, int internal, int width, int height, int border, int format,
+                int type, ByteBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompressedTexImage2D.xml"/>
+         */
+        void glCompressedTexImage2D(int target, int level, int internal, int width, int height,
+                int border, ByteBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml"/>
+         */
+        void glGenerateMipmap(int target);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glFramebufferTexture2D.xml"/>
+         */
+        void glFramebufferTexture2D(int target, int attachment, int texture, int name, int level);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnableVertexAttribArray.xml"/>
+         */
+        void glEnableVertexAttribArray(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisableVertexAttribArray.xml"/>
+         */
+        void glDisableVertexAttribArray(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml"/>
+         */
+        void glVertexAttribPointer(int name, int component, int type, boolean normalised, long offset);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glLinkProgram.xml"/>
+         */
+        void glLinkProgram(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgram.xml"/>
+         */
+        int glGetProgram(int name, int property);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteShader.xml"/>
+         */
+        void glDeleteShader(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateShader.xml"/>
+         */
+        void glCreateShader(int name, int type);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glShaderSource.xml"/>
+         */
+        void glShaderSource(int name, String source);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompileShader.xml"/>
+         */
+        void glCompileShader(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glAttachShader.xml"/>
+         */
+        void glAttachShader(int name, int shader);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindAttribLocation.xml"/>
+         */
+        void glBindAttribLocation(int name, int id, String attribute);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetUniformLocation.xml"/>
+         */
+        int glGetUniformLocation(int name, String uniform);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml"/>
+         */
+        void glRenderbufferStorage(int target, int format, int width, int height);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform1f(int name, float i1);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform2f(int name, float i1, float i2);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform3f(int name, float i1, float i2, float i3);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform4f(int name, float i1, float i2, float i3, float i4);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform1fv(int name, FloatBuffer buffer);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform1i(int name, int i1);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform2i(int name, int i1, int i2);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform3i(int name, int i1, int i2, int i3);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform4i(int name, int i1, int i2, int i3, int i4);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniform1iv(int name, IntBuffer buffer);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniformMatrix3fv(int name, FloatBuffer buffer);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         */
+        void glUniformMatrix4fv(int name, FloatBuffer buffer);
     }
 
     /**
@@ -153,6 +492,68 @@ public interface Render extends ManageableManager {
         int GL_TRANSFORM_FEEDBACK_BUFFER = 0x8C8E;
         int GL_UNIFORM_BUFFER = 0x8A11;
         int GL_UNSIGNED_INT = 0x1405;
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glGenVertexArrays.xml"/>
+         */
+        int glGenVertexArrays();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glDeleteVertexArrays.xml"/>
+         */
+        void glDeleteVertexArrays(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glBindVertexArray.xml"/>
+         */
+        void glBindVertexArray(int name);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glMapBufferRange.xml"/>
+         */
+        ByteBuffer glMapBufferRange(int target, long offset, long size, int access);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glTexImage3D.xml"/>
+         */
+        void glTexImage3D(int target, int level, int internal, int width, int height, int depth, int border,
+                int format, int type, ByteBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glCompressedTexImage3D.xml"/>
+         */
+        void glCompressedTexImage3D(int target, int level, int internal, int width, int height, int depth,
+                int border, ByteBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml"/>
+         */
+        void glRenderbufferStorageMultisample(int target, int samples, int format, int width, int height);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         */
+        void glUniform1ui(int name, int i1);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         */
+        void glUniform2ui(int name, int i1, int i2);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         */
+        void glUniform3ui(int name, int i1, int i2, int i3);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         */
+        void glUniform4ui(int name, int i1, int i2, int i3, int i4);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         */
+        void glUniform1uiv(int name, IntBuffer buffer);
     }
 
     /**

@@ -30,6 +30,31 @@ public final class RenderCapabilities {
      */
     public enum Extension {
         /**
+         * Indicates if frame buffer are supported.
+         */
+        FRAME,
+
+        /**
+         * Indicates if frame support multiple render target (MRT).
+         */
+        FRAME_MULTIPLE_RENDER_TARGET,
+
+        /**
+         * Indicates if frame support multiple samples.
+         */
+        FRAME_MULTIPLE_SAMPLE,
+
+        /**
+         * Indicates if texture support S3TC compression.
+         */
+        TEXTURE_COMPRESSION_S3TC,
+
+        /**
+         * Indicates if texture support anisotropic filter.
+         */
+        TEXTURE_FILTER_ANISOTROPIC,
+
+        /**
          * Indicates if geometry stage is supported by GLSL.
          */
         GLSL_GEOMETRY,
@@ -50,9 +75,34 @@ public final class RenderCapabilities {
      */
     public enum Limit {
         /**
+         * Indicates the maximum number of frame sample(s).
+         */
+        FRAME_SAMPLE,
+
+        /**
+         * Indicates the maximum number of frame attachment(s).
+         */
+        FRAME_ATTACHMENT,
+
+        /**
+         * Indicates the maximum number of frame multiple render attachment(s).
+         */
+        FRAME_MULTIPLE_RENDER_ATTACHMENT,
+
+        /**
+         * Indicates the maximum anisotropic filter of a texture.
+         */
+        TEXTURE_ANISOTROPIC,
+
+        /**
+         * Indicates the maximum size of a texture.
+         */
+        TEXTURE_SIZE,
+
+        /**
          * Indicates the maximum number of texture stage(s).
          */
-        TEXTURE_STAGE
+        TEXTURE_STAGE,
     }
 
     /**

@@ -14,4 +14,3 @@ include ':Quark-Backend:Quark-Backend-LWJGL'
 include ':Quark-Extension:Quark-Extension-2D'
 include ':Quark-Extension:Quark-Extension-3D'
 
-
