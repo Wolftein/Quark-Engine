@@ -30,7 +30,7 @@ import java.nio.FloatBuffer;
  */
 public interface AudioManager {
     /**
-     * <code>AL</code> encapsulate all feature(s) supported by OpenAL 1.0.
+     * <code>ALES10</code> encapsulate all feature(s) supported by OpenAL 1.0.
      */
     interface ALES10 {
         int AL_BUFFER = 0x1009;
@@ -134,6 +134,21 @@ public interface AudioManager {
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
          */
         void alBufferData(int name, int format, ByteBuffer data, int rate);
+    }
+
+    /**
+     * <code>ALCES</code> encapsulate all feature(s) supported by ALC.
+     */
+    interface ALCES {
+        /**
+         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
+         */
+        long alcCreateContext();
+
+        /**
+         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
+         */
+        void alcDestroyContext(long context);
     }
 
     /**
