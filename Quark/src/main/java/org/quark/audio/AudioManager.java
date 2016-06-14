@@ -68,7 +68,17 @@ public interface AudioManager {
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
          */
+        int alGenSources();
+
+        /**
+         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
+         */
         void alDeleteBuffers(int name);
+
+        /**
+         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
+         */
+        void alDeleteSources(int name);
 
         /**
          * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf"/>
