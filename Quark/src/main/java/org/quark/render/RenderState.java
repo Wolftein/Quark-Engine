@@ -17,7 +17,9 @@
  */
 package org.quark.render;
 
+import org.quark.mathematic.MutableVector2f;
 import org.quark.mathematic.MutableVector4i;
+import org.quark.mathematic.Vector2f;
 import org.quark.mathematic.Vector4i;
 
 /**
@@ -367,6 +369,11 @@ public final class RenderState {
     }
 
     /**
+     * If <code>true</code>, enable alpha to coverage, <code>false</code> otherwise.
+     */
+    private boolean mAlphaToCoverage = false;
+
+    /**
      * Specifies how the red, green, blue, and alpha source blending factors are computed.
      *
      * @see Blend
@@ -418,6 +425,11 @@ public final class RenderState {
      * Specifies whether the depth buffer is enabled for writing.
      */
     private boolean mDepthMask = true;
+
+    /**
+     * Specifies depth range.
+     */
+    private MutableVector2f mDepthRange = new MutableVector2f(0.0f, 1.0f);
 
     /**
      * Specifies the depth comparison function.
@@ -488,6 +500,18 @@ public final class RenderState {
      * @see StencilOp
      */
     private StencilOp mStencilBackDepthPassOp = StencilOp.KEEP;
+
+    /**
+     * <p>Change alpha to coverage mode</p>
+     *
+     * @param activate <code>true</code> to activate alpha to coverage mode, <code>false</code> otherwise
+     *
+     * @return <code>this</code> for chain operation(s)
+     */
+    public RenderState setAlphaToCoverage(boolean activate) {
+        mAlphaToCoverage = activate;
+        return this;
+    }
 
     /**
      * <p>Change blend mode</p>
@@ -588,6 +612,18 @@ public final class RenderState {
      */
     public RenderState setDepthMask(boolean activate) {
         mDepthMask = activate;
+        return this;
+    }
+
+    /**
+     * <p>Change depth range</p>
+     *
+     * @param range the new depth range
+     *
+     * @return <code>this</code> for chain operation(s)
+     */
+    public RenderState setDepthRange(Vector2f range) {
+        mDepthRange.setXY(range.getX(), range.getY());
         return this;
     }
 
@@ -722,6 +758,15 @@ public final class RenderState {
     }
 
     /**
+     * <p>Check if alpha to coverage mode is activated</p>
+     *
+     * @return <code>true</code> if alpha to coverage mode is activated, <code>false</code> otherwise
+     */
+    public boolean isAlphaToCoverage() {
+        return mAlphaToCoverage;
+    }
+
+    /**
      * <p>Get the blend mode state</p>
      *
      * @return the blend mode state
@@ -809,6 +854,15 @@ public final class RenderState {
      */
     public boolean isDepthMask() {
         return mDepthMask;
+    }
+
+    /**
+     * <p>Get the depth range</p>
+     *
+     * @return the depth range
+     */
+    public Vector2f getDepthRange() {
+        return mDepthRange;
     }
 
     /**

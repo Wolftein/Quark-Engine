@@ -27,10 +27,7 @@ import org.quark.render.texture.Texture;
 import org.quark.render.texture.frame.Frame;
 import org.quark.system.utility.ManageableManager;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 /**
  * <code>Render</code> encapsulate the render module.
@@ -41,25 +38,32 @@ public interface Render extends ManageableManager {
     /**
      * <code>GLES2</code> encapsulate all feature(s) supported by OpenGL ES 2.0.
      */
-    interface GLES2 {
+    interface GLES2 extends GLESExtension {
         int GL_ALWAYS = 0x0207;
         int GL_ARRAY_BUFFER = 0x8892;
-        int GL_COLOR_ATTACHMENT0 = 0x8CE0;
         int GL_BACK = 0x0405;
+        int GL_BLEND = 0x0BE2;
         int GL_BYTE = 0x1400;
         int GL_CLAMP_TO_BORDER = 0x812D;
         int GL_CLAMP_TO_EDGE = 0x812F;
+        int GL_COLOR_ATTACHMENT0 = 0x8CE0;
+        int GL_COLOR_BUFFER_BIT = 0x00004000;
+        int GL_CULL_FACE = 0x0B44;
         int GL_DECREASE = 0x1E03;
         int GL_DECREASE_WRAP = 0x8508;
         int GL_DEPTH_ATTACHMENT = 0x8D00;
+        int GL_DEPTH_BUFFER_BIT = 0x00000100;
         int GL_DEPTH_COMPONENT16 = 0x81A5;
+        int GL_DEPTH_TEST = 0x0B71;
         int GL_DST_ALPHA = 0x0304;
         int GL_DST_COLOR = 0x0306;
         int GL_DYNAMIC_DRAW = 0x88E8;
         int GL_ELEMENT_ARRAY_BUFFER = 0x8893;
         int GL_EQUAL = 0x0202;
+        int GL_FALSE = 0x0000;
         int GL_FLOAT = 0x1406;
         int GL_FRAGMENT_SHADER = 0x8B30;
+        int GL_FRAMEBUFFER = 0x8D40;
         int GL_FRONT = 0x0404;
         int GL_FRONT_BACK = 0x0408;
         int GL_FUNC_ADD = 0x8006;
@@ -79,6 +83,9 @@ public interface Render extends ManageableManager {
         int GL_LINES = 0x01;
         int GL_LINE_LOOP = 0x02;
         int GL_LINE_STRIP = 0x03;
+        int GL_LINK_STATUS = 0x8B82;
+        int GL_MAP_READ_BIT = 0x0001;
+        int GL_MAP_WRITE_BIT = 0x0002;
         int GL_MIRRORED_REPEAT = 0x8370;
         int GL_NEAREST = 0x2600;
         int GL_NEAREST_MIPMAP_NEAREST = 0x2700;
@@ -91,21 +98,33 @@ public interface Render extends ManageableManager {
         int GL_ONE_MINUS_SRC_ALPHA = 0x0303;
         int GL_ONE_MINUS_SRC_COLOR = 0x0301;
         int GL_POINTS = 0x00;
+        int GL_RENDERBUFFER = 0x8D41;
         int GL_REPEAT = 0x2901;
         int GL_REPLACE = 0x1E01;
         int GL_RGB = 0x1907;
         int GL_RGBA = 0x1908;
+        int GL_SCISSOR_TEST = 0x0C11;
         int GL_SHORT = 0x1402;
         int GL_SRC_ALPHA = 0x0302;
         int GL_SRC_COLOR = 0x0300;
         int GL_STATIC_DRAW = 0x88E4;
         int GL_STENCIL_ATTACHMENT = 0x8D20;
+        int GL_STENCIL_BUFFER_BIT = 0x00000400;
+        int GL_STENCIL_TEST = 0x0B90;
         int GL_STREAM_DRAW = 0x88E0;
+        int GL_TEXTURE0 = 0x84C0;
         int GL_TEXTURE_2D = 0xDE1;
         int GL_TEXTURE_CUBE_MAP = 0x8513;
+        int GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
+        int GL_TEXTURE_MAG_FILTER = 0x2800;
+        int GL_TEXTURE_MIN_FILTER = 0x2801;
+        int GL_TEXTURE_WRAP_R = 0x8072;
+        int GL_TEXTURE_WRAP_S = 0x2802;
+        int GL_TEXTURE_WRAP_T = 0x2803;
         int GL_TRIANGLES = 0x04;
         int GL_TRIANGLE_FAN = 0x05;
         int GL_TRIANGLE_STRIP = 0x06;
+        int GL_TRUE = 0x0001;
         int GL_UNSIGNED_BYTE = 0x1401;
         int GL_UNSIGNED_SHORT = 0x1403;
         int GL_VERTEX_SHADER = 0x8B31;
@@ -269,12 +288,47 @@ public interface Render extends ManageableManager {
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
          */
+        void glBufferData(int target, long capacity, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         */
         void glBufferData(int target, ByteBuffer data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         */
+        void glBufferData(int target, ShortBuffer data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         */
+        void glBufferData(int target, IntBuffer data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         */
+        void glBufferData(int target, FloatBuffer data, int usage);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
          */
         void glBufferSubData(int target, long offset, ByteBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         */
+        void glBufferSubData(int target, long offset, ShortBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         */
+        void glBufferSubData(int target, long offset, IntBuffer data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         */
+        void glBufferSubData(int target, long offset, FloatBuffer data);
 
         /**
          * (OES_map_buffer)
@@ -381,6 +435,11 @@ public interface Render extends ManageableManager {
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetUniformLocation.xml"/>
          */
         int glGetUniformLocation(int name, String uniform);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgramInfoLog.xml"/>
+         */
+        String glGetProgramInfoLog(int name);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml"/>
@@ -492,6 +551,9 @@ public interface Render extends ManageableManager {
         int GL_TRANSFORM_FEEDBACK_BUFFER = 0x8C8E;
         int GL_UNIFORM_BUFFER = 0x8A11;
         int GL_UNSIGNED_INT = 0x1405;
+        int GL_ACCESS_INVALIDATE = 0x0004;
+        int GL_ACCESS_INVALIDATE_ALL = 0x0008;
+        int GL_ACCESS_UNSYNCHRONIZED = 0x0020;
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glGenVertexArrays.xml"/>
@@ -578,10 +640,20 @@ public interface Render extends ManageableManager {
      * <code>GLESExtension</code> encapsulate all feature(s) supported by extension.
      */
     interface GLESExtension {
+        int GL_COMPRESSED_RED = 0x8225;
+        int GL_COMPRESSED_RG = 0x8226;
+        int GL_COMPRESSED_RGB = 0x84ED;
+        int GL_COMPRESSED_RGBA = 0x84EE;
+        int GL_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FE;
         int S3TC_RGBA_DXT1 = 0x83F1;
         int S3TC_RGBA_DXT3 = 0x83F2;
         int S3TC_RGBA_DXT5 = 0x83F3;
         int S3TC_RGB_DXT1 = 0x83F0;
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glBindFragDataLocation.xhtml"/>
+         */
+        void glBindFragDataLocation(int name, int index, String attribute);
     }
 
     /**

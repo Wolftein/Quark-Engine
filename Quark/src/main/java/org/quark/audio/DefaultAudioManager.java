@@ -15,12 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quark.audio.al;
+package org.quark.audio;
 
-import org.quark.audio.Audio;
-import org.quark.audio.AudioListener;
-import org.quark.audio.AudioManager;
-import org.quark.audio.AudioSource;
 import org.quark.audio.factory.FactoryAudioStatic;
 import org.quark.audio.factory.FactoryAudioStreaming;
 import org.quark.mathematic.ImmutableVector3f;
@@ -33,11 +29,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Default implementation for {@link AudioManager} using {@link org.quark.audio.AudioManager.ALES10}.
+ * Default implementation for {@link AudioManager}.
  *
  * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public final class AudioManager_AL10 implements AudioManager {
+public final class DefaultAudioManager implements AudioManager {
     /**
      * Represent the max capacity of a streaming buffer.
      */
@@ -97,7 +93,7 @@ public final class AudioManager_AL10 implements AudioManager {
     /**
      * <p>Constructor</p>
      */
-    public AudioManager_AL10(ALCES alc, ALES10 al10) {
+    public DefaultAudioManager(ALCES alc, ALES10 al10) {
         mALC = alc;
         mAL10 = al10;
     }
@@ -143,7 +139,7 @@ public final class AudioManager_AL10 implements AudioManager {
     /**
      * <p>Called to delete the module</p>
      */
-    public void delete() {
+    public void destroy() {
         //!
         //! Stop all attachment(s).
         //!

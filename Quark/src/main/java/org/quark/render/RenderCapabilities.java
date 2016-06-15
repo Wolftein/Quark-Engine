@@ -17,6 +17,10 @@
  */
 package org.quark.render;
 
+import org.quark.render.storage.VertexDescriptor;
+import org.quark.render.texture.Texture;
+import org.quark.render.texture.frame.Frame;
+
 import java.util.EnumMap;
 
 /**
@@ -30,27 +34,37 @@ public final class RenderCapabilities {
      */
     public enum Extension {
         /**
-         * Indicates if frame buffer are supported.
+         * Indicates if {@link Frame} is supported.
          */
-        FRAME,
+        FRAME_BUFFER,
 
         /**
-         * Indicates if frame support multiple render target (MRT).
+         * Indicates if {@link Frame} support sRGB format.
          */
-        FRAME_MULTIPLE_RENDER_TARGET,
+        FRAME_BUFFER_SRGB,
 
         /**
-         * Indicates if frame support multiple samples.
+         * Indicates if {@link Frame} support multiple render target (MRT).
          */
-        FRAME_MULTIPLE_SAMPLE,
+        FRAME_BUFFER_MULTIPLE_RENDER_TARGET,
 
         /**
-         * Indicates if texture support S3TC compression.
+         * Indicates if {@link Frame} support multiple samples.
+         */
+        FRAME_BUFFER_MULTIPLE_SAMPLE,
+
+        /**
+         * Indicates if {@link VertexDescriptor} is supported.
+         */
+        VERTEX_ARRAY_OBJECT,
+
+        /**
+         * Indicates if {@link Texture} support S3TC compression.
          */
         TEXTURE_COMPRESSION_S3TC,
 
         /**
-         * Indicates if texture support anisotropic filter.
+         * Indicates if {@link Texture} support anisotropic filter.
          */
         TEXTURE_FILTER_ANISOTROPIC,
 
@@ -75,32 +89,32 @@ public final class RenderCapabilities {
      */
     public enum Limit {
         /**
-         * Indicates the maximum number of frame sample(s).
+         * Indicates {@link Frame} maximum sample(s).
          */
         FRAME_SAMPLE,
 
         /**
-         * Indicates the maximum number of frame attachment(s).
+         * Indicates {@link Frame} maximum attachment(s).
          */
         FRAME_ATTACHMENT,
 
         /**
-         * Indicates the maximum number of frame multiple render attachment(s).
+         * Indicates {@link Frame} maximum multiple render attachment(s).
          */
         FRAME_MULTIPLE_RENDER_ATTACHMENT,
 
         /**
-         * Indicates the maximum anisotropic filter of a texture.
+         * Indicates {@link Texture} maximum anisotropic filter.
          */
         TEXTURE_ANISOTROPIC,
 
         /**
-         * Indicates the maximum size of a texture.
+         * Indicates {@link Texture} maximum size.
          */
         TEXTURE_SIZE,
 
         /**
-         * Indicates the maximum number of texture stage(s).
+         * Indicates {@link Texture} maximum stage(s).
          */
         TEXTURE_STAGE,
     }
@@ -110,43 +124,49 @@ public final class RenderCapabilities {
      */
     public enum LanguageVersion {
         /**
+         * Represent OpenGL ES 2.0 (March 2007).
+         */
+        GLES20,
+
+        /**
+         * Represent OpenGL ES 3.0 (August 2012).
+         */
+        GLES30,
+
+        /**
+         * Represent OpenGL ES 3.1 (March 2014).
+         */
+        GLES31,
+
+        /**
+         * Represent OpenGL ES 3.2 (August 2015).
+         */
+        GLES32,
+
+        /**
+         * Represent OpenGL 2.1 (2006).
+         */
+        GL21,
+
+        /**
          * Represent OpenGL 3.0 (August 2008).
-         * <p>
-         * {@since OpenGL 3.0}
          */
         GL30,
 
         /**
          * Represent OpenGL 3.1 (March 2009).
-         * <p>
-         * {@since OpenGL 3.1}
          */
         GL31,
 
         /**
          * Represent OpenGL 3.2 (August 2009).
-         * <p>
-         * {@since OpenGL 3.2}
          */
         GL32,
 
         /**
          * Represent OpenGL 3.3 (February 2010).
-         * <p>
-         * {@since OpenGL 3.3}
          */
         GL33;
-
-        /**
-         * <p>Check if this version is better than the given</p>
-         *
-         * @param version the other version
-         *
-         * @return <code>true</code> if this version is better than the given, <code>false</code> otherwise
-         */
-        public boolean isBetterThan(LanguageVersion version) {
-            return ordinal() >= version.ordinal();
-        }
 
         /**
          * <p>Parse the {@link LanguageVersion} from a string</p>
@@ -158,6 +178,9 @@ public final class RenderCapabilities {
         public static LanguageVersion fromStringVersion(String version) {
             final String id = version.substring(0, version.indexOf(" "));
             switch (id) {
+                // TODO: Implement OpenGL ES
+                case "2.1.0":
+                    return GL21;
                 case "3.0.0":
                     return GL30;
                 case "3.1.0":
@@ -180,6 +203,9 @@ public final class RenderCapabilities {
          */
         public static LanguageVersion fromIntVersion(int version) {
             switch (version) {
+                // TODO: Implement OpenGL ES
+                case 21:
+                    return GL21;
                 case 30:
                     return GL30;
                 case 31:
@@ -198,6 +224,27 @@ public final class RenderCapabilities {
      * <code>ShaderLanguageVersion</code> enumerates supported shading language(s)
      */
     public enum ShaderLanguageVersion {
+        /**
+         * Represent OpenGL ES Pipeline Language 2 (March 2007).
+         * <p>
+         * {@since OpenGL ES 2.0}
+         */
+        GLSLES2("100"),
+
+        /**
+         * Represent OpenGL ES Pipeline Language 3 (August 2012).
+         * <p>
+         * {@since OpenGL ES 3.0}
+         */
+        GLSLES3("300"),
+
+        /**
+         * Represent OpenGL Pipeline Language 1.20 (2006).
+         * <p>
+         * {@since OpenGL 2.1}
+         */
+        GLSL210("120"),
+
         /**
          * Represent OpenGL Pipeline Language 1.30 (August 2008).
          * <p>
@@ -236,17 +283,6 @@ public final class RenderCapabilities {
         }
 
         /**
-         * <p>Check if this version is better than the given</p>
-         *
-         * @param version the other version
-         *
-         * @return <code>true</code> if this version is better than the given, <code>false</code> otherwise
-         */
-        public boolean isBetterThan(ShaderLanguageVersion version) {
-            return ordinal() >= version.ordinal();
-        }
-
-        /**
          * <p>Parse the {@link ShaderLanguageVersion} from a string</p>
          *
          * @param version the string that contain(s) the version
@@ -256,6 +292,9 @@ public final class RenderCapabilities {
         public static ShaderLanguageVersion fromStringVersion(String version) {
             final String id = version.substring(0, version.indexOf(" "));
             switch (id) {
+                // TODO: Implement OpenGL ES
+                case "1.20":
+                    return GLSL210;
                 case "1.30":
                     return GLSL300;
                 case "1.40":
@@ -278,6 +317,9 @@ public final class RenderCapabilities {
          */
         public static ShaderLanguageVersion fromIntVersion(int version) {
             switch (version) {
+                // TODO: Implement OpenGL ES
+                case 120:
+                    return GLSL210;
                 case 130:
                     return GLSL300;
                 case 140:

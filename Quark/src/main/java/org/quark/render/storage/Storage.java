@@ -36,28 +36,28 @@ import static org.quark.Quark.QkRender;
  */
 public class Storage<A extends Buffer> extends Manageable implements Disposable {
     public final static int CONCEPT_DATA = (1 << 0);
+    public final static int CONCEPT_DATA_CHANGE = (1 << 1);
 
     /**
      * Indicates that the previous contents of the specified range may be discarded.
      * <p>
      * {@since OpenGL 3.0}
      */
-    public final static int ACCESS_INVALIDATE = 0x04;
+    public final static int ACCESS_INVALIDATE = Render.GLES3.GL_ACCESS_INVALIDATE;
 
     /**
      * Indicates that the previous contents of the entire storage may be discarded.
      * <p>
      * {@since OpenGL 3.0}
      */
-    public final static int ACCESS_INVALIDATE_ALL = 0x08;
+    public final static int ACCESS_INVALIDATE_ALL = Render.GLES3.GL_ACCESS_INVALIDATE_ALL;
 
     /**
      * Indicates that the server should not attempt to synchronize pending operations.
      * <p>
      * {@since OpenGL 3.0}
      */
-    public final static int ACCESS_UNSYNCHRONIZED = 0x20;
-
+    public final static int ACCESS_UNSYNCHRONIZED = Render.GLES3.GL_ACCESS_UNSYNCHRONIZED;
 
     private final StorageType mType;
     private final StorageTarget mTarget;
@@ -249,9 +249,9 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
         @Override
         public A map(Render gl, int access, long offset, long length) {
             //!
-            //! We only support offset and length (in the client-side) due to some limitation
+            //! Only support offset and length (in the client-side) due to some limitation
             //!
-            //! Missing: INVALIDATE, INVALIDATE_ALL requires mem-set which requires JNI.
+            //! Missing: INVALIDATE, INVALIDATE_ALL requires memset which requires JNI.
             //!
             mData.position((int) offset).limit((int) length);
 
@@ -265,7 +265,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
         public void unmap(Render gl) {
             mData.flip();
 
-            Storage.this.setUpdate(CONCEPT_DATA);
+            Storage.this.setUpdate(CONCEPT_DATA_CHANGE);
         }
     }
 
