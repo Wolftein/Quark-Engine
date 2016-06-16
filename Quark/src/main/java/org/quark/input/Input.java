@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -17,12 +17,10 @@
  */
 package org.quark.input;
 
-import java.nio.IntBuffer;
+import org.quark.system.utility.array.Int32Array;
 
 /**
  * <code>Input</code> encapsulate an input-device to interface with <code>InputManager</code>.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface Input {
     /**
@@ -35,7 +33,7 @@ public interface Input {
      *
      * @param buffer the buffer that will contain the input when updating
      */
-    void update(IntBuffer buffer);
+    void update(Int32Array buffer);
 
     /**
      * <p>Destroy the device</p>

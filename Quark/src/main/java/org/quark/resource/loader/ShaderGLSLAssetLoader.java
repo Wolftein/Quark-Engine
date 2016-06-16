@@ -44,12 +44,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Encapsulate an {@linkplain AssetLoader} for loading GLSL shader(s).
+ * <code>ShaderGLSLAssetLoader</code> encapsulate an {@linkplain AssetLoader} for loading GLSL shader(s).
  * <p>
- * {@link Shader}
- * {@link Stage}
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * NOTE: This class requires improvement.
  */
 public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.Descriptor> {
     private final PipelineParser mParser = new PipelineParser(SimpleEasyXmlParser.getElementFinderFactory());
@@ -58,6 +55,8 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
      * Encapsulate the pipeline structure.
      */
     private final static class Header {
+        public String mPrecision;
+
         public final Map<String, String> mProcessor = new HashMap<>();
         public final Map<String, Attribute> mAttributes = new HashMap<>();
         public final Map<String, Uniform> mUniforms = new HashMap<>();
@@ -95,12 +94,13 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
      * @throws IOException indicates failing loading the shader
      */
     private Shader readShader(Shader.Descriptor descriptor, InputStream input) throws IOException {
-        final Header header = new Header();
-
         //!
         //! Parse the XML file that contain(s) the pipeline.
         //!
         final Pipeline pipeline = SimpleEasyXmlParser.parse(input, mParser);
+
+        final Header header = new Header();
+        header.mPrecision = pipeline.precision;
 
         //!
         //! Handle and transform each stage.
@@ -146,6 +146,14 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         content.append("\n\n");
 
         //!
+        //! OpenGL ES require precision.
+        //!
+        if (mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSLES2
+                || mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSLES3) {
+            content.append("precision ").append(header.mPrecision).append(" float\n\n");
+        }
+
+        //!
         //! Build input-data
         //!
         for (final Input input : stage.input) {
@@ -189,6 +197,10 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
      * <p>Parse input-attribute(s)</p>
      */
     private String parseInput(Header header, StageType type, Input input) throws IOException {
+        final boolean isDeprecated =
+                (mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSL210
+                        || mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSLES2);
+
         //!
         //! Check if the element is valid.
         //!
@@ -202,8 +214,13 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         if (type == StageType.VERTEX) {
             header.mAttributes.put(input.name, new Attribute(input.index, Attribute.TYPE_INPUT));
 
-            if (mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE))
+            if (isDeprecated) {
+                return "attribute " + input.type + " " + input.name + ";";
+            } else if (mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
                 return "layout(location = " + input.index + ")" + " in " + input.type + " " + input.name + ";";
+            }
+        } else if (isDeprecated) {
+            return "varying " + input.type + " " + input.name + ";";
         }
         return "in " + input.type + " " + input.name + ";";
     }
@@ -212,6 +229,10 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
      * <p>Parse output-attribute(s)</p>
      */
     private String parseOutput(Header header, StageType type, Output output) throws IOException {
+        final boolean isDeprecated =
+                (mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSL210
+                        || mCapabilities.getShaderLanguageVersion() == RenderCapabilities.ShaderLanguageVersion.GLSLES2);
+
         //!
         //! Check if the element is valid.
         //!
@@ -225,8 +246,14 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         if (type == StageType.FRAGMENT) {
             header.mAttributes.put(output.name, new Attribute(output.index, Attribute.TYPE_OUTPUT));
 
-            if (mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE))
+            if (isDeprecated) {
+                return "";  // TODO: What to do here?
+            }
+            if (mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
                 return "layout(location = " + output.index + ")" + " out " + output.type + " " + output.name + ";";
+            }
+        } else if (isDeprecated) {
+            return "varying " + output.type + " " + output.name + ";";
         }
         return "out " + output.type + " " + output.name + ";";
     }
@@ -386,6 +413,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          * Hold the type of the attribute
          */
         public String type;
+
+        /**
+         * Hold the precision of the attribute
+         */
+        public String precision;
     }
 
     /**
@@ -399,9 +431,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         public Input marshall(String... input) {
             final Input instance = new Input();
 
+            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+
             instance.name = input[1];
             instance.type = input[2];
-            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+            instance.precision = input[3];
 
             return instance;
         }
@@ -425,6 +459,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          * Hold the type of the attribute
          */
         public String type;
+
+        /**
+         * Hold the precision of the attribute
+         */
+        public String precision;
     }
 
     /**
@@ -438,9 +477,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         public Output marshall(String... input) {
             final Output instance = new Output();
 
+            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+
             instance.name = input[1];
             instance.type = input[2];
-            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+            instance.precision = input[3];
 
             return instance;
         }
@@ -469,6 +510,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          * Hold the type of the variable
          */
         public String type;
+
+        /**
+         * Hold the precision of the variable
+         */
+        public String precision;
     }
 
     /**
@@ -482,10 +528,14 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         public Variable marshall(String... input) {
             final Variable instance = new Variable();
 
+            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+
             instance.name = input[1];
             instance.type = input[2];
-            instance.index = input[0] != null ? Integer.parseInt(input[0]) : -1;
+
             instance.length = input[3] != null ? Integer.parseInt(input[3]) : 1;
+
+            instance.precision = input[4];
 
             return instance;
         }
@@ -546,11 +596,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          */
         public UnitParser(ElementFinderFactory factory) {
             mFinder0 = factory.getListAttributeFinder(new InputAttributeMarshaller(),
-                    A -> mUnit.input.add(A), "index", "name", "type");
+                    A -> mUnit.input.add(A), "index", "name", "type", "precision");
             mFinder1 = factory.getListAttributeFinder(new OutputAttributeMarshaller(),
-                    A -> mUnit.output.add(A), "index", "name", "type");
+                    A -> mUnit.output.add(A), "index", "name", "type", "precision");
             mFinder2 = factory.getListAttributeFinder(new VariableAttributeMarshaller(),
-                    A -> mUnit.uniform.add(A), "index", "name", "type", "length");
+                    A -> mUnit.uniform.add(A), "index", "name", "type", "length", "precision");
             mFinder3 = factory.getStringFinder();
             mFinder4 = factory.getListElementFinder(new StringBodyMarshaller(),
                     A -> mUnit.literal.add(A));
@@ -567,13 +617,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
             mFinder3.find(element, "entry");
             mFinder4.find(element, "literal");
 
-            element.setStartElementListener(Attributes ->
-            {
+            element.setStartElementListener(attributes -> {
                 mUnit = new Unit();
-                mUnit.type = Attributes.getValue("type");
+                mUnit.type = attributes.getValue("type");
             });
-            element.setEndElementListener(() ->
-            {
+            element.setEndElementListener(() -> {
                 mUnit.entry = mFinder3.getResultOrThrow();
 
                 listener.onParsed(mUnit);
@@ -589,6 +637,11 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          * Hold the name of the pipeline.
          */
         public String name;
+
+        /**
+         * Hold the precision of the pipeline.
+         */
+        public String precision;
 
         /**
          * Hold all the stage(s) of the pipeline.
@@ -611,8 +664,7 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
          * <p>Constructor</p>
          */
         public PipelineParser(ElementFinderFactory factory) {
-            mFinder0 = factory.getListElementFinder(
-                    new UnitParser(factory), (Unit) -> mPipeline.stage.add(Unit));
+            mFinder0 = factory.getListElementFinder(new UnitParser(factory), (unit) -> mPipeline.stage.add(unit));
         }
 
         /**
@@ -630,10 +682,10 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
         public void stream(RootElement element) {
             mFinder0.find(element, "stage");
 
-            element.setStartElementListener(Attributes ->
-            {
+            element.setStartElementListener(attributes -> {
                 mPipeline = new Pipeline();
-                mPipeline.name = Attributes.getValue("name");
+                mPipeline.name = attributes.getValue("name");
+                mPipeline.precision = attributes.getValue("precision");
             });
         }
 

@@ -17,13 +17,12 @@
  */
 package org.quark.mathematic;
 
-import java.nio.ByteBuffer;
+import org.quark.system.utility.array.Float32Array;
+
 import java.nio.FloatBuffer;
 
 /**
  * <code>Matrix4f</code> encapsulate a single precision floating point 4 by 4 matrix.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Matrix4f {
     protected float m00, m01, m02, m03;
@@ -75,7 +74,7 @@ public abstract class Matrix4f {
      *
      * @return a reference to <code>buffer</code>
      */
-    public final FloatBuffer store(FloatBuffer buffer) {
+    public final Float32Array store(Float32Array buffer) {
         return store(buffer.position(), buffer);
     }
 
@@ -87,62 +86,23 @@ public abstract class Matrix4f {
      *
      * @return a reference to <code>buffer</code>
      */
-    public final FloatBuffer store(int index, FloatBuffer buffer) {
-        buffer.put(index, m00);
-        buffer.put(index + 1, m10);
-        buffer.put(index + 2, m20);
-        buffer.put(index + 3, m30);
-        buffer.put(index + 4, m01);
-        buffer.put(index + 5, m11);
-        buffer.put(index + 6, m21);
-        buffer.put(index + 7, m31);
-        buffer.put(index + 8, m02);
-        buffer.put(index + 9, m12);
-        buffer.put(index + 10, m22);
-        buffer.put(index + 11, m32);
-        buffer.put(index + 12, m03);
-        buffer.put(index + 13, m13);
-        buffer.put(index + 14, m23);
-        buffer.put(index + 15, m33);
-        return buffer;
-    }
-
-    /**
-     * <p>Put the matrix into a {@link ByteBuffer}</p>
-     *
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>buffer</code>
-     */
-    public final ByteBuffer store(ByteBuffer buffer) {
-        return store(buffer.position(), buffer);
-    }
-
-    /**
-     * <p>Put the matrix into a {@link ByteBuffer}</p>
-     *
-     * @param index  the buffer's offset
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>buffer</code>
-     */
-    public final ByteBuffer store(int index, ByteBuffer buffer) {
-        buffer.putFloat(index, m00);
-        buffer.putFloat(index + 4, m10);
-        buffer.putFloat(index + 8, m20);
-        buffer.putFloat(index + 12, m30);
-        buffer.putFloat(index + 16, m01);
-        buffer.putFloat(index + 20, m11);
-        buffer.putFloat(index + 24, m21);
-        buffer.putFloat(index + 28, m31);
-        buffer.putFloat(index + 32, m02);
-        buffer.putFloat(index + 36, m12);
-        buffer.putFloat(index + 40, m22);
-        buffer.putFloat(index + 44, m32);
-        buffer.putFloat(index + 48, m03);
-        buffer.putFloat(index + 52, m13);
-        buffer.putFloat(index + 56, m23);
-        buffer.putFloat(index + 60, m33);
+    public final Float32Array store(int index, Float32Array buffer) {
+        buffer.write(index, m00);
+        buffer.write(index + 1, m10);
+        buffer.write(index + 2, m20);
+        buffer.write(index + 3, m30);
+        buffer.write(index + 4, m01);
+        buffer.write(index + 5, m11);
+        buffer.write(index + 6, m21);
+        buffer.write(index + 7, m31);
+        buffer.write(index + 8, m02);
+        buffer.write(index + 9, m12);
+        buffer.write(index + 10, m22);
+        buffer.write(index + 11, m32);
+        buffer.write(index + 12, m03);
+        buffer.write(index + 13, m13);
+        buffer.write(index + 14, m23);
+        buffer.write(index + 15, m33);
         return buffer;
     }
 

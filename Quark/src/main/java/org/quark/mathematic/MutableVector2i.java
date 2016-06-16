@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent a mutable {@linkplain Vector2i}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class MutableVector2i extends Vector2i {
     /**
@@ -28,6 +26,16 @@ public final class MutableVector2i extends Vector2i {
      */
     public MutableVector2i(int x, int y) {
         super(x, y);
+    }
+
+    /**
+     * <p>Change the components of this vector</p>
+     *
+     * @param vector the vector
+     */
+    public void set(Vector2i vector) {
+        mX = vector.mX;
+        mY = vector.mY;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,12 +22,10 @@ import org.quark.mathematic.Vector3f;
 import org.quark.mathematic.Vector3i;
 import org.quark.system.utility.Manageable;
 
-import static org.quark.Quark.QkAudioManager;
+import static org.quark.Quark.QKAudio;
 
 /**
  * <code>AudioSource</code> encapsulate an audio source that can be manipulated.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class AudioSource extends Manageable {
     public final static int CONCEPT_POSITION = (1 << 1);
@@ -90,28 +88,28 @@ public final class AudioSource extends Manageable {
         //!
         mAudio = audio;
 
-        QkAudioManager.play(this);
+        QKAudio.play(this);
     }
 
     /**
      * @see AudioManager#pause(AudioSource)
      */
     public void pause() {
-        QkAudioManager.pause(this);
+        QKAudio.pause(this);
     }
 
     /**
      * @see AudioManager#resume(AudioSource)
      */
     public void resume() {
-        QkAudioManager.resume(this);
+        QKAudio.resume(this);
     }
 
     /**
      * @see AudioManager#stop(AudioSource)
      */
     public void stop() {
-        QkAudioManager.stop(this);
+        QKAudio.stop(this);
     }
 
     /**

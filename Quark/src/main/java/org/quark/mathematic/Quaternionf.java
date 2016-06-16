@@ -19,10 +19,8 @@ package org.quark.mathematic;
 
 /**
  * <code>Quaternionf</code> extend a rotation in three dimensions to a rotation in four dimensions.
- * <p/>
+ * <p>
  * <code>Quaternionf</code> are defined by four floating point component: {x y z w}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Quaternionf {
     protected float mX;

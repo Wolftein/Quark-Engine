@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,8 +21,6 @@ import org.quark.render.Render;
 
 /**
  * <code>FrameAttachment</code> enumerate {@link Frame} attachment(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public enum FrameAttachment {
     /**

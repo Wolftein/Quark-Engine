@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent an immutable {@link Matrix3f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableMatrix3f extends Matrix3f {
     /**

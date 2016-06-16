@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,8 +21,6 @@ package org.quark.render.shader;
  * <code>Stage</code> encapsulate an user-defined stage of a graphics processor.
  * <p>
  * Its purpose is to execute one of the programmable stages of the rendering pipeline.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Stage {
     private final String mSource;

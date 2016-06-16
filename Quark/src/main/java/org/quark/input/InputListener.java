@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,8 +22,6 @@ import org.quark.input.device.InputMouseButton;
 
 /**
  * <code>InputListener</code> encapsulate a raw listener for handling any input-event.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface InputListener {
     /**

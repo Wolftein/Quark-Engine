@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent a mutable {@linkplain Vector4f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class MutableVector4f extends Vector4f {
     /**
@@ -28,6 +26,18 @@ public final class MutableVector4f extends Vector4f {
      */
     public MutableVector4f(float x, float y, float z, float w) {
         super(x, y, z, w);
+    }
+
+    /**
+     * <p>Change the components of this vector</p>
+     *
+     * @param vector the vector
+     */
+    public void set(Vector4f vector) {
+        mX = vector.mX;
+        mY = vector.mY;
+        mZ = vector.mZ;
+        mW = vector.mW;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -18,13 +18,10 @@
 package org.quark.input.device;
 
 import org.quark.input.Input;
-
-import java.nio.IntBuffer;
+import org.quark.system.utility.array.Int32Array;
 
 /**
  * <code>InputKeyboard</code> encapsulate an {@link Input} for handling keyboard based device(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface InputKeyboard extends Input {
     /**
@@ -47,8 +44,8 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_UP
      */
-    static void onFactoryKeyUp(IntBuffer buffer, InputKey key) {
-        buffer.put(EVENT_KEY_UP).put(key.ordinal());
+    static void onFactoryKeyUp(Int32Array buffer, InputKey key) {
+        buffer.write(EVENT_KEY_UP).write(key.ordinal());
     }
 
     /**
@@ -56,8 +53,8 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_DOWN
      */
-    static void onFactoryKeyDown(IntBuffer buffer, InputKey key) {
-        buffer.put(EVENT_KEY_DOWN).put(key.ordinal());
+    static void onFactoryKeyDown(Int32Array buffer, InputKey key) {
+        buffer.write(EVENT_KEY_DOWN).write(key.ordinal());
     }
 
     /**
@@ -65,7 +62,7 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_TYPE
      */
-    static void onFactoryKeyType(IntBuffer buffer, char key) {
-        buffer.put(EVENT_KEY_TYPE).put(key);
+    static void onFactoryKeyType(Int32Array buffer, char key) {
+        buffer.write(EVENT_KEY_TYPE).write(key);
     }
 }

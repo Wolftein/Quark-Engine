@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,36 +21,44 @@ import org.quark.audio.AudioManager;
 import org.quark.input.InputManager;
 import org.quark.render.Render;
 import org.quark.resource.AssetManager;
-import org.quark.system.Framework;
+import org.quark.system.Display;
 
 /**
  * <code>Quark</code> encapsulate a singleton for the entire framework.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Quark {
     /**
-     * Hold the {@link Framework} implementation of the framework.
+     * Hold the {@link AudioManager} implementation.
+     *
+     * @see AudioManager
      */
-    public static Framework Qk = null;
+    public static AudioManager QKAudio;
 
     /**
-     * Hold the {@link AudioManager} implementation of the framework.
+     * Hold the {@link Display} implementation.
+     *
+     * @see Display
      */
-    public static AudioManager QkAudioManager = null;
+    public static Display QKDisplay = null;
 
     /**
-     * Hold the {@link Render} implementation of the framework.
+     * Hold the {@link InputManager} implementation.
+     *
+     * @see InputManager
      */
-    public static Render QkRender = null;
+    public static InputManager QKInput;
 
     /**
-     * Hold the {@link AssetManager} implementation of the framework.
+     * Hold the {@link Render} implementation.
+     *
+     * @see Render
      */
-    public static AssetManager QkAssetManager = null;
+    public static Render QKRender;
 
     /**
-     * Hold the {@link InputManager} implementation of the framework.
+     * Hold the {@link AssetManager} implementation.
+     *
+     * @see AssetManager
      */
-    public static InputManager QkInputManager = null;
+    public static AssetManager QKResources;
 }

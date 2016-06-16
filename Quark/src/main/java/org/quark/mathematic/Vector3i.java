@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector3i</code> encapsulate a 3 element vector that is represented by integer.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector3i {
     protected int mX;
@@ -389,7 +387,7 @@ public abstract class Vector3i {
             return false;
         }
         final Vector3i other = (Vector3i) vector;
-        return Float.compare(mX, other.mX) == 0 && Float.compare(mY, other.mY) == 0 && Float.compare(mZ, other.mZ) == 0;
+        return mX == other.mX && mY == other.mY && mZ == other.mZ;
     }
 
     /**

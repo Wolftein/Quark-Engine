@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,8 +21,6 @@ import org.quark.render.Render;
 
 /**
  * <code>TextureFilter</code> enumerate {@link Texture} filter(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public enum TextureFilter {
     /**
@@ -30,9 +28,9 @@ public enum TextureFilter {
      * <p>
      * Uses the value of the texture element that is nearest (in Manhattan distance) to the center
      * of the pixel being textured.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 2.0
      */
     POINT(Render.GLES2.GL_NEAREST, Render.GLES2.GL_NEAREST_MIPMAP_NEAREST, Render.GLES2.GL_NEAREST, 1),
 
@@ -42,9 +40,9 @@ public enum TextureFilter {
      * Uses the weighted average of the four texture elements that are closest to the center of the pixel
      * being textured. These can include border texture elements, depending on the values of GL_TEXTURE_WRAP_S and
      * GL_TEXTURE_WRAP_T, and on the exact mapping.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 2.0
      */
     BILINEAR(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_NEAREST, Render.GLES2.GL_LINEAR, 1),
 
@@ -55,45 +53,45 @@ public enum TextureFilter {
      * the BASE_LEVEL_LINEAR criterion (a weighted average of the four texture elements that are closest to
      * the center of the pixel) to produce a texture value from each mip-map. The final texture value is a
      * weighted average of those two values.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 2.0
      */
     TRILINEAR(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_LINEAR, Render.GLES2.GL_LINEAR, 1),
 
     /**
      * Uses {@link #TRILINEAR} as base filter and additionally applies a 2x anisotropic filter.
-     * <p>
-     * {@since OpenGL    1.2}
-     * {@since OpenGL ES 2.0}
-     * {@since GL_EXT_texture_filter_anisotropic}
+     *
+     * @since OpenGL    1.2
+     * @since OpenGL ES 2.0
+     * @since GL_EXT_texture_filter_anisotropic
      */
     ANISOTROPIC_2(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_LINEAR, Render.GLES2.GL_LINEAR, 2),
 
     /**
      * Uses {@link #TRILINEAR} as base filter and additionally applies a 4x anisotropic filter.
-     * <p>
-     * {@since OpenGL    1.2}
-     * {@since OpenGL ES 2.0}
-     * {@since GL_EXT_texture_filter_anisotropic}
+     *
+     * @since OpenGL    1.2
+     * @since OpenGL ES 2.0
+     * @since GL_EXT_texture_filter_anisotropic
      */
     ANISOTROPIC_4(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_LINEAR, Render.GLES2.GL_LINEAR, 4),
 
     /**
      * Uses {@link #TRILINEAR} as base filter and additionally applies a 8x anisotropic filter.
-     * <p>
-     * {@since OpenGL    1.2}
-     * {@since OpenGL ES 2.0}
-     * {@since GL_EXT_texture_filter_anisotropic}
+     *
+     * @since OpenGL    1.2
+     * @since OpenGL ES 2.0
+     * @since GL_EXT_texture_filter_anisotropic
      */
     ANISOTROPIC_8(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_LINEAR, Render.GLES2.GL_LINEAR, 8),
 
     /**
      * Uses {@link #TRILINEAR} as base filter and additionally applies a 16x anisotropic filter.
-     * <p>
-     * {@since OpenGL    1.2}
-     * {@since OpenGL ES 2.0}
-     * {@since GL_EXT_texture_filter_anisotropic}
+     *
+     * @since OpenGL    1.2
+     * @since OpenGL ES 2.0
+     * @since GL_EXT_texture_filter_anisotropic
      */
     ANISOTROPIC_16(Render.GLES2.GL_LINEAR, Render.GLES2.GL_LINEAR_MIPMAP_LINEAR, Render.GLES2.GL_LINEAR, 16);
 

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -26,13 +26,10 @@ import org.quark.render.storage.VertexFormat;
 import org.quark.render.texture.Texture;
 import org.quark.render.texture.frame.Frame;
 import org.quark.system.utility.ManageableManager;
-
-import java.nio.*;
+import org.quark.system.utility.array.*;
 
 /**
- * <code>Render</code> encapsulate the render module.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>QKRender</code> encapsulate the render module.
  */
 public interface Render extends ManageableManager {
     /**
@@ -103,6 +100,7 @@ public interface Render extends ManageableManager {
         int GL_REPLACE = 0x1E01;
         int GL_RGB = 0x1907;
         int GL_RGBA = 0x1908;
+        int GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
         int GL_SCISSOR_TEST = 0x0C11;
         int GL_SHORT = 0x1402;
         int GL_SRC_ALPHA = 0x0302;
@@ -131,380 +129,447 @@ public interface Render extends ManageableManager {
         int GL_ZERO = 0x0000;
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml"/>
+         * <p>Retrieve the capabilities of the context</p>
+         *
+         * @return the capabilities of the context
+         */
+        RenderCapabilities glCapabilities();
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnable.xml">Link</a>
          */
         void glEnable(int value);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisable.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisable.xml">Link</a>
          */
         void glDisable(int value);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendFunc.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendFunc.xml">Link</a>
          */
         void glBlendFunc(int source, int destination);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendEquationSeparate.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBlendEquationSeparate.xml">Link</a>
          */
         void glBlendEquationSeparate(int rgb, int alpha);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCullFace.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCullFace.xml">Link</a>
          */
         void glCullFace(int mode);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDepthMask.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDepthMask.xml">Link</a>
          */
         void glDepthMask(boolean activate);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glColorMask.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDepthRange.xml">Link</a>
+         */
+        void glDepthRange(float near, float far);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDepthFunc.xml">Link</a>
+         */
+        void glDepthFunc(int mode);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glColorMask.xml">Link</a>
          */
         void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glScissor.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glScissor.xml">Link</a>
          */
         void glScissor(int x1, int y1, int x2, int y2);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilOpSeparate.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilOpSeparate.xml">Link</a>
          */
         void glStencilOpSeparate(int face, int stencilFail, int depthFail, int depthPass);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilFuncSeparate.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glStencilFuncSeparate.xml">Link</a>
          */
         void glStencilFuncSeparate(int face, int func, int ref, int mask);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClear.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClear.xml">Link</a>
          */
         void glClear(int value);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClearColor.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glClearColor.xml">Link</a>
          */
         void glClearColor(float red, float green, float blue, float alpha);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glViewport.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glViewport.xml">Link</a>
          */
         void glViewport(int x, int y, int width, int height);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenTextures.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenTextures.xml">Link</a>
          */
         int glGenTextures();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenBuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenBuffers.xml">Link</a>
          */
         int glGenBuffers();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateProgram.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateProgram.xml">Link</a>
          */
         int glCreateProgram();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenFramebuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenFramebuffers.xml">Link</a>
          */
         int glGenFramebuffers();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenRenderbuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenRenderbuffers.xml">Link</a>
          */
         int glGenRenderbuffers();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteTextures.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteTextures.xml">Link</a>
          */
         void glDeleteTextures(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteBuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteBuffers.xml">Link</a>
          */
         void glDeleteBuffers(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteProgram.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteProgram.xml">Link</a>
          */
         void glDeleteProgram(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteFramebuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteFramebuffers.xml">Link</a>
          */
         void glDeleteFramebuffers(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteRenderbuffers.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteRenderbuffers.xml">Link</a>
          */
         void glDeleteRenderbuffers(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glActiveTexture.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glActiveTexture.xml">Link</a>
          */
         void glActiveTexture(int stage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindTexture.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindTexture.xml">Link</a>
          */
         void glBindTexture(int target, int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindBuffer.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindBuffer.xml">Link</a>
          */
         void glBindBuffer(int target, int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUseProgram.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUseProgram.xml">Link</a>
          */
         void glUseProgram(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindFramebuffer.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindFramebuffer.xml">Link</a>
          */
         void glBindFramebuffer(int type, int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindRenderbuffer.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindRenderbuffer.xml">Link</a>
          */
         void glBindRenderbuffer(int type, int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawArrays.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawArrays.xml">Link</a>
          */
-        void glDrawArrays(int primitive, long offset, long count);
+        void glDrawArrays(int primitive, int offset, int count);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawElements.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDrawElements.xml">Link</a>
          */
-        void glDrawElements(int primitive, long count, int format, long offset);
+        void glDrawElements(int primitive, int count, int format, int offset);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, long capacity, int usage);
+        void glBufferData(int target, int capacity, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, ByteBuffer data, int usage);
+        void glBufferData(int target, Array<?> data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, ShortBuffer data, int usage);
+        void glBufferData(int target, Int8Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, IntBuffer data, int usage);
+        void glBufferData(int target, Int16Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, FloatBuffer data, int usage);
+        void glBufferData(int target, Int32Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferSubData(int target, long offset, ByteBuffer data);
+        void glBufferData(int target, UInt8Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferSubData(int target, long offset, ShortBuffer data);
+        void glBufferData(int target, UInt16Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferSubData(int target, long offset, IntBuffer data);
+        void glBufferData(int target, UInt32Array data, int usage);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferSubData(int target, long offset, FloatBuffer data);
+        void glBufferData(int target, Float16Array data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
+         */
+        void glBufferData(int target, Float32Array data, int usage);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Array<?> data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Int8Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Int16Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Int32Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, UInt8Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, UInt16Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, UInt32Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Float16Array data);
+
+        /**
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
+         */
+        void glBufferSubData(int target, int offset, Float32Array data);
 
         /**
          * (OES_map_buffer)
          *
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUnmapBuffer.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUnmapBuffer.xml">Link</a>
          */
         void glUnmapBuffer(int target);
 
         /**
          * (OES_map_buffer)
          *
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glMapBuffer.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glMapBuffer.xml">Link</a>
          */
-        ByteBuffer glMapBuffer(int target, int access);
+        Int8Array glMapBuffer(int target, int access);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml">Link</a>
          */
         void glTexParameter(int target, int type, int value);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexParameter.xml">Link</a>
          */
         void glTexParameter(int target, int type, float value);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexImage2D.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glTexImage2D.xml">Link</a>
          */
         void glTexImage2D(int target, int level, int internal, int width, int height, int border, int format,
-                int type, ByteBuffer data);
+                int type, Int8Array data);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompressedTexImage2D.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompressedTexImage2D.xml">Link</a>
          */
         void glCompressedTexImage2D(int target, int level, int internal, int width, int height,
-                int border, ByteBuffer data);
+                int border, Int8Array data);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml">Link</a>
          */
         void glGenerateMipmap(int target);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glFramebufferTexture2D.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glFramebufferTexture2D.xml">Link</a>
          */
         void glFramebufferTexture2D(int target, int attachment, int texture, int name, int level);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnableVertexAttribArray.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glEnableVertexAttribArray.xml">Link</a>
          */
         void glEnableVertexAttribArray(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisableVertexAttribArray.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDisableVertexAttribArray.xml">Link</a>
          */
         void glDisableVertexAttribArray(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGenerateMipmap.xml">Link</a>
          */
-        void glVertexAttribPointer(int name, int component, int type, boolean normalised, int stride, long offset);
+        void glVertexAttribPointer(int name, int component, int type, boolean normalised, int stride, int offset);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glLinkProgram.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glLinkProgram.xml">Link</a>
          */
         void glLinkProgram(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgram.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgram.xml">Link</a>
          */
         int glGetProgram(int name, int property);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteShader.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glDeleteShader.xml">Link</a>
          */
         void glDeleteShader(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateShader.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCreateShader.xml">Link</a>
          */
         int glCreateShader(int type);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glShaderSource.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glShaderSource.xml">Link</a>
          */
         void glShaderSource(int name, String source);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompileShader.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glCompileShader.xml">Link</a>
          */
         void glCompileShader(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glAttachShader.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glAttachShader.xml">Link</a>
          */
         void glAttachShader(int name, int shader);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindAttribLocation.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBindAttribLocation.xml">Link</a>
          */
         void glBindAttribLocation(int name, int id, String attribute);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetUniformLocation.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetUniformLocation.xml">Link</a>
          */
         int glGetUniformLocation(int name, String uniform);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgramInfoLog.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glGetProgramInfoLog.xml">Link</a>
          */
         String glGetProgramInfoLog(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml">Link</a>
          */
         void glRenderbufferStorage(int target, int format, int width, int height);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform1f(int name, float i1);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform2f(int name, float i1, float i2);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform3f(int name, float i1, float i2, float i3);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform4f(int name, float i1, float i2, float i3, float i4);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
-        void glUniform1fv(int name, FloatBuffer buffer);
+        void glUniform1fv(int name, Float32Array buffer);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform1i(int name, int i1);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform2i(int name, int i1, int i2);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform3i(int name, int i1, int i2, int i3);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
         void glUniform4i(int name, int i1, int i2, int i3, int i4);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
-        void glUniform1iv(int name, IntBuffer buffer);
+        void glUniform1iv(int name, Int32Array buffer);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
-        void glUniformMatrix3fv(int name, FloatBuffer buffer);
+        void glUniformMatrix3fv(int name, Float32Array buffer);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glUniform.xml">Link</a>
          */
-        void glUniformMatrix4fv(int name, FloatBuffer buffer);
+        void glUniformMatrix4fv(int name, Float32Array buffer);
     }
 
     /**
@@ -556,66 +621,66 @@ public interface Render extends ManageableManager {
         int GL_ACCESS_UNSYNCHRONIZED = 0x0020;
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glGenVertexArrays.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glGenVertexArrays.xml">Link</a>
          */
         int glGenVertexArrays();
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glDeleteVertexArrays.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glDeleteVertexArrays.xml">Link</a>
          */
         void glDeleteVertexArrays(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glBindVertexArray.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glBindVertexArray.xml">Link</a>
          */
         void glBindVertexArray(int name);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glMapBufferRange.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glMapBufferRange.xml">Link</a>
          */
-        ByteBuffer glMapBufferRange(int target, long offset, long size, int access);
+        Int8Array glMapBufferRange(int target, int offset, int size, int access);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glTexImage3D.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glTexImage3D.xml">Link</a>
          */
         void glTexImage3D(int target, int level, int internal, int width, int height, int depth, int border,
-                int format, int type, ByteBuffer data);
+                int format, int type, Int8Array data);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glCompressedTexImage3D.xml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man3/xhtml/glCompressedTexImage3D.xml">Link</a>
          */
         void glCompressedTexImage3D(int target, int level, int internal, int width, int height, int depth,
-                int border, ByteBuffer data);
+                int border, Int8Array data);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml">Link</a>
          */
         void glRenderbufferStorageMultisample(int target, int samples, int format, int width, int height);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml">Link</a>
          */
         void glUniform1ui(int name, int i1);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml">Link</a>
          */
         void glUniform2ui(int name, int i1, int i2);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml">Link</a>
          */
         void glUniform3ui(int name, int i1, int i2, int i3);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml">Link</a>
          */
         void glUniform4ui(int name, int i1, int i2, int i3, int i4);
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml">Link</a>
          */
-        void glUniform1uiv(int name, IntBuffer buffer);
+        void glUniform1uiv(int name, UInt32Array buffer);
     }
 
     /**
@@ -651,7 +716,7 @@ public interface Render extends ManageableManager {
         int S3TC_RGB_DXT1 = 0x83F0;
 
         /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glBindFragDataLocation.xhtml"/>
+         * @see <a href="https://www.opengl.org/sdk/docs/man/html/glBindFragDataLocation.xhtml">Link</a>
          */
         void glBindFragDataLocation(int name, int index, String attribute);
     }
@@ -947,7 +1012,7 @@ public interface Render extends ManageableManager {
      * @param offset    the action's offset
      * @param count     the action's count
      */
-    void draw(Primitive primitive, long offset, long count);
+    void draw(Primitive primitive, int offset, int count);
 
     /**
      * <p>Perform a draw operation using element(s)</p>
@@ -957,18 +1022,18 @@ public interface Render extends ManageableManager {
      * @param count     the action count
      * @param format    the action vertex's format(s)
      */
-    void draw(Primitive primitive, long offset, long count, VertexFormat format);
+    void draw(Primitive primitive, int offset, int count, VertexFormat format);
 
     /**
      * <p>Map a <code>Storage</code></p>
      *
      * @param storage the storage
      *
-     * @return a reference to the shared buffer expressed as <code>ByteBuffer</code>
+     * @return a reference to the shared buffer expressed as <code>Int8Array</code>
      *
      * @see #unmap(Storage)
      */
-    <T extends Buffer> T map(Storage<T> storage);
+    <T extends Array> T map(Storage<T> storage);
 
     /**
      * <p>Map a <code>Storage</code></p>
@@ -980,7 +1045,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Buffer> T map(Storage<T> storage, int access);
+    <T extends Array> T map(Storage<T> storage, int access);
 
     /**
      * <p>Map a range of the <code>Storage</code></p>
@@ -993,7 +1058,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Buffer> T map(Storage<T> storage, long offset, long length);
+    <T extends Array> T map(Storage<T> storage, int offset, int length);
 
     /**
      * <p>Map a range of the <code>Storage</code></p>
@@ -1007,7 +1072,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Buffer> T map(Storage<T> storage, int access, long offset, long length);
+    <T extends Array> T map(Storage<T> storage, int access, int offset, int length);
 
     /**
      * <p>Un-map a <code>Storage</code></p>
@@ -1016,8 +1081,8 @@ public interface Render extends ManageableManager {
      *
      * @see #map(Storage)
      * @see #map(Storage, int)
-     * @see #map(Storage, int, long, long)
-     * @see #map(Storage, long, long)
+     * @see #map(Storage, int, int, int)
+     * @see #map(Storage, int, int)
      */
-    <T extends Buffer> void unmap(Storage<T> storage);
+    <T extends Array> void unmap(Storage<T> storage);
 }

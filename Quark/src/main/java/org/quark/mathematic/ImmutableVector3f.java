@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent an immutable {@linkplain Vector3f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableVector3f extends Vector3f {
     public final static ImmutableVector3f ZERO = zero();

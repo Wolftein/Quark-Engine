@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,14 +22,12 @@ import org.quark.resource.AssetDescriptor;
 import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * <code>Texture</code> encapsulate a texture that contains one or more {@link Image}(s).
  * <p>
  * A texture can be used as the source of a texture access from a pipeline, or it can be used as a render target.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Texture extends Manageable implements Disposable {
     public final static int CONCEPT_FILTER = (1 << 0);
@@ -106,7 +104,7 @@ public abstract class Texture extends Manageable implements Disposable {
      * @see Render#create(Texture)
      */
     public final void create() {
-        QkRender.create(this);
+        QKRender.create(this);
     }
 
     /**
@@ -114,42 +112,42 @@ public abstract class Texture extends Manageable implements Disposable {
      */
     @Override
     public final void delete() {
-        QkRender.delete(this);
+        QKRender.delete(this);
     }
 
     /**
      * @see Render#acquire(Texture)
      */
     public final void acquire() {
-        QkRender.acquire(this);
+        QKRender.acquire(this);
     }
 
     /**
      * @see Render#acquire(Texture, int)
      */
     public final void acquire(int stage) {
-        QkRender.acquire(this, stage);
+        QKRender.acquire(this, stage);
     }
 
     /**
      * @see Render#update(Texture)
      */
     public final void update() {
-        QkRender.update(this);
+        QKRender.update(this);
     }
 
     /**
      * @see Render#release(Texture)
      */
     public final void release() {
-        QkRender.release(this);
+        QKRender.release(this);
     }
 
     /**
      * @see Render#release(Texture, int)
      */
     public final void release(int stage) {
-        QkRender.release(this, stage);
+        QKRender.release(this, stage);
     }
 
     /**
@@ -157,7 +155,7 @@ public abstract class Texture extends Manageable implements Disposable {
      */
     @Override
     public final void dispose() {
-        QkRender.dispose(this);
+        QKRender.dispose(this);
     }
 
     /**

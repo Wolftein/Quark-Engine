@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector3f</code> encapsulate a 3 element vector that is represented by single precision floating.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector3f {
     protected float mX;

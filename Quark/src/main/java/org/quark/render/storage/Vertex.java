@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -23,8 +23,6 @@ import java.util.List;
 
 /**
  * <code>Vertex</code> encapsulate how a {@link Storage} of {@link StorageTarget#ARRAY} is managed.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Vertex {
     /**

@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector2f</code> encapsulate a 2 element vector that is represented by single precision floating.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector2f {
     protected float mX;

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -20,42 +20,38 @@ package org.quark.render.storage;
 import org.quark.render.Render;
 import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
+import org.quark.system.utility.array.Array;
+import org.quark.system.utility.array.ArrayFactory;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * <code>Storage</code> encapsulate a buffer that store an array of un-formatted memory allocated by the GPU.
  * <p>
  * These can be used to store vertex data, pixel data retrieved from images or the frame-buffer.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
-public class Storage<A extends Buffer> extends Manageable implements Disposable {
+public class Storage<A extends Array> extends Manageable implements Disposable {
     public final static int CONCEPT_DATA = (1 << 0);
     public final static int CONCEPT_DATA_CHANGE = (1 << 1);
 
     /**
      * Indicates that the previous contents of the specified range may be discarded.
-     * <p>
-     * {@since OpenGL 3.0}
+     *
+     * @since OpenGL 3.0
      */
     public final static int ACCESS_INVALIDATE = Render.GLES3.GL_ACCESS_INVALIDATE;
 
     /**
      * Indicates that the previous contents of the entire storage may be discarded.
-     * <p>
-     * {@since OpenGL 3.0}
+     *
+     * @since OpenGL 3.0
      */
     public final static int ACCESS_INVALIDATE_ALL = Render.GLES3.GL_ACCESS_INVALIDATE_ALL;
 
     /**
      * Indicates that the server should not attempt to synchronize pending operations.
-     * <p>
-     * {@since OpenGL 3.0}
+     *
+     * @since OpenGL 3.0
      */
     public final static int ACCESS_UNSYNCHRONIZED = Render.GLES3.GL_ACCESS_UNSYNCHRONIZED;
 
@@ -63,7 +59,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     private final StorageTarget mTarget;
     private final StorageMode mMode;
     private final VertexFormat mFormat;
-    private final long mCapacity;
+    private final int mCapacity;
 
     /**
      * Hold the underlying factory of the storage, for transparency between client and server side storage(s).
@@ -73,7 +69,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     /**
      * <p>Constructor</p>
      */
-    public Storage(StorageType type, StorageTarget target, StorageMode mode, VertexFormat format, long capacity) {
+    public Storage(StorageType type, StorageTarget target, StorageMode mode, VertexFormat format, int capacity) {
         mType = type;
         mTarget = target;
         mMode = mode;
@@ -116,7 +112,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
      *
      * @return the capacity of the storage (in bytes)
      */
-    public final long getCapacity() {
+    public final int getCapacity() {
         return mCapacity;
     }
 
@@ -133,7 +129,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
      * @see Render#create(Storage)
      */
     public final void create() {
-        QkRender.create(this);
+        QKRender.create(this);
     }
 
     /**
@@ -141,56 +137,56 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
      */
     @Override
     public final void delete() {
-        QkRender.delete(this);
+        QKRender.delete(this);
     }
 
     /**
      * @see Render#acquire(Storage)
      */
     public final void acquire() {
-        QkRender.acquire(this);
+        QKRender.acquire(this);
     }
 
     /**
      * @see Render#update(Storage)
      */
     public final void update() {
-        QkRender.update(this);
+        QKRender.update(this);
     }
 
     /**
      * @see Render#release(Storage)
      */
     public final void release() {
-        QkRender.release(this);
+        QKRender.release(this);
     }
 
     /**
      * @see Render#map(Storage)
      */
     public final A map() {
-        return mFactory.map(QkRender);
+        return mFactory.map(QKRender);
     }
 
     /**
      * @see Render#map(Storage, int)
      */
     public final A map(int access) {
-        return mFactory.map(QkRender, access);
+        return mFactory.map(QKRender, access);
     }
 
     /**
-     * @see Render#map(Storage, int, long, long)
+     * @see Render#map(Storage, int, int, int)
      */
-    public final A map(int access, long offset, long length) {
-        return mFactory.map(QkRender, access, offset, length);
+    public final A map(int access, int offset, int length) {
+        return mFactory.map(QKRender, access, offset, length);
     }
 
     /**
      * @see Render#unmap(Storage)
      */
     public final void unmap() {
-        mFactory.unmap(QkRender);
+        mFactory.unmap(QKRender);
     }
 
     /**
@@ -198,18 +194,18 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
      */
     @Override
     public final void dispose() {
-        QkRender.dispose(this);
+        QKRender.dispose(this);
     }
 
     /**
      * <code>Factory</code> encapsulate the definition of a buffer within a <code>Storage</code>.
      */
-    private interface Factory<A extends Buffer> {
+    private interface Factory<A extends Array> {
         A map(Render gl);
 
         A map(Render gl, int access);
 
-        A map(Render gl, int access, long offset, long length);
+        A map(Render gl, int access, int offset, int length);
 
         void unmap(Render gl);
     }
@@ -218,13 +214,13 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
      * <code>Factory</code> implementation for {@link StorageType#CLIENT}
      */
     private final class BufferClientFactory implements Factory<A> {
-        private final ByteBuffer mData;
+        private final A mData;
 
         /**
          * <p>Constructor</p>
          */
         public BufferClientFactory() {
-            mData = ByteBuffer.allocateDirect((int) (Storage.this.mCapacity)).order(ByteOrder.nativeOrder());
+            mData = create(Storage.this.mCapacity, Storage.this.mFormat);
         }
 
         /**
@@ -232,7 +228,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
          */
         @Override
         public A map(Render gl) {
-            return map(gl, 0, 0L, mData.capacity());
+            return map(gl, 0, 0, mData.capacity());
         }
 
         /**
@@ -240,22 +236,22 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
          */
         @Override
         public A map(Render gl, int access) {
-            return map(gl, access, 0L, mData.capacity());
+            return map(gl, access, 0, mData.capacity());
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public A map(Render gl, int access, long offset, long length) {
+        public A map(Render gl, int access, int offset, int length) {
             //!
             //! Only support offset and length (in the client-side) due to some limitation
             //!
-            //! Missing: INVALIDATE, INVALIDATE_ALL requires memset which requires JNI.
+            //! Missing: INVALIDATE, INVALIDATE_ALL requires mem-set which requires JNI.
             //!
-            mData.position((int) offset).limit((int) length);
+            mData.position(offset).limit(length);
 
-            return cast(mData, Storage.this.mFormat);
+            return mData;
         }
 
         /**
@@ -293,7 +289,7 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
          * {@inheritDoc}
          */
         @Override
-        public A map(Render gl, int access, long offset, long length) {
+        public A map(Render gl, int access, int offset, int length) {
             return gl.map(Storage.this, access, offset, length);
         }
 
@@ -307,24 +303,27 @@ public class Storage<A extends Buffer> extends Manageable implements Disposable 
     }
 
     /**
-     * <p>Cast a {@link Buffer} that matches the {@link VertexFormat}</p>
+     * <p>Create a {@link Array} that matches the {@link VertexFormat}</p>
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends Buffer> T cast(ByteBuffer buffer, VertexFormat format) {
+    public static <T extends Array> T create(int capacity, VertexFormat format) {
         switch (format) {
             case BYTE:
+                return (T) ArrayFactory.allocateInt8Array(capacity);
             case UNSIGNED_BYTE:
-                return (T) buffer;
+                return (T) ArrayFactory.allocateUInt8Array(capacity);
             case HALF_FLOAT:
+                return (T) ArrayFactory.allocateFloat16Array(capacity);
             case SHORT:
+                return (T) ArrayFactory.allocateInt16Array(capacity);
             case UNSIGNED_SHORT:
-                return (T) buffer.asShortBuffer();
+                return (T) ArrayFactory.allocateUInt16Array(capacity);
             case INT:
+                return (T) ArrayFactory.allocateInt32Array(capacity);
             case UNSIGNED_INT:
-                return (T) buffer.asIntBuffer();
+                return (T) ArrayFactory.allocateUInt32Array(capacity);
             case FLOAT:
-                return (T) buffer.asFloatBuffer();
+                return (T) ArrayFactory.allocateFloat32Array(capacity);
         }
-        throw new IllegalArgumentException("Trying to parser a buffer with invalid format");
+        throw new IllegalArgumentException("Trying to create an array with invalid format");
     }
 }

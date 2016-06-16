@@ -17,13 +17,12 @@
  */
 package org.quark.mathematic;
 
-import java.nio.ByteBuffer;
+import org.quark.system.utility.array.Float32Array;
+
 import java.nio.FloatBuffer;
 
 /**
  * Represent a mutable {@link Matrix3f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class MutableMatrix3f extends Matrix3f {
     /**
@@ -70,40 +69,18 @@ public final class MutableMatrix3f extends Matrix3f {
      *
      * @return a reference to <code>this</code>
      */
-    public MutableMatrix3f set(FloatBuffer buffer) {
+    public MutableMatrix3f set(Float32Array buffer) {
         final int offset = buffer.position();
 
-        m00 = buffer.get(offset);
-        m01 = buffer.get(offset + 1);
-        m02 = buffer.get(offset + 2);
-        m10 = buffer.get(offset + 3);
-        m11 = buffer.get(offset + 4);
-        m12 = buffer.get(offset + 5);
-        m20 = buffer.get(offset + 6);
-        m21 = buffer.get(offset + 7);
-        m22 = buffer.get(offset + 8);
-        return this;
-    }
-
-    /**
-     * <p>Set the values of the matrix from a {@link ByteBuffer}</p>
-     *
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>this</code>
-     */
-    public MutableMatrix3f set(ByteBuffer buffer) {
-        final int offset = buffer.position();
-
-        m00 = buffer.getFloat(offset);
-        m01 = buffer.getFloat(offset + 4);
-        m02 = buffer.getFloat(offset + 8);
-        m10 = buffer.getFloat(offset + 12);
-        m11 = buffer.getFloat(offset + 16);
-        m12 = buffer.getFloat(offset + 20);
-        m20 = buffer.getFloat(offset + 24);
-        m21 = buffer.getFloat(offset + 28);
-        m22 = buffer.getFloat(offset + 32);
+        m00 = buffer.read(offset);
+        m01 = buffer.read(offset + 1);
+        m02 = buffer.read(offset + 2);
+        m10 = buffer.read(offset + 3);
+        m11 = buffer.read(offset + 4);
+        m12 = buffer.read(offset + 5);
+        m20 = buffer.read(offset + 6);
+        m21 = buffer.read(offset + 7);
+        m22 = buffer.read(offset + 8);
         return this;
     }
 

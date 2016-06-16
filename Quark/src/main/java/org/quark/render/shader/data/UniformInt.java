@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,8 +22,6 @@ import org.quark.render.shader.UniformType;
 
 /**
  * <code>UniformInt</code> encapsulate an {@link Uniform} for {@link UniformType#Int}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformInt extends Uniform {
     private int mValue;

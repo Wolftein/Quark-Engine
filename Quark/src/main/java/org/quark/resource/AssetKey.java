@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -24,8 +24,6 @@ import java.util.Collections;
 
 /**
  * <code>AssetKey</code> encapsulate a key that contain(s) all the information of an asset.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class AssetKey<A, B extends AssetDescriptor> {
     /**

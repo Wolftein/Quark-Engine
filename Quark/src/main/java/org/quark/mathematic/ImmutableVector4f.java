@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent an immutable {@linkplain Vector4f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableVector4f extends Vector4f {
     /**

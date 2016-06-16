@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent an immutable {@linkplain Vector2i}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableVector2i extends Vector2i {
     /**

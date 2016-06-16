@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ This file is part of Quark Engine, licensed under the APACHE License.
+  ~ This file is part of Quark Framework, licensed under the APACHE License.
   ~
   ~ Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
   ~
@@ -16,7 +16,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<pipeline name="Default2D">
+<pipeline name="Default2D" precision="mediump">
     <!-- ####################################################################################################### -->
     <!--                                        [STAGE_VERTEX]                                                   -->
     <!-- ####################################################################################################### -->

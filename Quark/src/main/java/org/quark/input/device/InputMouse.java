@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -18,13 +18,10 @@
 package org.quark.input.device;
 
 import org.quark.input.Input;
-
-import java.nio.IntBuffer;
+import org.quark.system.utility.array.Int32Array;
 
 /**
  * <code>InputMouse</code> encapsulate an {@link Input} for handling mouse based device(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface InputMouse extends Input {
     /**
@@ -69,8 +66,8 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_MOVE
      */
-    static void onFactoryMove(IntBuffer buffer, int x, int y) {
-        buffer.put(EVENT_MOVE).put(x).put(y);
+    static void onFactoryMove(Int32Array buffer, int x, int y) {
+        buffer.write(EVENT_MOVE).write(x).write(y);
     }
 
     /**
@@ -78,8 +75,8 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_BUTTON_UP
      */
-    static void onFactoryButtonUp(IntBuffer buffer, InputMouseButton button) {
-        buffer.put(EVENT_BUTTON_UP).put(button.ordinal());
+    static void onFactoryButtonUp(Int32Array buffer, InputMouseButton button) {
+        buffer.write(EVENT_BUTTON_UP).write(button.ordinal());
     }
 
     /**
@@ -87,8 +84,8 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_BUTTON_DOWN
      */
-    static void onFactoryButtonDown(IntBuffer buffer, InputMouseButton button) {
-        buffer.put(EVENT_BUTTON_DOWN).put(button.ordinal());
+    static void onFactoryButtonDown(Int32Array buffer, InputMouseButton button) {
+        buffer.write(EVENT_BUTTON_DOWN).write(button.ordinal());
     }
 
     /**
@@ -96,7 +93,7 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_WHEEL
      */
-    static void onFactoryWheel(IntBuffer buffer, int delta) {
-        buffer.put(EVENT_WHEEL).put(delta);
+    static void onFactoryWheel(Int32Array buffer, int delta) {
+        buffer.write(EVENT_WHEEL).write(delta);
     }
 }

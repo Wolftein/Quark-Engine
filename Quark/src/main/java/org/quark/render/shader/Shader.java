@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * <code>Data.Shader</code> encapsulate the programmable stage(s) of the rendering pipeline.
@@ -36,8 +36,6 @@ import static org.quark.Quark.QkRender;
  * <p>
  * Each stage has a set of inputs and outputs, which are passed from prior stages and on to subsequent stages
  * (whether programmable or not).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Shader extends Manageable implements Disposable {
     /**
@@ -148,7 +146,7 @@ public final class Shader extends Manageable implements Disposable {
      * @see Render#create(Shader)
      */
     public void create() {
-        QkRender.create(this);
+        QKRender.create(this);
     }
 
     /**
@@ -156,14 +154,14 @@ public final class Shader extends Manageable implements Disposable {
      */
     @Override
     public void delete() {
-        QkRender.delete(this);
+        QKRender.delete(this);
     }
 
     /**
      * @see Render#acquire(Shader)
      */
     public void acquire() {
-        QkRender.acquire(this);
+        QKRender.acquire(this);
     }
 
     /**
@@ -179,7 +177,7 @@ public final class Shader extends Manageable implements Disposable {
      * @see Render#release(Shader)
      */
     public void release() {
-        QkRender.release(this);
+        QKRender.release(this);
     }
 
     /**
@@ -187,7 +185,7 @@ public final class Shader extends Manageable implements Disposable {
      */
     @Override
     public void dispose() {
-        QkRender.dispose(this);
+        QKRender.dispose(this);
     }
 
     /**

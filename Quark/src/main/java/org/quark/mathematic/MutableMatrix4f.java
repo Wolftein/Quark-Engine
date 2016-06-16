@@ -17,13 +17,12 @@
  */
 package org.quark.mathematic;
 
-import java.nio.ByteBuffer;
+import org.quark.system.utility.array.Float32Array;
+
 import java.nio.FloatBuffer;
 
 /**
  * Represent a mutable {@link Matrix4f}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class MutableMatrix4f extends Matrix4f {
     /**
@@ -82,54 +81,25 @@ public final class MutableMatrix4f extends Matrix4f {
      *
      * @return a reference to <code>this</code>
      */
-    public MutableMatrix4f set(FloatBuffer buffer) {
+    public MutableMatrix4f set(Float32Array buffer) {
         final int offset = buffer.position();
 
-        m00 = buffer.get(offset);
-        m01 = buffer.get(offset + 1);
-        m02 = buffer.get(offset + 2);
-        m03 = buffer.get(offset + 3);
-        m10 = buffer.get(offset + 4);
-        m11 = buffer.get(offset + 5);
-        m12 = buffer.get(offset + 6);
-        m13 = buffer.get(offset + 7);
-        m20 = buffer.get(offset + 8);
-        m21 = buffer.get(offset + 9);
-        m22 = buffer.get(offset + 10);
-        m23 = buffer.get(offset + 11);
-        m30 = buffer.get(offset + 12);
-        m31 = buffer.get(offset + 13);
-        m32 = buffer.get(offset + 14);
-        m33 = buffer.get(offset + 15);
-        return this;
-    }
-
-    /**
-     * <p>Set the values of the matrix from a {@link ByteBuffer}</p>
-     *
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>this</code>
-     */
-    public MutableMatrix4f set(ByteBuffer buffer) {
-        final int offset = buffer.position();
-
-        m00 = buffer.get(offset);
-        m01 = buffer.get(offset + 4);
-        m02 = buffer.get(offset + 8);
-        m03 = buffer.get(offset + 12);
-        m10 = buffer.get(offset + 16);
-        m11 = buffer.get(offset + 20);
-        m12 = buffer.get(offset + 24);
-        m13 = buffer.get(offset + 28);
-        m20 = buffer.get(offset + 32);
-        m21 = buffer.get(offset + 36);
-        m22 = buffer.get(offset + 40);
-        m23 = buffer.get(offset + 44);
-        m30 = buffer.get(offset + 48);
-        m31 = buffer.get(offset + 52);
-        m32 = buffer.get(offset + 56);
-        m33 = buffer.get(offset + 60);
+        m00 = buffer.read(offset);
+        m01 = buffer.read(offset + 1);
+        m02 = buffer.read(offset + 2);
+        m03 = buffer.read(offset + 3);
+        m10 = buffer.read(offset + 4);
+        m11 = buffer.read(offset + 5);
+        m12 = buffer.read(offset + 6);
+        m13 = buffer.read(offset + 7);
+        m20 = buffer.read(offset + 8);
+        m21 = buffer.read(offset + 9);
+        m22 = buffer.read(offset + 10);
+        m23 = buffer.read(offset + 11);
+        m30 = buffer.read(offset + 12);
+        m31 = buffer.read(offset + 13);
+        m32 = buffer.read(offset + 14);
+        m33 = buffer.read(offset + 15);
         return this;
     }
 

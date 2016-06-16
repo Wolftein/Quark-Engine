@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -20,17 +20,15 @@ package org.quark.render.storage;
 import org.quark.render.Render;
 import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
-import org.quark.render.storage.factory.FactoryStorageIndices;
-import org.quark.render.storage.factory.FactoryStorageVertices;
+import org.quark.render.storage.factory.FactoryElementStorage;
+import org.quark.render.storage.factory.FactoryArrayStorage;
 
 import java.util.List;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
- * <code>VertexDescriptor</code> encapsulate how {@link FactoryStorageVertices} are fragmented.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>VertexDescriptor</code> encapsulate how {@link FactoryArrayStorage} are fragmented.
  */
 public final class VertexDescriptor extends Manageable implements Disposable {
     public final static int CONCEPT_DATA = (1 << 0);
@@ -38,17 +36,17 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     /**
      * Hold every <code>StorageFactoryVertex</code> that contain(s) the vertices.
      */
-    private final List<FactoryStorageVertices<?>> mFactoryVertices;
+    private final List<FactoryArrayStorage<?>> mFactoryVertices;
 
     /**
      * Hold an optional <code>StorageFactoryElement</code> that contain(s) the indices.
      */
-    private final FactoryStorageIndices<?> mFactoryIndices;
+    private final FactoryElementStorage<?> mFactoryIndices;
 
     /**
      * <p>Constructor</p>
      */
-    public VertexDescriptor(List<FactoryStorageVertices<?>> vertices, FactoryStorageIndices<?> indices) {
+    public VertexDescriptor(List<FactoryArrayStorage<?>> vertices, FactoryElementStorage<?> indices) {
         mFactoryVertices = vertices;
         mFactoryIndices = indices;
 
@@ -58,7 +56,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     /**
      * <p>Constructor</p>
      */
-    public VertexDescriptor(List<FactoryStorageVertices<?>> vertices) {
+    public VertexDescriptor(List<FactoryArrayStorage<?>> vertices) {
         this(vertices, null);
     }
 
@@ -67,7 +65,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
      *
      * @return the vertices factory (all storage for vertices) of the descriptor
      */
-    public List<FactoryStorageVertices<?>> getVertices() {
+    public List<FactoryArrayStorage<?>> getVertices() {
         return mFactoryVertices;
     }
 
@@ -76,7 +74,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
      *
      * @return the indices factory (all storage for indices) of the descriptor
      */
-    public FactoryStorageIndices<?> getIndices() {
+    public FactoryElementStorage<?> getIndices() {
         return mFactoryIndices;
     }
 
@@ -102,7 +100,7 @@ public final class VertexDescriptor extends Manageable implements Disposable {
      * @see Render#create(VertexDescriptor)
      */
     public void create() {
-        QkRender.create(this);
+        QKRender.create(this);
     }
 
     /**
@@ -110,28 +108,28 @@ public final class VertexDescriptor extends Manageable implements Disposable {
      */
     @Override
     public void delete() {
-        QkRender.delete(this);
+        QKRender.delete(this);
     }
 
     /**
      * @see Render#acquire(VertexDescriptor)
      */
     public void acquire() {
-        QkRender.acquire(this);
+        QKRender.acquire(this);
     }
 
     /**
      * @see Render#update(VertexDescriptor)
      */
     public void update() {
-        QkRender.update(this);
+        QKRender.update(this);
     }
 
     /**
      * @see Render#release(VertexDescriptor)
      */
     public void release() {
-        QkRender.release(this);
+        QKRender.release(this);
     }
 
     /**
@@ -139,6 +137,6 @@ public final class VertexDescriptor extends Manageable implements Disposable {
      */
     @Override
     public void dispose() {
-        QkRender.dispose(this);
+        QKRender.dispose(this);
     }
 }

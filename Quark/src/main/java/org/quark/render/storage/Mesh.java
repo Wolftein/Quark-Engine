@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -17,13 +17,13 @@
  */
 package org.quark.render.storage;
 
-import org.quark.render.storage.factory.FactoryStorageIndices;
-import org.quark.render.storage.factory.FactoryStorageVertices;
+import org.quark.render.storage.factory.FactoryElementStorage;
+import org.quark.render.storage.factory.FactoryArrayStorage;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * A <code>Mesh</code> consists of vertices and optionally indices which specify which
@@ -31,8 +31,6 @@ import static org.quark.Quark.QkRender;
  * <p>
  * Each vertex is composed of attribute(s) such as position, normal, color or texture coordinate (all attribute(s)
  * may not be present, except for position).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public class Mesh {
     /**
@@ -50,21 +48,21 @@ public class Mesh {
     /**
      * <p>Constructor</p>
      */
-    public Mesh(List<FactoryStorageVertices<?>> vertices, FactoryStorageIndices indices) {
+    public Mesh(List<FactoryArrayStorage<?>> vertices, FactoryElementStorage indices) {
         this(new VertexDescriptor(vertices, indices));
     }
 
     /**
      * <p>Constructor</p>
      */
-    public Mesh(FactoryStorageVertices<?> vertices, FactoryStorageIndices indices) {
+    public Mesh(FactoryArrayStorage<?> vertices, FactoryElementStorage indices) {
         this(new VertexDescriptor(Collections.singletonList(vertices), indices));
     }
 
     /**
      * <p>Constructor</p>
      */
-    public Mesh(FactoryStorageVertices<?> vertices) {
+    public Mesh(FactoryArrayStorage<?> vertices) {
         this(new VertexDescriptor(Collections.singletonList(vertices)));
     }
 
@@ -82,7 +80,7 @@ public class Mesh {
      *
      * @return the vertices of the mesh
      */
-    public final List<FactoryStorageVertices<?>> getVertices() {
+    public final List<FactoryArrayStorage<?>> getVertices() {
         return mDescriptor.getVertices();
     }
 
@@ -93,8 +91,8 @@ public class Mesh {
      *
      * @return the vertices of the mesh
      */
-    public final FactoryStorageVertices<?> getVertices(int index) {
-        final List<FactoryStorageVertices<?>> vertices = mDescriptor.getVertices();
+    public final FactoryArrayStorage<?> getVertices(int index) {
+        final List<FactoryArrayStorage<?>> vertices = mDescriptor.getVertices();
 
         if (vertices == null || index < 0 || index >= vertices.size()) {
             throw new IllegalArgumentException("Invalid vertices storage");
@@ -107,7 +105,7 @@ public class Mesh {
      *
      * @return the indices of the mesh
      */
-    public final FactoryStorageIndices<?> getIndices() {
+    public final FactoryElementStorage<?> getIndices() {
         return mDescriptor.getIndices();
     }
 
@@ -118,10 +116,10 @@ public class Mesh {
      * @param offset    the render offset
      * @param count     the render primitive count
      */
-    public final void draw(Primitive primitive, long offset, long count) {
+    public final void draw(Primitive primitive, int offset, int count) {
         mDescriptor.acquire();
         {
-            QkRender.draw(primitive, offset, count);
+            QKRender.draw(primitive, offset, count);
         }
         mDescriptor.release();
     }
@@ -134,13 +132,13 @@ public class Mesh {
      * @param count     the render primitive count
      * @param format    the indices format
      */
-    public final void draw(Primitive primitive, long offset, long count, VertexFormat format) {
+    public final void draw(Primitive primitive, int offset, int count, VertexFormat format) {
         if (!mDescriptor.hasIndices()) {
             throw new IllegalStateException("Cannot draw the mesh without an indices storage");
         }
         mDescriptor.acquire();
         {
-            QkRender.draw(primitive, offset, count, format);
+            QKRender.draw(primitive, offset, count, format);
         }
         mDescriptor.release();
     }

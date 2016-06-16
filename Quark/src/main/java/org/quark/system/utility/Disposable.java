@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,8 +19,6 @@ package org.quark.system.utility;
 
 /**
  * <code>Disposable</code> manage the life-cycle of a resource.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface Disposable {
     /**

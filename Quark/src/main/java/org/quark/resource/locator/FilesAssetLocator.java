@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -25,8 +25,6 @@ import java.nio.file.*;
 
 /**
  * Encapsulate an {@link AssetLocator} that search asset(s) using {@link FileSystem}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class FilesAssetLocator implements AssetLocator {
     private final FileSystem mFilesystem;

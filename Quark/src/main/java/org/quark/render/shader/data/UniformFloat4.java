@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -25,8 +25,6 @@ import org.quark.render.shader.UniformType;
 
 /**
  * <code>UniformFloat4</code> encapsulate an {@link Uniform} for {@link UniformType#Float4}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformFloat4 extends Uniform {
     private final MutableVector4f mValue = MutableVector4f.zero();

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -25,12 +25,10 @@ import org.quark.system.utility.Manageable;
 
 import java.util.EnumMap;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * <code>Frame</code> is a collection of buffers that can be used as the destination for rendering.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Frame extends Manageable implements Disposable {
     private final EnumMap<FrameAttachment, Target> mAttachment;
@@ -135,42 +133,42 @@ public final class Frame extends Manageable implements Disposable {
      * @see Render#colour(float, float, float, float)
      */
     public void colour(float red, float green, float blue, float alpha) {
-        QkRender.colour(red, green, blue, alpha);
+        QKRender.colour(red, green, blue, alpha);
     }
 
     /**
      * @see Render#clear(boolean, boolean, boolean)
      */
     public void clear(boolean colour, boolean depth, boolean stencil) {
-        QkRender.clear(colour, depth, stencil);
+        QKRender.clear(colour, depth, stencil);
     }
 
     /**
      * @see Render#clear(boolean, boolean, boolean)
      */
     public void clear() {
-        QkRender.clear(hasColour(), hasDepth(), hasStencil());
+        QKRender.clear(hasColour(), hasDepth(), hasStencil());
     }
 
     /**
      * @see Render#viewport(int, int, int, int)
      */
     public void viewport(int x, int y, int width, int height) {
-        QkRender.viewport(x, y, width, height);
+        QKRender.viewport(x, y, width, height);
     }
 
     /**
      * @see Render#viewport(int, int, int, int)
      */
     public void viewport() {
-        QkRender.viewport(0, 0, mWidth, mHeight);
+        QKRender.viewport(0, 0, mWidth, mHeight);
     }
 
     /**
      * @see Render#create(Frame)
      */
     public void create() {
-        QkRender.create(this);
+        QKRender.create(this);
     }
 
     /**
@@ -178,21 +176,21 @@ public final class Frame extends Manageable implements Disposable {
      */
     @Override
     public void delete() {
-        QkRender.delete(this);
+        QKRender.delete(this);
     }
 
     /**
      * @see Render#acquire(Frame)
      */
     public void acquire() {
-        QkRender.acquire(this);
+        QKRender.acquire(this);
     }
 
     /**
      * @see Render#release(Frame)
      */
     public void release() {
-        QkRender.release(this);
+        QKRender.release(this);
     }
 
     /**
@@ -200,7 +198,7 @@ public final class Frame extends Manageable implements Disposable {
      */
     @Override
     public void dispose() {
-        QkRender.dispose(this);
+        QKRender.dispose(this);
     }
 
     /**

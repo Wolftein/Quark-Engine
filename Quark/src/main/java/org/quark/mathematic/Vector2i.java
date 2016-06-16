@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector2i</code> encapsulate a 2 element vector that is represented by integer.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector2i {
     protected int mX;
@@ -328,7 +326,7 @@ public abstract class Vector2i {
             return false;
         }
         final Vector2i other = (Vector2i) vector;
-        return Float.compare(mX, other.mX) == 0 && Float.compare(mY, other.mY) == 0;
+        return mX == other.mX && mY == other.mY;
     }
 
     /**

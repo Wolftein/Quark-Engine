@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -24,24 +24,15 @@ import org.quark.render.texture.Texture2D;
 import org.quark.resource.AssetKey;
 import org.quark.resource.AssetLoader;
 import org.quark.resource.AssetManager;
+import org.quark.system.utility.array.ArrayFactory;
+import org.quark.system.utility.array.Int8Array;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.zip.Inflater;
 
 /**
- * Encapsulate an {@link AssetLoader} for loading PNG image(s).
- * <p>
- * {@link Texture}
- * {@link Texture2D}
- * {@link ImageFormat#RED}
- * {@link ImageFormat#RG}
- * {@link ImageFormat#RGB}
- * {@link ImageFormat#RGBA}
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>TexturePNGAssetLoader</code> encapsulate an {@link AssetLoader} for loading PNG image(s).
  */
 public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture.Descriptor> {
     private final static byte PIXEL_OPAQUE = (byte) 0xFF;
@@ -212,8 +203,8 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
     private Image readImage(Texture.Descriptor descriptor, ImageHeader header, byte[] input) throws IOException {
         final ImageFormat imageFormat
                 = getUncompressedFormat(header);
-        final ByteBuffer imageBuffer = ByteBuffer.allocateDirect(
-                header.mImageWidth * header.mImageHeight * imageFormat.eComponent).order(ByteOrder.nativeOrder());
+        final Int8Array imageBuffer
+                = ArrayFactory.allocateInt8Array(header.mImageWidth * header.mImageHeight * imageFormat.eComponent);
 
         final int imageLineLength = getUncompressedFormatLength(header);
         final int imageLineSize = ((header.mImageWidth * header.mImageDepth + 7) / 8) * imageLineLength;
@@ -343,53 +334,53 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
      *
      * @throws IOException indicates failing loading the image
      */
-    private void handleData(ImageHeader header, byte[] input, ByteBuffer output) throws IOException {
+    private void handleData(ImageHeader header, byte[] input, Int8Array output) throws IOException {
         final byte[] transparency = header.mTransparency;
 
         switch (header.mPixelType) {
             case TYPE_GREY_SCALE:
                 if (transparency == null) {
-                    output.put(input);
+                    output.write(input);
                 } else {
                     for (final byte texel : input)
-                        output.put(texel).put(texel == transparency[0x01] ? PIXEL_NON_OPAQUE : PIXEL_OPAQUE);
+                        output.write(texel).write(texel == transparency[0x01] ? PIXEL_NON_OPAQUE : PIXEL_OPAQUE);
                 }
                 break;
             case TYPE_GREY_SCALE_ALPHA:
-                output.put(input);
+                output.write(input);
                 break;
             case TYPE_INDEXED:
                 if (transparency == null) {
                     for (final byte pixel : input) {
                         final int index = pixel & 0xFF;
 
-                        output.put(header.mPalette[index * 3])
-                                .put(header.mPalette[index * 3 + 1])
-                                .put(header.mPalette[index * 3 + 2]);
+                        output.write(header.mPalette[index * 3])
+                                .write(header.mPalette[index * 3 + 1])
+                                .write(header.mPalette[index * 3 + 2]);
                     }
                 } else {
                     for (final byte pixel : input) {
                         final int index = pixel & 0xFF;
 
-                        output.put(header.mPalette[index * 3])
-                                .put(header.mPalette[index * 3 + 1])
-                                .put(header.mPalette[index * 3 + 2])
-                                .put(transparency[index]);
+                        output.write(header.mPalette[index * 3])
+                                .write(header.mPalette[index * 3 + 1])
+                                .write(header.mPalette[index * 3 + 2])
+                                .write(transparency[index]);
                     }
                 }
                 break;
             case TYPE_TRUE_COLOR:
                 if (transparency == null) {
-                    output.put(input);
+                    output.write(input);
                 } else {
                     for (int i = 0; i < input.length; i += 3)
-                        output.put(input, i, 0x03).put(input[i] == transparency[0x01] &&
+                        output.write(input, i, 0x03).write(input[i] == transparency[0x01] &&
                                 input[i + 1] == transparency[3] &&
                                 input[i + 2] == transparency[5] ? PIXEL_NON_OPAQUE : PIXEL_OPAQUE);
                 }
                 break;
             case TYPE_TRUE_COLOR_ALPHA:
-                output.put(input);
+                output.write(input);
                 break;
         }
     }

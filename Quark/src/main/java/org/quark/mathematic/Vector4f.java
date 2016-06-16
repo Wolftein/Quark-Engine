@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector4f</code> encapsulate a 4 element vector that is represented by single precision floating.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector4f {
     protected float mX;

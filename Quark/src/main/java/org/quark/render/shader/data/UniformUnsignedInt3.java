@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -24,8 +24,6 @@ import org.quark.render.shader.UniformType;
 
 /**
  * <code>UniformUnsignedInt3</code> encapsulate an {@link Uniform} for {@link UniformType#UInt3}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformUnsignedInt3 extends Uniform {
     private final MutableVector3i mValue = MutableVector3i.zero();

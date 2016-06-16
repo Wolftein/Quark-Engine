@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,23 +19,19 @@ package org.quark.render.shader.data;
 
 import org.quark.render.shader.Uniform;
 import org.quark.render.shader.UniformType;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import org.quark.system.utility.array.ArrayFactory;
+import org.quark.system.utility.array.UInt32Array;
 
 /**
  * <code>UniformUnsignedIntArray</code> encapsulate an {@link Uniform} for {@link UniformType#UIntArray}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformUnsignedIntArray extends Uniform {
-    private final IntBuffer mValue;
+    private final UInt32Array mValue;
 
     /**
      * <p>Constructor</p>
      */
-    public UniformUnsignedIntArray(IntBuffer buffer) {
+    public UniformUnsignedIntArray(UInt32Array buffer) {
         super(UniformType.UIntArray);
         mValue = buffer;
     }
@@ -44,7 +40,7 @@ public final class UniformUnsignedIntArray extends Uniform {
      * <p>Constructor</p>
      */
     public UniformUnsignedIntArray(int capacity) {
-        this(ByteBuffer.allocateDirect(4 * capacity).order(ByteOrder.nativeOrder()).asIntBuffer());
+        this(ArrayFactory.allocateUInt32Array(capacity));
     }
 
     /**
@@ -52,7 +48,7 @@ public final class UniformUnsignedIntArray extends Uniform {
      *
      * @return the value of the data
      */
-    public IntBuffer getValue() {
+    public UInt32Array getValue() {
         return mValue;
     }
 
@@ -61,7 +57,7 @@ public final class UniformUnsignedIntArray extends Uniform {
      *
      * @param newValue the new value of the data from an array
      */
-    public void setValue(int[] newValue) {
+    public void setValue(long[] newValue) {
         setValue(newValue, 0, newValue.length);
     }
 
@@ -72,9 +68,9 @@ public final class UniformUnsignedIntArray extends Uniform {
      * @param offset   the source offset of the <code>newValue</code>
      * @param length   the source length of the <code>newValue</code>
      */
-    public void setValue(int[] newValue, int offset, int length) {
+    public void setValue(long[] newValue, int offset, int length) {
         mValue.rewind();
-        mValue.put(newValue, offset, length);
+        mValue.write(newValue, offset, length);
         setUpdate(CONCEPT_VALUE);
     }
 }

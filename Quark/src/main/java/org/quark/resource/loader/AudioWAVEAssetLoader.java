@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,28 +19,20 @@ package org.quark.resource.loader;
 
 import org.quark.audio.Audio;
 import org.quark.audio.AudioFormat;
-import org.quark.audio.factory.FactoryAudioStatic;
-import org.quark.audio.factory.FactoryAudioStreaming;
+import org.quark.audio.factory.FactoryStaticAudio;
+import org.quark.audio.factory.FactoryStreamingAudio;
 import org.quark.resource.AssetKey;
 import org.quark.resource.AssetLoader;
 import org.quark.resource.AssetManager;
+import org.quark.system.utility.array.ArrayFactory;
+import org.quark.system.utility.array.Int8Array;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
- * Encapsulate an {@link AssetLoader} for loading WAVE audio(s).
- * <p>
- * {@link Audio}
- * {@link AudioFormat#MONO_8}
- * {@link AudioFormat#MONO_16}
- * {@link AudioFormat#STEREO_8}
- * {@link AudioFormat#STEREO_16}
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>AudioWAVEAssetLoader</code> encapsulate an {@link AssetLoader} for loading WAVE audio(s).
  */
 public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
     /**
@@ -107,22 +99,20 @@ public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Desc
                     header.mAudioDuration = (length / header.mAudioBlock) * 1000;
 
                     if (descriptor.isCloseable()) {
-                        final ByteBuffer content
-                                = ByteBuffer.allocateDirect(length).order(ByteOrder.nativeOrder());
+                        final Int8Array content = ArrayFactory.allocateInt8Array(length);
 
                         final byte[] read = new byte[1024];
                         int bytesRead;
                         while ((bytesRead = input.read(read)) > 0) {
-                            content.put(read, 0,
-                                    Math.min(bytesRead, content.remaining()));
+                            content.write(read, 0, Math.min(bytesRead, content.remaining()));
                         }
                         content.flip();
 
-                        return new FactoryAudioStatic(content, getUncompressedFormat(header),
+                        return new FactoryStaticAudio(content, getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     } else {
-                        return new FactoryAudioStreaming(input, getUncompressedFormat(header),
+                        return new FactoryStreamingAudio(input, getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     }

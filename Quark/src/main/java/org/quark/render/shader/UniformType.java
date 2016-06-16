@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,126 +19,124 @@ package org.quark.render.shader;
 
 /**
  * <code>UniformType</code> enumerate {@link Uniform} type(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public enum UniformType {
     /**
      * Represent an IEEE-754 single-precision floating point number.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Float,
 
     /**
      * Represent two IEEE-754 single-precision floating point number.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Float2,
 
     /**
      * Represent three IEEE-754 single-precision floating point number.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Float3,
 
     /**
      * Represent four IEEE-754 single-precision floating point number.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Float4,
 
     /**
      * Represent an array of {@linkplain #Float}
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     FloatArray,
 
     /**
      * Represent a signed, two's complement, 32-bit integer.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Int,
 
     /**
      * Represent two signed, two's complement, 32-bit integer.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Int2,
 
     /**
      * Represent three signed, two's complement, 32-bit integer.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Int3,
 
     /**
      * Represent four signed, two's complement, 32-bit integer.
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Int4,
 
     /**
      * Represent an array of {@linkplain #Int}
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     IntArray,
 
     /**
      * Represent a signed, two's complement, 32-bit unsigned integer.
-     * <p>
-     * {@since GLSL 1.30}
+     *
+     * @since GLSL 1.30
      */
     UInt,
 
     /**
      * Represent two signed, two's complement, 32-bit unsigned integer.
-     * <p>
-     * {@since GLSL 1.30}
+     *
+     * @since GLSL 1.30
      */
     UInt2,
 
     /**
      * Represent three signed, two's complement, 32-bit unsigned integer.
-     * <p>
-     * {@since GLSL 1.30}
+     *
+     * @since GLSL 1.30
      */
     UInt3,
 
     /**
      * Represent four signed, two's complement, 32-bit unsigned integer.
-     * <p>
-     * {@since GLSL 1.30}
+     *
+     * @since GLSL 1.30
      */
     UInt4,
 
     /**
      * Represent an array of {@linkplain #UInt}
-     * <p>
-     * {@since GLSL 1.30}
+     *
+     * @since GLSL 1.30
      */
     UIntArray,
 
     /**
      * Represent a matrix of 3x3 component(s).
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Matrix3x3,
 
     /**
      * Represent a matrix of 4x4 component(s).
-     * <p>
-     * {@since GLSL 1.20}
+     *
+     * @since GLSL 1.20
      */
     Matrix4x4
 }

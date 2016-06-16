@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -17,7 +17,8 @@
  */
 package org.quark.render.texture;
 
-import java.nio.ByteBuffer;
+import org.quark.system.utility.array.Int8Array;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -27,8 +28,6 @@ import java.util.List;
  * <p>
  * Coordinates of pixels are specified with respect to the top left corner of the image, with the x-axis pointing
  * to the right and the y-axis pointing downwards.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Image {
     private final List<Layer> mLayer;
@@ -114,7 +113,7 @@ public final class Image {
         /**
          * Hold the data of the layer (The layer and all mip-map).
          */
-        public final ByteBuffer data;
+        public final Int8Array data;
 
         /**
          * Hold the images of each image in the layer (in bytes, including mip-map).
@@ -129,7 +128,7 @@ public final class Image {
         /**
          * <p>Constructor</p>
          */
-        public Layer(ByteBuffer data, int[] images) {
+        public Layer(Int8Array data, int[] images) {
             this.data = data;
             this.images = images;
             this.mipmap = false;
@@ -138,7 +137,7 @@ public final class Image {
         /**
          * <p>Constructor</p>
          */
-        public Layer(ByteBuffer data, boolean mipmap) {
+        public Layer(Int8Array data, boolean mipmap) {
             this.data = data;
             this.images = new int[]{hasData() ? data.capacity() : 0};
             this.mipmap = mipmap;

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,83 +21,81 @@ import org.quark.render.Render;
 
 /**
  * <code>ImageFormat</code> enumerate possible {@link Image} format(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public enum ImageFormat {
     /**
      * Each element is an RED component.
-     * <p>
-     * {@since OpenGL    3.0}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.0
+     * @since OpenGL ES 3.0
      */
     RED(Render.GLES3.GL_RED, 1, false, false, false, false),
 
     /**
      * Each element is an RGB triple.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 2.0
      */
     RGB(Render.GLES2.GL_RGB, 3, false, false, false, false),
 
     /**
      * Each element contains all four components.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 2.0
      */
     RGBA(Render.GLES2.GL_RGBA, 4, false, true, false, false),
 
     /**
      * Only contains the depth component.
-     * <p>
-     * {@since OpenGL    1.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    1.1
+     * @since OpenGL ES 3.0
      */
     DEPTH_COMPONENT(Render.GLES3.GL_DEPTH_COMPONENT, 1, false, false, false, true),
 
     /**
      * Only contains the red and green component.
-     * <p>
-     * {@since OpenGL    3.0}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.0
+     * @since OpenGL ES 3.0
      */
     RG(Render.GLES3.GL_RG, 2, false, false, false, false),
 
     /**
      * Only contains the stencil and depth component.
-     * <p>
-     * {@since OpenGL    3.0}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.0
+     * @since OpenGL ES 3.0
      */
     DEPTH_STENCIL(Render.GLES3.GL_DEPTH_STENCIL, 2, false, false, true, true),
 
     /**
      * Compressed texture using S3TC for RGB.
-     * <p>
-     * {@since EXT_texture_compression_s3tc}
+     *
+     * @since EXT_texture_compression_s3tc
      */
     RGB_DXT1(Render.GLESExtension.S3TC_RGB_DXT1, 3, true, false, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
-     * <p>
-     * {@since EXT_texture_compression_s3tc}
+     *
+     * @since EXT_texture_compression_s3tc
      */
     RGBA_DXT1(Render.GLESExtension.S3TC_RGBA_DXT1, 4, true, true, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
-     * <p>
-     * {@since EXT_texture_compression_s3tc}
+     *
+     * @since EXT_texture_compression_s3tc
      */
     RGBA_DXT3(Render.GLESExtension.S3TC_RGBA_DXT3, 4, true, true, false, false),
 
     /**
      * Compressed texture using S3TC for RGBA.
-     * <p>
-     * {@since EXT_texture_compression_s3tc}
+     *
+     * @since EXT_texture_compression_s3tc
      */
     RGBA_DXT5(Render.GLESExtension.S3TC_RGBA_DXT5, 4, true, true, false, false);
 

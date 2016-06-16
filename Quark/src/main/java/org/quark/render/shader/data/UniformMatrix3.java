@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,19 +21,14 @@ import org.quark.mathematic.Matrix3f;
 import org.quark.mathematic.MutableMatrix3f;
 import org.quark.render.shader.Uniform;
 import org.quark.render.shader.UniformType;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import org.quark.system.utility.array.Float32Array;
+import org.quark.system.utility.array.ArrayFactory;
 
 /**
  * <code>UniformMatrix3</code> encapsulate an {@link Uniform} for {@link UniformType#Matrix3x3}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformMatrix3 extends Uniform {
-    private final FloatBuffer mBuffer
-            = ByteBuffer.allocateDirect((3 * 3) * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+    private final Float32Array mBuffer = ArrayFactory.allocateFloat32Array(3 * 3);
 
     /**
      * <p>Constructor</p>
@@ -55,7 +50,7 @@ public final class UniformMatrix3 extends Uniform {
      *
      * @return the value of the data
      */
-    public FloatBuffer getValue() {
+    public Float32Array getValue() {
         return mBuffer;
     }
 

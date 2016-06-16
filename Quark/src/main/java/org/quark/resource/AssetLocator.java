@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,8 +21,6 @@ import java.io.InputStream;
 
 /**
  * <code>AssetLocator</code> encapsulate an interface for finding asset(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface AssetLocator {
     /**

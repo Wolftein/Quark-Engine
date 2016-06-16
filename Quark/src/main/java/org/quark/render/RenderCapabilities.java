@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -25,8 +25,6 @@ import java.util.EnumMap;
 
 /**
  * <code>RenderCapabilities</code> contain(s) all capabilities supported by {@link Render}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class RenderCapabilities {
     /**
@@ -168,55 +166,32 @@ public final class RenderCapabilities {
          */
         GL33;
 
-        /**
-         * <p>Parse the {@link LanguageVersion} from a string</p>
-         *
-         * @param version the string that contain(s) the version
-         *
-         * @return the enumeration parsed from the string
-         */
-        public static LanguageVersion fromStringVersion(String version) {
-            final String id = version.substring(0, version.indexOf(" "));
-            switch (id) {
-                // TODO: Implement OpenGL ES
-                case "2.1.0":
-                    return GL21;
-                case "3.0.0":
-                    return GL30;
-                case "3.1.0":
-                    return GL31;
-                case "3.2.0":
-                    return GL32;
-                case "3.3.0":
-                    return GL33;
-                default:
-                    return GL33;    // TODO: Implement more version(s) in the future
-            }
-        }
 
         /**
-         * <p>Parse the {@link LanguageVersion} from an integer</p>
+         * <p>Get the {@link ShaderLanguageVersion}</p>
          *
-         * @param version the integer that contain(s) the version
-         *
-         * @return the enumeration parsed from the integer
+         * @return the shader language version
          */
-        public static LanguageVersion fromIntVersion(int version) {
-            switch (version) {
-                // TODO: Implement OpenGL ES
-                case 21:
-                    return GL21;
-                case 30:
-                    return GL30;
-                case 31:
-                    return GL31;
-                case 32:
-                    return GL32;
-                case 33:
-                    return GL33;
-                default:
-                    return GL33;    // TODO: Implement more version(s) in the future
+        public ShaderLanguageVersion getShaderVersion() {
+            switch (this) {
+                case GLES20:
+                    return ShaderLanguageVersion.GLSLES2;
+                case GLES30:
+                case GLES31:
+                case GLES32:
+                    return ShaderLanguageVersion.GLSLES3;
+                case GL21:
+                    return ShaderLanguageVersion.GLSL210;
+                case GL30:
+                    return ShaderLanguageVersion.GLSL300;
+                case GL31:
+                    return ShaderLanguageVersion.GLSL310;
+                case GL32:
+                    return ShaderLanguageVersion.GLSL320;
+                case GL33:
+                    return ShaderLanguageVersion.GLSL330;
             }
+            throw new IllegalStateException("Missing shader version");
         }
     }
 
@@ -226,50 +201,50 @@ public final class RenderCapabilities {
     public enum ShaderLanguageVersion {
         /**
          * Represent OpenGL ES Pipeline Language 2 (March 2007).
-         * <p>
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         GLSLES2("100"),
 
         /**
          * Represent OpenGL ES Pipeline Language 3 (August 2012).
-         * <p>
-         * {@since OpenGL ES 3.0}
+         *
+         * @since OpenGL ES 3.0
          */
         GLSLES3("300"),
 
         /**
          * Represent OpenGL Pipeline Language 1.20 (2006).
-         * <p>
-         * {@since OpenGL 2.1}
+         *
+         * @since OpenGL 2.1
          */
         GLSL210("120"),
 
         /**
          * Represent OpenGL Pipeline Language 1.30 (August 2008).
-         * <p>
-         * {@since OpenGL 3.0}
+         *
+         * @since OpenGL 3.0
          */
         GLSL300("130"),
 
         /**
          * Represent OpenGL Pipeline Language 1.40 (March 2009).
-         * <p>
-         * {@since OpenGL 3.1}
+         *
+         * @since OpenGL 3.1
          */
         GLSL310("140"),
 
         /**
          * Represent OpenGL Pipeline Language 1.50 (August 2009).
-         * <p>
-         * {@since OpenGL 3.2}
+         *
+         * @since OpenGL 3.2
          */
         GLSL320("150"),
 
         /**
          * Represent OpenGL Pipeline Language 3.30 (February 2010).
-         * <p>
-         * {@since OpenGL 3.3}
+         *
+         * @since OpenGL 3.3
          */
         GLSL330("330");
 
@@ -281,71 +256,17 @@ public final class RenderCapabilities {
         ShaderLanguageVersion(String name) {
             eName = name;
         }
-
-        /**
-         * <p>Parse the {@link ShaderLanguageVersion} from a string</p>
-         *
-         * @param version the string that contain(s) the version
-         *
-         * @return the enumeration parsed from the string
-         */
-        public static ShaderLanguageVersion fromStringVersion(String version) {
-            final String id = version.substring(0, version.indexOf(" "));
-            switch (id) {
-                // TODO: Implement OpenGL ES
-                case "1.20":
-                    return GLSL210;
-                case "1.30":
-                    return GLSL300;
-                case "1.40":
-                    return GLSL310;
-                case "1.50":
-                    return GLSL320;
-                case "3.30":
-                    return GLSL330;
-                default:
-                    return GLSL330;    // TODO: Implement more version(s) in the future
-            }
-        }
-
-        /**
-         * <p>Parse the {@link ShaderLanguageVersion} from an integer</p>
-         *
-         * @param version the integer that contain(s) the version
-         *
-         * @return the enumeration parsed from the integer
-         */
-        public static ShaderLanguageVersion fromIntVersion(int version) {
-            switch (version) {
-                // TODO: Implement OpenGL ES
-                case 120:
-                    return GLSL210;
-                case 130:
-                    return GLSL300;
-                case 140:
-                    return GLSL310;
-                case 150:
-                    return GLSL320;
-                case 330:
-                    return GLSL330;
-                default:
-                    return GLSL330;    // TODO: Implement more version(s) in the future
-            }
-        }
     }
 
     private final LanguageVersion mVersion;
-    private final ShaderLanguageVersion mShaderLanguageVersion;
     private final EnumMap<Limit, Float> mLimits;
     private final EnumMap<Extension, Boolean> mExtensions;
 
     /**
      * <p>Constructor</p>
      */
-    public RenderCapabilities(LanguageVersion version, ShaderLanguageVersion shaderLanguageVersion,
-            EnumMap<Extension, Boolean> extensions, EnumMap<Limit, Float> limits) {
+    public RenderCapabilities(LanguageVersion version, EnumMap<Extension, Boolean> extensions, EnumMap<Limit, Float> limits) {
         mVersion = version;
-        mShaderLanguageVersion = shaderLanguageVersion;
         mExtensions = extensions;
         mLimits = limits;
     }
@@ -387,6 +308,6 @@ public final class RenderCapabilities {
      * @return the version of the <b>OpenGL</b> shading language
      */
     public ShaderLanguageVersion getShaderLanguageVersion() {
-        return mShaderLanguageVersion;
+        return mVersion.getShaderVersion();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -20,12 +20,10 @@ package org.quark.render.shader;
 import org.quark.render.Render;
 import org.quark.system.utility.Manageable;
 
-import static org.quark.Quark.QkRender;
+import static org.quark.Quark.QKRender;
 
 /**
  * <code>Uniform</code> encapsulate a variable that resides in a {@link Stage}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Uniform extends Manageable {
     public final static int CONCEPT_VALUE = (1 << 1);
@@ -52,6 +50,6 @@ public abstract class Uniform extends Manageable {
      * @see Render#update(Uniform)
      */
     public final void update() {
-        QkRender.update(this);
+        QKRender.update(this);
     }
 }

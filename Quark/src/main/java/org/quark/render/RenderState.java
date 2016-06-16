@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -24,12 +24,30 @@ import org.quark.mathematic.Vector4i;
 
 /**
  * <code>RenderState</code> contain(s) all render state(s) of {@link Render}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class RenderState {
     /**
-     * Enumerate(s) possible blend mode(s).
+     * Enumerate flag mode(s).
+     */
+    public enum Flag {
+        /**
+         * Indicates the flag is enabled.
+         */
+        ENABLE,
+
+        /**
+         * Indicates the flag is disabled.
+         */
+        DISABLE,
+
+        /**
+         * Indicates the flag inherit.
+         */
+        INHERIT
+    }
+
+    /**
+     * Enumerate(s) blend mode(s).
      */
     public enum Blend {
         /**
@@ -38,66 +56,63 @@ public final class RenderState {
         NONE(Render.GLES2.GL_NONE, Render.GLES2.GL_NONE),
 
         /**
+         * Inherit.
+         */
+        INHERIT(Render.GLES2.GL_NONE, Render.GLES2.GL_NONE),
+
+        /**
          * Result = source_colour + destination_colour.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ADD(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour * destination_colour.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         MULTIPLY(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_ZERO),
 
         /**
          * Result = source_colour * destination_colour * 2.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         MULTIPLY_TWICE(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_SRC_COLOR),
 
         /**
          * Result = source_alpha * source_colour + (1 - source_alpha) * destination_colour.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ALPHA(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
 
         /**
          * Result = (source_alpha * source_colour) + destination_colour.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ALPHA_ADD(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour + (destination_colour * 1 - source_alpha).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ALPHA_PRE_MULTIPLY(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_ALPHA),
 
         /**
          * Result = source_colour + (1 - source_colour) * destination_colour.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         COLOR(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
 
         /**
          * Result = (source_colour * (1 - destination_colour)) + (destination_colour * (1 - source_colour)).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         COLOR_EXCLUSION(Render.GLES2.GL_ONE_MINUS_DST_COLOR, Render.GLES2.GL_ONE_MINUS_SRC_COLOR);
 
@@ -114,46 +129,41 @@ public final class RenderState {
     }
 
     /**
-     * Enumerate(s) possible blend equation(s).
+     * Enumerate(s) blend equation(s).
      */
     public enum BlendEquation {
         /**
          * Result = source_rgba + destination_rgba.
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ADD(Render.GLES2.GL_FUNC_ADD),
 
         /**
          * Result = source_rgba - destination_rgba.
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         SUBTRACT(Render.GLES2.GL_FUNC_SUBTRACT),
 
         /**
          * Result = destination_rgba - source_rgba.
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         SUBTRACT_REVERSE(Render.GLES2.GL_FUNC_REVERSE_SUBTRACT),
 
         /**
          * Result = min(source_rgba, destination_rgba).
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 3.0}
+         *
+         * @since OpenGL ES 3.0
          */
         MIN(Render.GLES3.GL_MIN),
 
         /**
          * Result = max(source_rgba, destination_rgba).
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 3.0}
+         *
+         * @since OpenGL ES 3.0
          */
         MAX(Render.GLES3.GL_MAX);
 
@@ -168,7 +178,7 @@ public final class RenderState {
     }
 
     /**
-     * Enumerate(s) possible cull operation(s).
+     * Enumerate(s) cull operation(s).
      */
     public enum Cull {
         /**
@@ -177,26 +187,28 @@ public final class RenderState {
         NONE(Render.GLES2.GL_NONE),
 
         /**
-         * Cull only front-face</p>
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Inherit.
+         */
+        INHERIT(Render.GLES2.GL_NONE),
+
+        /**
+         * Cull only front-face
+         *
+         * @since OpenGL ES 2.0
          */
         FRONT(Render.GLES2.GL_FRONT),
 
         /**
-         * Cull front- and back- face</p>
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Cull front- and back- face
+         *
+         * @since OpenGL ES 2.0
          */
         FRONT_BACK(Render.GLES2.GL_FRONT_BACK),
 
         /**
-         * Cull only back-face</p>
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Cull only back-face
+         *
+         * @since OpenGL ES 2.0
          */
         BACK(Render.GLES2.GL_BACK);
 
@@ -211,72 +223,64 @@ public final class RenderState {
     }
 
     /**
-     * Enumerate(s) possible stencil operation(s).
+     * Enumerate(s) stencil operation(s).
      */
     public enum StencilOp {
         /**
          * Keeps the current value.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         KEEP(Render.GLES2.GL_KEEP),
 
         /**
          * Sets the stencil buffer value to 0.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ZERO(Render.GLES2.GL_ZERO),
 
         /**
          * Replace the stencil buffer value.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         REPLACE(Render.GLES2.GL_REPLACE),
 
         /**
          * Increments the current stencil buffer value. Clamps to the maximum representable unsigned value.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         INCREMENT(Render.GLES2.GL_INCREMENT),
 
         /**
          * Increments the current stencil buffer value. Wraps stencil buffer value to zero when incrementing
          * the maximum representable unsigned value.
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         INCREMENT_WRAP(Render.GLES2.GL_INCREMENT_WRAP),
 
         /**
          * Decrements the current stencil buffer value. Clamps to 0.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         DECREASE(Render.GLES2.GL_DECREASE),
 
         /**
          * Decrements the current stencil buffer value. Wraps stencil buffer value to the maximum representable
          * unsigned value when decrementing a stencil buffer value of zero.
-         * <p>
-         * {@since OpenGL    1.4}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         DECREASE_WRAP(Render.GLES2.GL_DECREASE_WRAP),
 
         /**
          * Bitwise inverts the current stencil buffer value.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         INVERT(Render.GLES2.GL_INVERT);
 
@@ -291,70 +295,62 @@ public final class RenderState {
     }
 
     /**
-     * Enumerate(s) possible test operation(s).
+     * Enumerate(s) test operation(s).
      */
     public enum TestOp {
         /**
          * Always fails.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         NEVER(Render.GLES2.GL_NEVER),
 
         /**
          * Always passes.
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         *
+         * @since OpenGL ES 2.0
          */
         ALWAYS(Render.GLES2.GL_ALWAYS),
 
         /**
-         * Passes if ( ref & mask ) < ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes if reference is less than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         LESS(Render.GLES2.GL_LESS),
 
         /**
-         * Passes if ( ref & mask ) <= ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes if reference is less or equal than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         LESS_EQUAL(Render.GLES2.GL_LESS_EQUAL),
 
         /**
-         * Passes if ( ref & mask ) > ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes if reference is greater than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         GREATER(Render.GLES2.GL_GREATER),
 
         /**
-         * Passes if ( ref & mask ) >= ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes iif reference is greater or equal than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         GREATER_EQUAL(Render.GLES2.GL_GREATER_EQUAL),
 
         /**
-         * Passes if ( ref & mask ) = ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes if reference is equal than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         EQUAL(Render.GLES2.GL_EQUAL),
 
         /**
-         * Passes if ( ref & mask ) != ( stencil & mask ).
-         * <p>
-         * {@since OpenGL    1.1}
-         * {@since OpenGL ES 2.0}
+         * Passes if reference is not equal than mask.
+         *
+         * @since OpenGL ES 2.0
          */
         NOT_EQUAL(Render.GLES2.GL_NOT_EQUAL);
 
@@ -369,9 +365,9 @@ public final class RenderState {
     }
 
     /**
-     * If <code>true</code>, enable alpha to coverage, <code>false</code> otherwise.
+     * Specifies whether do alpha to coverage sample.
      */
-    private boolean mAlphaToCoverage = false;
+    private Flag mAlphaToCoverage = Flag.INHERIT;
 
     /**
      * Specifies how the red, green, blue, and alpha source blending factors are computed.
@@ -397,7 +393,7 @@ public final class RenderState {
     /**
      * Specifies whether red, green, blue, and alpha can or cannot be written into the frame buffer.
      */
-    private boolean mRedMask = true, mGreenMask = true, mBlueMask = true, mAlphaMask = true;
+    private Flag mRedMask = Flag.INHERIT, mGreenMask = Flag.INHERIT, mBlueMask = Flag.INHERIT, mAlphaMask = Flag.INHERIT;
 
     /**
      * Specifies whether front- or back-facing polygons are candidates for culling.
@@ -407,9 +403,9 @@ public final class RenderState {
     private Cull mCull = Cull.BACK;
 
     /**
-     * If <code>true</code>, discard fragments that are outside the scissor rectangle.
+     * Specifies whether discard fragments that are outside the scissor rectangle.
      */
-    private boolean mScissor = false;
+    private Flag mScissor = Flag.INHERIT;
 
     /**
      * Specifies the scissor viewport.
@@ -417,14 +413,14 @@ public final class RenderState {
     private MutableVector4i mScissorViewport = MutableVector4i.zero();
 
     /**
-     * If <code>true</code>, do depth comparisons and update the depth buffer.
+     * Specifies whether do depth comparisons and update the depth buffer.
      */
-    private boolean mDepth = true;
+    private Flag mDepth = Flag.INHERIT;
 
     /**
      * Specifies whether the depth buffer is enabled for writing.
      */
-    private boolean mDepthMask = true;
+    private Flag mDepthMask = Flag.INHERIT;
 
     /**
      * Specifies depth range.
@@ -439,9 +435,9 @@ public final class RenderState {
     private TestOp mDepthOp = TestOp.LESS;
 
     /**
-     * If <code>true</code>, do stencil testing and update the stencil buffer.
+     * Specifies whether do stencil testing and update the stencil buffer.
      */
-    private boolean mStencil = false;
+    private Flag mStencil = Flag.INHERIT;
 
     /**
      * Specifies the stencil test function for front-face.
@@ -502,14 +498,46 @@ public final class RenderState {
     private StencilOp mStencilBackDepthPassOp = StencilOp.KEEP;
 
     /**
+     * <p>Merge the state(s) with other state(s)</p>
+     *
+     * @param other the other state to merge
+     */
+    public void merge(RenderState other) {
+        mAlphaToCoverage = other.mAlphaToCoverage;
+        mAlphaMask = other.mRedMask;
+        mBlend = other.mBlend;
+        mBlendAlphaEquation = other.mBlendAlphaEquation;
+        mBlendColourEquation = other.mBlendColourEquation;
+        mBlueMask = other.mRedMask;
+        mCull = other.mCull;
+        mDepth = other.mDepth;
+        mDepthMask = other.mDepthMask;
+        mDepthOp = other.mDepthOp;
+        mDepthRange.set(other.mDepthRange);
+        mGreenMask = other.mRedMask;
+        mRedMask = other.mRedMask;
+        mScissor = other.mScissor;
+        mScissorViewport.set(other.mScissorViewport);
+        mStencil = other.mStencil;
+        mStencilBackOp = other.mStencilBackOp;
+        mStencilBackFailOp = other.mStencilBackFailOp;
+        mStencilBackDepthFailOp = other.mStencilBackDepthFailOp;
+        mStencilBackDepthPassOp = other.mStencilBackDepthPassOp;
+        mStencilFrontOp = other.mStencilFrontOp;
+        mStencilFrontFailOp = other.mStencilFrontFailOp;
+        mStencilFrontDepthFailOp = other.mStencilFrontDepthFailOp;
+        mStencilFrontDepthPassOp = other.mStencilFrontDepthPassOp;
+    }
+
+    /**
      * <p>Change alpha to coverage mode</p>
      *
-     * @param activate <code>true</code> to activate alpha to coverage mode, <code>false</code> otherwise
+     * @param flag the new flag of the state
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setAlphaToCoverage(boolean activate) {
-        mAlphaToCoverage = activate;
+    public RenderState setAlphaToCoverage(Flag flag) {
+        mAlphaToCoverage = flag;
         return this;
     }
 
@@ -553,25 +581,25 @@ public final class RenderState {
     /**
      * <p>Change colour mask</p>
      *
-     * @param mask <code>true</code> to mask all colour(s), <code>false</code> otherwise
+     * @param mask the flag mask for all colour(s)
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setColourMask(boolean mask) {
+    public RenderState setColourMask(Flag mask) {
         return setColourMask(mask, mask, mask, mask);
     }
 
     /**
      * <p>Change colour mask</p>
      *
-     * @param red   <code>true</code> to mask red colour, <code>false</code> otherwise
-     * @param green <code>true</code> to mask green colour, <code>false</code> otherwise
-     * @param blue  <code>true</code> to mask blue colour, <code>false</code> otherwise
-     * @param alpha <code>true</code> to mask alpha colour, <code>false</code> otherwise
+     * @param red   the flag of the red colour
+     * @param green the flag of the green colour
+     * @param blue  the flag of the blue colour
+     * @param alpha the flag of the alpha colour
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setColourMask(boolean red, boolean green, boolean blue, boolean alpha) {
+    public RenderState setColourMask(Flag red, Flag green, Flag blue, Flag alpha) {
         mRedMask = red;
         mGreenMask = green;
         mBlueMask = blue;
@@ -594,24 +622,24 @@ public final class RenderState {
     /**
      * <p>Change depth mode</p>
      *
-     * @param activate <code>true</code> to activate depth mode, <code>false</code> otherwise
+     * @param flag the new flag of the state
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setDepth(boolean activate) {
-        mDepth = activate;
+    public RenderState setDepth(Flag flag) {
+        mDepth = flag;
         return this;
     }
 
     /**
      * <p>Change depth mask</p>
      *
-     * @param activate <code>true</code> to activate depth mask (writable), <code>false</code> otherwise
+     * @param flag the new flag of the state
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setDepthMask(boolean activate) {
-        mDepthMask = activate;
+    public RenderState setDepthMask(Flag flag) {
+        mDepthMask = flag;
         return this;
     }
 
@@ -623,7 +651,19 @@ public final class RenderState {
      * @return <code>this</code> for chain operation(s)
      */
     public RenderState setDepthRange(Vector2f range) {
-        mDepthRange.setXY(range.getX(), range.getY());
+        return setDepthRange(range.getX(), range.getY());
+    }
+
+    /**
+     * <p>Change depth range</p>
+     *
+     * @param near the new near depth range
+     * @param far  the new far depth range
+     *
+     * @return <code>this</code> for chain operation(s)
+     */
+    public RenderState setDepthRange(float near, float far) {
+        mDepthRange.setXY(near, far);
         return this;
     }
 
@@ -642,12 +682,12 @@ public final class RenderState {
     /**
      * <p>Change scissor mask</p>
      *
-     * @param activate <code>true</code> to activate scissor, <code>false</code> otherwise
+     * @param flag the new flag of the state
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setScissor(boolean activate) {
-        mScissor = activate;
+    public RenderState setScissor(Flag flag) {
+        mScissor = flag;
         return this;
     }
 
@@ -669,12 +709,12 @@ public final class RenderState {
     /**
      * <p>Change stencil mode</p>
      *
-     * @param activate <code>true</code> to activate stencil mode, <code>false</code> otherwise
+     * @param flag the new flag of the state
      *
      * @return <code>this</code> for chain operation(s)
      */
-    public RenderState setStencil(boolean activate) {
-        mStencil = activate;
+    public RenderState setStencil(Flag flag) {
+        mStencil = flag;
         return this;
     }
 
@@ -758,11 +798,11 @@ public final class RenderState {
     }
 
     /**
-     * <p>Check if alpha to coverage mode is activated</p>
+     * <p>Get the alpha coverage flag</p>
      *
-     * @return <code>true</code> if alpha to coverage mode is activated, <code>false</code> otherwise
+     * @return the alpha coverage flag
      */
-    public boolean isAlphaToCoverage() {
+    public Flag getAlphaToCoverage() {
         return mAlphaToCoverage;
     }
 
@@ -794,38 +834,38 @@ public final class RenderState {
     }
 
     /**
-     * <p>Check if red mask colour is activated</p>
+     * <p>Get the red colour mask flag</p>
      *
-     * @return <code>true</code> if red mask colour is activated, <code>false</code> otherwise
+     * @return the red colour mask flag
      */
-    public boolean isRedMask() {
+    public Flag getRedMask() {
         return mRedMask;
     }
 
     /**
-     * <p>Check if green mask colour is activated</p>
+     * <p>Get the green colour mask flag</p>
      *
-     * @return <code>true</code> if green mask colour is activated, <code>false</code> otherwise
+     * @return the green colour mask flag
      */
-    public boolean isGreenMask() {
+    public Flag getGreenMask() {
         return mGreenMask;
     }
 
     /**
-     * <p>Check if blue mask colour is activated</p>
+     * <p>Get the blue colour mask flag</p>
      *
-     * @return <code>true</code> if blue mask colour is activated, <code>false</code> otherwise
+     * @return the blue colour mask flag
      */
-    public boolean isBlueMask() {
+    public Flag getBlueMask() {
         return mBlueMask;
     }
 
     /**
-     * <p>Check if alpha mask colour is activated</p>
+     * <p>Get the alpha colour mask flag</p>
      *
-     * @return <code>true</code> if alpha mask colour is activated, <code>false</code> otherwise
+     * @return the alpha colour mask flag
      */
-    public boolean isAlphaMask() {
+    public Flag getAlphaMask() {
         return mAlphaMask;
     }
 
@@ -839,20 +879,20 @@ public final class RenderState {
     }
 
     /**
-     * <p>Check if depth is activated</p>
+     * <p>Get the depth flag</p>
      *
-     * @return <code>true</code> if depth is activated, <code>false</code> otherwise
+     * @return the depth flag
      */
-    public boolean isDepth() {
+    public Flag getDepth() {
         return mDepth;
     }
 
     /**
-     * <p>Check if depth mask (writable) is activated</p>
+     * <p>Get the depth mask flag</p>
      *
-     * @return <code>true</code> if depth mask (writable) is activated, <code>false</code> otherwise
+     * @return the depth mask flag
      */
-    public boolean isDepthMask() {
+    public Flag getDepthMask() {
         return mDepthMask;
     }
 
@@ -875,11 +915,11 @@ public final class RenderState {
     }
 
     /**
-     * <p>Check if scissor is activated</p>
+     * <p>Get the scissor flag</p>
      *
-     * @return <code>true</code> if scissor is activated, <code>false</code> otherwise
+     * @return the scissor flag
      */
-    public boolean isScissor() {
+    public Flag getScissor() {
         return mScissor;
     }
 
@@ -893,11 +933,11 @@ public final class RenderState {
     }
 
     /**
-     * <p>Check if stencil is activated</p>
+     * <p>Get the stencil flag</p>
      *
-     * @return <code>true</code> if stencil is activated, <code>false</code> otherwise
+     * @return the stencil flag
      */
-    public boolean isStencil() {
+    public Flag getStencil() {
         return mStencil;
     }
 
@@ -972,4 +1012,113 @@ public final class RenderState {
     public StencilOp getStencilBackDepthPassOp() {
         return mStencilBackDepthPassOp;
     }
+
+    /**
+     * <p>Check whether the given {@link Flag} is dirty</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
+     */
+    public static boolean isFlagDirty(Flag source, Flag destination) {
+        return !(source == destination || source == Flag.INHERIT);
+    }
+
+    /**
+     * <p>Check whether the given {@link Flag} is enabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagEnabled(Flag source, Flag destination) {
+        return (source == Flag.ENABLE || (source == Flag.INHERIT && destination == Flag.ENABLE));
+    }
+
+    /**
+     * <p>Check whether the given {@link Flag} is disabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is disabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagDisabled(Flag source, Flag destination) {
+        return (source == Flag.DISABLE || (source == Flag.INHERIT && destination == Flag.DISABLE));
+    }
+
+    /**
+     * <p>Check whether the given {@link Blend} is dirty</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
+     */
+    public static boolean isFlagDirty(Blend source, Blend destination) {
+        return !(source == destination || source == Blend.INHERIT);
+    }
+
+    /**
+     * <p>Check whether the given {@link Blend} is enabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagEnabled(Blend source, Blend destination) {
+        return (source != Blend.NONE || destination != Blend.NONE);
+    }
+
+    /**
+     * <p>Check whether the given {@link Blend} is disabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is disabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagDisabled(Blend source, Blend destination) {
+        return (source == Blend.NONE || (source == Blend.INHERIT && destination == Blend.NONE));
+    }
+
+    /**
+     * <p>Check whether the given {@link Cull} is dirty</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
+     */
+    public static boolean isFlagDirty(Cull source, Cull destination) {
+        return !(source == destination || source == Cull.INHERIT);
+    }
+
+    /**
+     * <p>Check whether the given {@link Cull} is enabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagEnabled(Cull source, Cull destination) {
+        return (source != Cull.NONE || destination != Cull.NONE);
+    }
+
+    /**
+     * <p>Check whether the given {@link Cull} is disabled</p>
+     *
+     * @param source      the source
+     * @param destination the destination
+     *
+     * @return <code>true</code> if the flag is disabled, <code>false</code> otherwise
+     */
+    public static boolean isFlagDisabled(Cull source, Cull destination) {
+        return (source == Cull.NONE || (source == Cull.INHERIT && destination == Cull.NONE));
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,8 +19,6 @@ package org.quark.render.texture;
 
 /**
  * <code>Texture2DCube</code> encapsulate a {@link Texture} of 2 dimension.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Texture2DCube extends Texture {
     protected TextureBorder mBorderX = TextureBorder.REPEAT;

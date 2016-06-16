@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,31 +21,17 @@ import org.quark.render.texture.*;
 import org.quark.resource.AssetKey;
 import org.quark.resource.AssetLoader;
 import org.quark.resource.AssetManager;
+import org.quark.system.utility.array.ArrayFactory;
+import org.quark.system.utility.array.Int8Array;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulate an {@link AssetLoader} for loading DDS texture(s).
- * <p>
- * {@link Texture}
- * {@link Texture2D}
- * {@link Texture3D}
- * {@link ImageFormat#RED}
- * {@link ImageFormat#RG}
- * {@link ImageFormat#RGB}
- * {@link ImageFormat#RGBA}
- * {@link ImageFormat#RGB_DXT1}
- * {@link ImageFormat#RGBA_DXT1}
- * {@link ImageFormat#RGBA_DXT3}
- * {@link ImageFormat#RGBA_DXT5}
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>TextureDDSAssetLoader</code> encapsulate an {@link AssetLoader} for loading DDS texture(s).
  */
 public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture.Descriptor> {
     private final static int DDSD_MIPMAP_COUNT = 0x00020000;
@@ -259,8 +245,8 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
             //!
             //! Create the buffer.
             //!
-            final ByteBuffer buffer = ByteBuffer.allocateDirect(imageLength).order(ByteOrder.nativeOrder());
-            buffer.put(content, 0, imageLength).flip();
+            final Int8Array buffer = ArrayFactory.allocateInt8Array(imageLength);
+            buffer.write(content, 0, imageLength).flip();
 
             //!
             //! Create the layer.

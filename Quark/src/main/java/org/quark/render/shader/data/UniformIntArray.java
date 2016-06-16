@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,23 +19,19 @@ package org.quark.render.shader.data;
 
 import org.quark.render.shader.Uniform;
 import org.quark.render.shader.UniformType;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import org.quark.system.utility.array.Int32Array;
+import org.quark.system.utility.array.ArrayFactory;
 
 /**
  * <code>UniformIntArray</code> encapsulate an {@link Uniform} for {@link UniformType#IntArray}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformIntArray extends Uniform {
-    private final IntBuffer mValue;
+    private final Int32Array mValue;
 
     /**
      * <p>Constructor from a buffer</p>
      */
-    public UniformIntArray(IntBuffer buffer) {
+    public UniformIntArray(Int32Array buffer) {
         super(UniformType.IntArray);
         mValue = buffer;
     }
@@ -44,7 +40,7 @@ public final class UniformIntArray extends Uniform {
      * <p>Constructor</p>
      */
     public UniformIntArray(int capacity) {
-        this(ByteBuffer.allocateDirect(4 * capacity).order(ByteOrder.nativeOrder()).asIntBuffer());
+        this(ArrayFactory.allocateInt32Array(capacity));
     }
 
     /**
@@ -52,7 +48,7 @@ public final class UniformIntArray extends Uniform {
      *
      * @return the value of the data
      */
-    public IntBuffer getValue() {
+    public Int32Array getValue() {
         return mValue;
     }
 
@@ -74,7 +70,7 @@ public final class UniformIntArray extends Uniform {
      */
     public void setValue(int[] newValue, int offset, int length) {
         mValue.rewind();
-        mValue.put(newValue, offset, length);
+        mValue.write(newValue, offset, length);
         setUpdate(CONCEPT_VALUE);
     }
 }

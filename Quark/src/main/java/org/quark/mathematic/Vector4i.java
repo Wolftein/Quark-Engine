@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * <code>Vector4i</code> encapsulate a 4 element vector that is represented by integer.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public abstract class Vector4i {
     protected int mX;
@@ -406,8 +404,7 @@ public abstract class Vector4i {
             return false;
         }
         final Vector4i other = (Vector4i) vector;
-        return Float.compare(mX, other.mX) == 0 && Float.compare(mY, other.mY) == 0 &&
-                Float.compare(mZ, other.mZ) == 0 && Float.compare(mW, other.mW) == 0;
+        return mX == other.mX && mY == other.mY && mZ == other.mZ && mW == other.mW;
     }
 
     /**

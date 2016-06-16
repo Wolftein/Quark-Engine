@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,79 +21,77 @@ import org.quark.render.Render;
 
 /**
  * <code>StorageTarget</code> enumerate {@link Storage} target(s).
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public enum StorageTarget {
     /**
      * Represent a storage for vertices.
-     * <p>
-     * {@since OpenGL    1.5}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.5
+     * @since OpenGL ES 2.0
      */
     ARRAY(Render.GLES2.GL_ARRAY_BUFFER),
 
     /**
      * Represent a storage for indices..
-     * <p>
-     * {@since OpenGL    1.5}
-     * {@since OpenGL ES 2.0}
+     *
+     * @since OpenGL    1.5
+     * @since OpenGL ES 2.0
      */
     ELEMENT(Render.GLES2.GL_ELEMENT_ARRAY_BUFFER),
 
     /**
      * Represent a storage for pixel data being sent to the GPU.
-     * <p>
-     * {@since OpenGL    2.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    2.1
+     * @since OpenGL ES 3.0
      */
     PIXEL_PACK(Render.GLES3.GL_PIXEL_PACK_BUFFER),
 
     /**
      * Represent a storage for pixel data being read to the GPU.
-     * <p>
-     * {@since OpenGL    2.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    2.1
+     * @since OpenGL ES 3.0
      */
     PIXEL_UNPACK(Render.GLES3.GL_PIXEL_UNPACK_BUFFER),
 
     /**
      * Represent a storage for results from executing a transform feedback shader.
-     * <p>
-     * {@since OpenGL    3.0}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.0
+     * @since OpenGL ES 3.0
      */
     TRANSFORM_FEEDBACK(Render.GLES3.GL_TRANSFORM_FEEDBACK_BUFFER),
 
     /**
      * Represent a storage for data copied between storage.
-     * <p>
-     * {@since OpenGL    3.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.1
+     * @since OpenGL ES 3.0
      */
     COPY_READ(Render.GLES3.GL_COPY_READ_BUFFER),
 
     /**
      * Represent a storage for data copied between storage.
-     * <p>
-     * {@since OpenGL    3.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.1
+     * @since OpenGL ES 3.0
      */
     COPY_WRITE(Render.GLES3.GL_COPY_WRITE_BUFFER),
 
     /**
      * Represent a storage for data(s).
-     * <p>
-     * {@since OpenGL    3.1}
-     * {@since OpenGL ES 3.0}
+     *
+     * @since OpenGL    3.1
+     * @since OpenGL ES 3.0
      */
     UNIFORM(Render.GLES3.GL_UNIFORM_BUFFER),
 
     /**
      * Represent a storage for texture(s).
-     * <p>
-     * {@since OpenGL    3.1}
-     * {@since OpenGL ES 3.2}
+     *
+     * @since OpenGL    3.1
+     * @since OpenGL ES 3.2
      */
     TEXTURE(Render.GLES32.GL_TEXTURE_BUFFER);
 

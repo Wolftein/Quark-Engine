@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -19,23 +19,19 @@ package org.quark.render.shader.data;
 
 import org.quark.render.shader.Uniform;
 import org.quark.render.shader.UniformType;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import org.quark.system.utility.array.Float32Array;
+import org.quark.system.utility.array.ArrayFactory;
 
 /**
  * <code>UniformFloatArray</code> encapsulate an {@link Uniform} for {@link UniformType#FloatArray}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class UniformFloatArray extends Uniform {
-    private final FloatBuffer mValue;
+    private final Float32Array mValue;
 
     /**
      * <p>Constructor</p>
      */
-    public UniformFloatArray(FloatBuffer buffer) {
+    public UniformFloatArray(Float32Array buffer) {
         super(UniformType.FloatArray);
         mValue = buffer;
     }
@@ -44,7 +40,7 @@ public final class UniformFloatArray extends Uniform {
      * <p>Constructor</p>
      */
     public UniformFloatArray(int capacity) {
-        this(ByteBuffer.allocateDirect(4 * capacity).order(ByteOrder.nativeOrder()).asFloatBuffer());
+        this(ArrayFactory.allocateFloat32Array(capacity));
     }
 
     /**
@@ -52,7 +48,7 @@ public final class UniformFloatArray extends Uniform {
      *
      * @return the value of the data
      */
-    public FloatBuffer getValue() {
+    public Float32Array getValue() {
         return mValue;
     }
 
@@ -74,7 +70,7 @@ public final class UniformFloatArray extends Uniform {
      */
     public void setValue(float[] newValue, int offset, int length) {
         mValue.rewind();
-        mValue.put(newValue, offset, length);
+        mValue.write(newValue, offset, length);
         setUpdate(CONCEPT_VALUE);
     }
 }

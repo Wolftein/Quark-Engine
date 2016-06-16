@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,30 +22,24 @@ import de.jarnbjo.vorbis.IdentificationHeader;
 import de.jarnbjo.vorbis.VorbisStream;
 import org.quark.audio.Audio;
 import org.quark.audio.AudioFormat;
-import org.quark.audio.factory.FactoryAudioStatic;
-import org.quark.audio.factory.FactoryAudioStreaming;
+import org.quark.audio.factory.FactoryStaticAudio;
+import org.quark.audio.factory.FactoryStreamingAudio;
 import org.quark.resource.AssetKey;
 import org.quark.resource.AssetLoader;
 import org.quark.resource.AssetManager;
+import org.quark.system.utility.array.ArrayFactory;
+import org.quark.system.utility.array.Int8Array;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Encapsulate an {@link AssetLoader} for loading OGG audio(s).
- * <p>
- * {@link Audio}
- * {@link AudioFormat#MONO_16}
- * {@link AudioFormat#STEREO_16}
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>AudioOGGAssetLoader</code> encapsulate an {@link AssetLoader} for loading OGG audio(s).
  */
 public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
     /**
@@ -96,11 +90,11 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
     }
 
     /**
-     * <p>Read an {@link FactoryAudioStatic} from the {@link ExtendedOggStream} given</p>
+     * <p>Read an {@link FactoryStaticAudio} from the {@link ExtendedOggStream} given</p>
      *
      * @throws IOException indicates failing loading the audio
      */
-    private FactoryAudioStatic readAudio(ExtendedOggStream stream, LogicalOggStream logical,
+    private FactoryStaticAudio readAudio(ExtendedOggStream stream, LogicalOggStream logical,
             VorbisStream vorbis) throws IOException {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -134,23 +128,23 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
         //!
         //! Create the buffer for the audio and fill it with all the PCM data.
         //!
-        final ByteBuffer data = ByteBuffer.allocateDirect(length).order(ByteOrder.nativeOrder());
-        data.put(bytes, 0, length).flip();
+        final Int8Array data = ArrayFactory.allocateInt8Array(length);
+        data.write(bytes, 0, length).flip();
 
         //!
         //! Close everything.
         //!
         vorbis.close();
 
-        return new FactoryAudioStatic(data, getUncompressedFormat(header), duration, header.getSampleRate());
+        return new FactoryStaticAudio(data, getUncompressedFormat(header), duration, header.getSampleRate());
     }
 
     /**
-     * <p>Read an {@link FactoryAudioStreaming} from the {@link ExtendedOggStream} given</p>
+     * <p>Read an {@link FactoryStreamingAudio} from the {@link ExtendedOggStream} given</p>
      *
      * @throws IOException indicates failing loading the audio
      */
-    private FactoryAudioStreaming readAudioStreaming(ExtendedOggStream stream, LogicalOggStream logical,
+    private FactoryStreamingAudio readAudioStreaming(ExtendedOggStream stream, LogicalOggStream logical,
             VorbisStream vorbis) throws IOException {
         //!
         //! Get the header.
@@ -165,7 +159,7 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
         final int duration
                 = (int) ((float) length / (2 * header.getChannels() * header.getSampleRate())) * 1000;
 
-        return new FactoryAudioStreaming(new OGGInputStream((CachedStream) stream, logical, vorbis),
+        return new FactoryStreamingAudio(new OGGInputStream((CachedStream) stream, logical, vorbis),
                 getUncompressedFormat(header), duration, header.getSampleRate());
     }
 
@@ -191,7 +185,7 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
     }
 
     /**
-     * <code>OGGInputStream</code> encapsulate an {@link InputStream} for {@link FactoryAudioStreaming}.
+     * <code>OGGInputStream</code> encapsulate an {@link InputStream} for {@link FactoryStreamingAudio}.
      */
     private final static class OGGInputStream extends InputStream {
         private final CachedStream mStream;

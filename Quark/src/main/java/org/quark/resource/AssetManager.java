@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <code>AssetManager</code> encapsulate an interface that holds and manage every resource in the engine.
+ * <code>AssetManager</code> encapsulate an interface that holds every resource.
  * <p>
  * Provides a means to register {@link AssetLocator}(s) (which are used to find resources),
  * then {@link AssetLoader}(s) are invoked to convert the data into an usable object.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public interface AssetManager {
     /**

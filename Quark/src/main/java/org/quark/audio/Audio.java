@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -22,9 +22,7 @@ import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
 
 /**
- * <code>Audio</code> encapsulate the data of a sound.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
+ * <code>QKAudio</code> encapsulate the data of a sound.
  */
 public abstract class Audio extends Manageable implements Disposable {
     private final int mDuration;

@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 /**
  * Represent an immutable {@linkplain Quaternionf}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class ImmutableQuaternionf extends Quaternionf {
     /**
@@ -31,7 +29,7 @@ public final class ImmutableQuaternionf extends Quaternionf {
     }
 
     /**
-     * <p></p>Creates a new quaternion where each component value is 0.0f</p>
+     * <p>Creates a new quaternion where each component value is 0.0f</p>
      *
      * @return a new quaternion
      */
