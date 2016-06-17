@@ -40,7 +40,7 @@ public final class DesktopInputMouse implements InputMouse {
     /**
      * Hold the device buffer.
      */
-    private Int32Array mBuffer = DesktopArrayFactory.allocateInt32Array(1024);
+    private Int32Array mBuffer = DesktopArrayFactory.allocateInt32Array(512);
 
     /**
      * <p>Constructor</p>

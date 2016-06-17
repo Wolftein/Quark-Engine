@@ -18,6 +18,7 @@
 package org.quark.backend.teavm.utility.array;
 
 import org.quark.system.utility.array.*;
+import org.teavm.jso.typedarrays.ArrayBuffer;
 
 /**
  * <a href="http://teavm.org/">TeaVM</a> implementation for {@link ArrayFactory}.
@@ -28,7 +29,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Int8Array nAllocateInt8Array(int capacity) {
-        return new TeaVMInt8Array(org.teavm.jso.typedarrays.Int8Array.create(capacity));
+        return new TeaVMInt8Array(ArrayBuffer.create(capacity));
     }
 
     /**
@@ -36,7 +37,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Int16Array nAllocateInt16Array(int capacity) {
-        return new TeaVMInt16Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x02));
+        return new TeaVMInt16Array(ArrayBuffer.create(capacity * 0x02));
     }
 
     /**
@@ -44,7 +45,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Int32Array nAllocateInt32Array(int capacity) {
-        return new TeaVMInt32Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x04));
+        return new TeaVMInt32Array(ArrayBuffer.create(capacity * 0x04));
     }
 
     /**
@@ -52,7 +53,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Int64Array nAllocateInt64Array(int capacity) {
-        return new TeaVMInt64Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x08));
+        return new TeaVMInt64Array(ArrayBuffer.create(capacity * 0x08));
     }
 
     /**
@@ -60,7 +61,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected UInt8Array nAllocateUInt8Array(int capacity) {
-        return new TeaVMUInt8Array(org.teavm.jso.typedarrays.Int8Array.create(capacity));
+        return new TeaVMUInt8Array(ArrayBuffer.create(capacity));
     }
 
     /**
@@ -68,7 +69,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected UInt16Array nAllocateUInt16Array(int capacity) {
-        return new TeaVMUInt16Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x02));
+        return new TeaVMUInt16Array(ArrayBuffer.create(capacity * 0x02));
     }
 
     /**
@@ -76,7 +77,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected UInt32Array nAllocateUInt32Array(int capacity) {
-        return new TeaVMUInt32Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x04));
+        return new TeaVMUInt32Array(ArrayBuffer.create(capacity * 0x04));
     }
 
     /**
@@ -84,7 +85,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Float16Array nAllocateFloat16Array(int capacity) {
-        return new TeaVMFloat16Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x02));
+        return new TeaVMFloat16Array(ArrayBuffer.create(capacity * 0x02));
     }
 
     /**
@@ -92,7 +93,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Float32Array nAllocateFloat32Array(int capacity) {
-        return new TeaVMFloat32Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x04));
+        return new TeaVMFloat32Array(ArrayBuffer.create(capacity * 0x04));
     }
 
     /**
@@ -100,7 +101,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
      */
     @Override
     protected Float64Array nAllocateFloat64Array(int capacity) {
-        return new TeaVMFloat64Array(org.teavm.jso.typedarrays.Int8Array.create(capacity * 0x08));
+        return new TeaVMFloat64Array(ArrayBuffer.create(capacity * 0x08));
     }
 
     /**
@@ -117,7 +118,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMInt8Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMInt8Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -129,7 +130,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMInt16Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMInt16Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -141,7 +142,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMInt32Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMInt32Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -153,7 +154,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMInt64Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMInt64Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -165,7 +166,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMUInt8Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMUInt8Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -177,7 +178,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMUInt16Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMUInt16Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -189,7 +190,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMUInt32Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMUInt32Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -201,7 +202,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMFloat16Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMFloat16Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -213,7 +214,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMFloat32Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMFloat32Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -225,7 +226,7 @@ public final class TeaVMArrayFactory extends ArrayFactory {
         /**
          * <p>Constructor</p>
          */
-        public TeaVMFloat64Array(org.teavm.jso.typedarrays.Int8Array buffer) {
+        public TeaVMFloat64Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }

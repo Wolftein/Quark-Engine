@@ -25,6 +25,7 @@ import org.quark.system.utility.Manageable;
 import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Float32Array;
 import org.quark.system.utility.array.Int8Array;
+import org.quark.system.utility.emulation.Emulation;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -32,7 +33,7 @@ import java.util.Queue;
 /**
  * Default implementation for {@link AudioManager}.
  */
-public final class DefaultAudioManager implements AudioManager {
+public final class SimpleAudioManager implements AudioManager {
     /**
      * Represent the max capacity of a streaming buffer.
      */
@@ -124,18 +125,15 @@ public final class DefaultAudioManager implements AudioManager {
         //!
         //! Stop all attachment(s).
         //!
-        for (final AudioSource source : mAttachments) {
-            if (source != null) {
-                onRemoveSource(source);
-            }
-        }
+        Emulation.forEachArrayIfNotNull(mAttachments, this::onRemoveSource);
 
         //!
         //! Clear all source(s) and buffer(s).
         //!
-        mSources.forEach(mAL::alDeleteSources);
+        Emulation.forEach(mSources, mAL::alDeleteSources);
         mSources.clear();
-        mBuffers.forEach(mAL::alDeleteBuffers);
+
+        Emulation.forEach(mBuffers, mAL::alDeleteBuffers);
         mBuffers.clear();
 
         //!
@@ -149,13 +147,9 @@ public final class DefaultAudioManager implements AudioManager {
      */
     public void onModuleUpdate() {
         //!
-        //! Update all attachment(s).
+        //! Iterate over all available attachment(s).
         //!
-        for (final AudioSource source : mAttachments) {
-            if (source != null) {
-                onUpdateSource(source);
-            }
-        }
+        Emulation.forEachArrayIfNotNull(mAttachments, this::onUpdateSource);
     }
 
     /**
@@ -216,11 +210,10 @@ public final class DefaultAudioManager implements AudioManager {
      */
     @Override
     public void pause() {
-        for (final AudioSource mAttachment : mAttachments) {
-            if (mAttachment != null) {
-                pause(mAttachment);
-            }
-        }
+        //!
+        //! Iterate over all available attachment(s).
+        //!
+        Emulation.forEachArrayIfNotNull(mAttachments, this::pause);
     }
 
     /**
@@ -239,11 +232,10 @@ public final class DefaultAudioManager implements AudioManager {
      */
     @Override
     public void resume() {
-        for (final AudioSource mAttachment : mAttachments) {
-            if (mAttachment != null) {
-                resume(mAttachment);
-            }
-        }
+        //!
+        //! Iterate over all available attachment(s).
+        //!
+        Emulation.forEachArrayIfNotNull(mAttachments, this::resume);
     }
 
     /**
@@ -262,11 +254,10 @@ public final class DefaultAudioManager implements AudioManager {
      */
     @Override
     public void stop() {
-        for (final AudioSource mAttachment : mAttachments) {
-            if (mAttachment != null) {
-                stop(mAttachment);
-            }
-        }
+        //!
+        //! Iterate over all available attachment(s).
+        //!
+        Emulation.forEachArrayIfNotNull(mAttachments, this::stop);
     }
 
     /**
@@ -360,6 +351,9 @@ public final class DefaultAudioManager implements AudioManager {
             onUpdateSource(source, false);
 
             if (source.getAudio().isStreaming()) {
+                //!
+                //! Proceed to update the streaming.
+                //!
                 onUpdateStreaming(source, (FactoryStreamingAudio) source.getAudio());
             }
         }

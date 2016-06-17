@@ -17,6 +17,8 @@
  */
 package org.quark.input;
 
+import org.quark.input.device.InputKeyboard;
+import org.quark.input.device.InputMouse;
 import org.quark.input.device.InputMouseButton;
 import org.quark.input.device.InputKey;
 
@@ -24,6 +26,112 @@ import org.quark.input.device.InputKey;
  * <code>InputManager</code> encapsulate a service on which handle raw input and transforming them to abstract data.
  */
 public interface InputManager {
+    /**
+     * <p>Invoke a raw input event immediately</p>
+     *
+     * @param event an array that contain(s) the event (in binary)
+     */
+    void invoke(int[] event);
+
+    /**
+     * <p>Invoke a {@link InputKeyboard#EVENT_KEY_UP} event</p>
+     *
+     * @param key the key of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeKeyUp(InputKey key) {
+        final int[] event = {
+                InputKeyboard.EVENT_KEY_UP, key.ordinal()
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputKeyboard#EVENT_KEY_DOWN} event</p>
+     *
+     * @param key the key of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeKeyDown(InputKey key) {
+        final int[] event = {
+                InputKeyboard.EVENT_KEY_DOWN, key.ordinal()
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputKeyboard#EVENT_KEY_TYPE} event</p>
+     *
+     * @param key the key of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeKeyType(char key) {
+        final int[] event = {
+                InputKeyboard.EVENT_KEY_DOWN, key
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputMouse#EVENT_BUTTON_UP} event</p>
+     *
+     * @param button the button of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeMouseButtonUp(InputMouseButton button) {
+        final int[] event = {
+                InputMouse.EVENT_BUTTON_UP, button.ordinal()
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputMouse#EVENT_BUTTON_DOWN} event</p>
+     *
+     * @param button the button of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeMouseButtonDown(InputMouseButton button) {
+        final int[] event = {
+                InputMouse.EVENT_BUTTON_DOWN, button.ordinal()
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputMouse#EVENT_MOVE} event</p>
+     *
+     * @param x the x coordinate of the event
+     * @param y the y coordinate of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeMouseMove(int x, int y) {
+        final int[] event = {
+                InputMouse.EVENT_MOVE, x, y
+        };
+        invoke(event);
+    }
+
+    /**
+     * <p>Invoke a {@link InputMouse#EVENT_WHEEL} event</p>
+     *
+     * @param delta the wheel delta of the event
+     *
+     * @see #invoke(int[])
+     */
+    default void invokeMouseWheel(int delta) {
+        final int[] event = {
+                InputMouse.EVENT_WHEEL, delta
+        };
+        invoke(event);
+    }
+
     /**
      * <p>Register an {@link InputListener}</p>
      *

@@ -21,17 +21,17 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowIconifyCallback;
 import org.quark.audio.AudioManager;
-import org.quark.audio.DefaultAudioManager;
+import org.quark.audio.SimpleAudioManager;
 import org.quark.backend.lwjgl.input.DesktopInputKeyboard;
 import org.quark.backend.lwjgl.input.DesktopInputMouse;
 import org.quark.backend.lwjgl.openal.DesktopALES10;
 import org.quark.backend.lwjgl.opengl.DesktopGLES32;
 import org.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
-import org.quark.input.DefaultInputManager;
 import org.quark.input.InputManager;
-import org.quark.render.DefaultRender;
+import org.quark.input.SimpleInputManager;
 import org.quark.render.Render;
-import org.quark.resource.DefaultAssetManager;
+import org.quark.render.SimpleRender;
+import org.quark.resource.SimpleAssetManager;
 import org.quark.resource.loader.*;
 import org.quark.resource.locator.ClassAssetLocator;
 import org.quark.resource.locator.FilesAssetLocator;
@@ -86,17 +86,17 @@ public final class Desktop {
     /**
      * Hold {@link Render} module.
      */
-    private final DefaultRender mRender = (DefaultRender) (QKRender = new DefaultRender());
+    private final SimpleRender mRender = (SimpleRender) (QKRender = new SimpleRender());
 
     /**
      * Hold {@link AudioManager} module.
      */
-    private final DefaultAudioManager mAudio = (DefaultAudioManager) (QKAudio = new DefaultAudioManager());
+    private final SimpleAudioManager mAudio = (SimpleAudioManager) (QKAudio = new SimpleAudioManager());
 
     /**
      * Hold {@link InputManager} module.
      */
-    private final DefaultInputManager mInput = (DefaultInputManager) (QKInput = new DefaultInputManager());
+    private final SimpleInputManager mInput = (SimpleInputManager) (QKInput = new SimpleInputManager());
 
     /**
      * <p>Constructor</p>
@@ -168,13 +168,14 @@ public final class Desktop {
         //!
         //! Create resource module.
         //!
-        QKResources = new DefaultAssetManager();
+        QKResources = new SimpleAssetManager();
         QKResources.registerAssetLocator("INTERNAL", new ClassAssetLocator());
         QKResources.registerAssetLocator("EXTERNAL", new FilesAssetLocator());
+
         QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
-        QKResources.registerAssetLoader(new ShaderGLSLAssetLoader(QKRender.getCapabilities()), "pipeline");
-        QKResources.registerAssetLoader(new AudioWAVEAssetLoader(), "wav");
+        QKResources.registerAssetLoader(new ShaderGLSLAssetLoader(mRender.getCapabilities()), "pipeline");
+        QKResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         QKResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
 
         //!

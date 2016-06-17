@@ -34,7 +34,7 @@ import java.io.InputStream;
 /**
  * <code>AudioWAVEAssetLoader</code> encapsulate an {@link AssetLoader} for loading WAVE audio(s).
  */
-public final class AudioWAVEAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
+public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descriptor> {
     /**
      * <code>AudioHeader</code> represent the file format of a WAVE sound.
      */

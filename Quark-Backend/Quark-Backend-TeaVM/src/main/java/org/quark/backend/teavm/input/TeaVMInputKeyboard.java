@@ -19,21 +19,17 @@ package org.quark.backend.teavm.input;
 
 import org.quark.input.device.InputKey;
 import org.quark.input.device.InputKeyboard;
-import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Int32Array;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.html.HTMLElement;
 
+import static org.quark.Quark.QKInput;
+
 /**
  * <a href="http://teavm.org/">TeaVM</a> implementation for {@link InputKeyboard}.
  */
 public final class TeaVMInputKeyboard implements InputKeyboard {
-    /**
-     * Hold the mutex for allowing polling from another thread.
-     */
-    private final Object mLock = new Object();
-
     /**
      * Hold the canvas handle.
      */
@@ -45,11 +41,6 @@ public final class TeaVMInputKeyboard implements InputKeyboard {
     private final EventListener<KeyboardEvent> mRegistration1 = this::onKeyUp;
     private final EventListener<KeyboardEvent> mRegistration2 = this::onKeyDown;
     private final EventListener<KeyboardEvent> mRegistration3 = this::onKeyPress;
-
-    /**
-     * Hold the device buffer.
-     */
-    private Int32Array mBuffer = ArrayFactory.allocateInt32Array(1024);
 
     /**
      * <p>Constructor</p>
@@ -73,14 +64,6 @@ public final class TeaVMInputKeyboard implements InputKeyboard {
      */
     @Override
     public void update(Int32Array buffer) {
-        synchronized (mLock) {
-            buffer.write(mBuffer.flip());
-
-            //!
-            //! Change the buffer mode to write-mode.
-            //!
-            mBuffer.clear();
-        }
     }
 
     /**
@@ -99,9 +82,7 @@ public final class TeaVMInputKeyboard implements InputKeyboard {
     private void onKeyUp(KeyboardEvent event) {
         final InputKey input = transform(event.getKeyCode());
         if (input != null) {
-            synchronized (mLock) {
-                InputKeyboard.onFactoryKeyUp(mBuffer, input);
-            }
+            QKInput.invokeKeyUp(input);
         }
     }
 
@@ -110,11 +91,8 @@ public final class TeaVMInputKeyboard implements InputKeyboard {
      */
     private void onKeyDown(KeyboardEvent event) {
         final InputKey input = transform(event.getKeyCode());
-
         if (input != null) {
-            synchronized (mLock) {
-                InputKeyboard.onFactoryKeyDown(mBuffer, input);
-            }
+            QKInput.invokeKeyDown(input);
         }
     }
 
@@ -122,9 +100,7 @@ public final class TeaVMInputKeyboard implements InputKeyboard {
      * <p>Handle key-press event</p>
      */
     private void onKeyPress(KeyboardEvent event) {
-        synchronized (mLock) {
-            InputKeyboard.onFactoryKeyType(mBuffer, (char) event.getCharCode());
-        }
+        QKInput.invokeKeyType((char) event.getCharCode());
     }
 
     /**

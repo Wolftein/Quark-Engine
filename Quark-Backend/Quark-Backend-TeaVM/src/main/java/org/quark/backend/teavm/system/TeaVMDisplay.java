@@ -38,13 +38,6 @@ public final class TeaVMDisplay implements Display {
      */
     public void onModuleCreate(HTMLCanvasElement handle, Display.Preference preference) {
         mHandle = handle;
-
-        //!
-        //! Create the element in fullscreen if required.
-        //!
-        if (preference.isFullscreen()) {
-            switchToFullscreen();
-        }
     }
 
     /**
@@ -199,7 +192,7 @@ public final class TeaVMDisplay implements Display {
     /**
      * @see <a href="https://robertnyman.com/2012/03/08/using-the-fullscreen-api-in-web-browsers/">Fullscreen</a>
      */
-    @JSBody(params = {"document"}, script = "return " +
+    @JSBody(params = {"element"}, script = "return " +
             "document.fullscreenElement || " +
             "document.webkitFullscreenElement ||" +
             "document.mozFullScreenElement || " +

@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Default implementation for {@link InputManager}.
  */
-public final class DefaultInputManager implements InputManager {
+public final class SimpleInputManager implements InputManager {
     /**
      * Hold all raw input listener of the manager.
      */
@@ -54,7 +54,7 @@ public final class DefaultInputManager implements InputManager {
     /**
      * Hold all the event(s) from the device(s) efficiently.
      */
-    private final Int32Array mBuffer = ArrayFactory.allocateInt32Array(4096);
+    private final Int32Array mBuffer = ArrayFactory.allocateInt32Array(1024);
 
     /**
      * <p>Handle when the module initialise</p>
@@ -109,6 +109,43 @@ public final class DefaultInputManager implements InputManager {
         //! Process all input-event being queue by all device(s) attached.
         //!
         onProcessInputEvent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void invoke(int[] event) {
+        switch (event[0]) {
+            //!
+            //! KEYBOARD
+            //!
+            case InputKeyboard.EVENT_KEY_UP:
+                onKeyboardKeyUp(InputKey.values()[event[1]]);
+                break;
+            case InputKeyboard.EVENT_KEY_DOWN:
+                onKeyboardKeyDown(InputKey.values()[event[1]]);
+                break;
+            case InputKeyboard.EVENT_KEY_TYPE:
+                onKeyboardKeyType((char) event[1]);
+                break;
+
+            //!
+            //! MOUSE
+            //!
+            case InputMouse.EVENT_MOVE:
+                onMouseMove(event[1], event[2]);
+                break;
+            case InputMouse.EVENT_BUTTON_UP:
+                onMouseButtonUp(InputMouseButton.values()[event[1]]);
+                break;
+            case InputMouse.EVENT_BUTTON_DOWN:
+                onMouseButtonDown(InputMouseButton.values()[event[1]]);
+                break;
+            case InputMouse.EVENT_WHEEL:
+                onMouseWheel(event[1]);
+                break;
+        }
     }
 
     /**

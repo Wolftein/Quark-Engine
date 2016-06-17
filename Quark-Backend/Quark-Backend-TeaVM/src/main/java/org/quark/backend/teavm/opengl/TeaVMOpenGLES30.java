@@ -62,8 +62,6 @@ public class TeaVMOpenGLES30 extends TeaVMOpenGLES20 implements Render.GLES3 {
      */
     @Override
     public RenderCapabilities glCapabilities() {
-        System.out.println("HERE");
-
         //!
         //! Retrieves the extension from the context.
         //!

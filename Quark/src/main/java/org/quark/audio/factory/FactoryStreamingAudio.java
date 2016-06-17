@@ -44,13 +44,13 @@ public final class FactoryStreamingAudio extends Audio {
     }
 
     /**
-     * <p>Read from the stream</p>
+     * <p>Read audio's data from the {@link InputStream}</p>
      *
      * @param buffer the target buffer
      * @param offset the target offset
      * @param length the target length
      *
-     * @return the number of byte(s) read
+     * @return the number of byte(s) read from the stream
      */
     public int read(byte[] buffer, int offset, int length) {
         int bytes = 0;

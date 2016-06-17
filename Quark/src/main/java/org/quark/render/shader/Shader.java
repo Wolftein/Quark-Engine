@@ -19,6 +19,7 @@ package org.quark.render.shader;
 
 import org.quark.render.Render;
 import org.quark.system.utility.Disposable;
+import org.quark.system.utility.emulation.Emulation;
 import org.quark.system.utility.Manageable;
 import org.quark.resource.AssetDescriptor;
 
@@ -90,7 +91,7 @@ public final class Shader extends Manageable implements Disposable {
      * @return the attribute with the given name
      */
     public Attribute getAttribute(String name) {
-        final Attribute attribute = mAttributes.getOrDefault(name, null);
+        final Attribute attribute = mAttributes.get(name);
         if (attribute == null) {
             throw new IllegalStateException(name + " attribute not present.");
         }
@@ -126,7 +127,7 @@ public final class Shader extends Manageable implements Disposable {
      */
     @SuppressWarnings("unchecked")
     public <T extends Uniform> T getUniform(String name) {
-        final Uniform value = mUniforms.getOrDefault(name, null);
+        final Uniform value = mUniforms.get(name);
         if (value == null) {
             throw new IllegalStateException(name + " data not present.");
         }
@@ -170,7 +171,7 @@ public final class Shader extends Manageable implements Disposable {
      * @see Render#update(Uniform)
      */
     public void update() {
-        mUniforms.values().forEach(Uniform::update);
+        Emulation.forEach(mUniforms.values(), Uniform::update);
     }
 
     /**

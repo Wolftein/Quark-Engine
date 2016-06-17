@@ -18,7 +18,11 @@
 package org.quark.backend.teavm.utility.array;
 
 import org.quark.system.utility.array.Array;
-import org.teavm.jso.typedarrays.Int8Array;
+import org.teavm.jso.JSBody;
+import org.teavm.jso.JSMethod;
+import org.teavm.jso.JSObject;
+import org.teavm.jso.JSProperty;
+import org.teavm.jso.typedarrays.ArrayBuffer;
 
 /**
  * <a href="http://teavm.org/">TeaVM</a> implementation for {@link Array}.
@@ -27,7 +31,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
     /**
      * Hold a reference to the typed-array.
      */
-    private final Int8Array mBuffer;
+    private final DataView mBuffer;
 
     private int mPosition;
     private int mLimit;
@@ -35,8 +39,11 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
     /**
      * <p>Constructor</p>
      */
-    public TeaVMArray(Int8Array array) {
-        mBuffer = array;
+    public TeaVMArray(ArrayBuffer array) {
+        mBuffer = create(array);
+
+        mLimit = capacity();
+        mPosition = 0;
     }
 
     /**
@@ -139,7 +146,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt8(byte value) {
-        mBuffer.set(mPosition++, value);
+        mBuffer.setInt8(mPosition++, value);
         return (A) this;
     }
 
@@ -148,7 +155,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt8(int index, byte value) {
-        mBuffer.set(index, value);
+        mBuffer.setInt8(index, value);
         return (A) this;
     }
 
@@ -157,8 +164,10 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt16(short value) {
-        writeInt8((byte) ((value & 0xFF00) >> 8));
-        writeInt8((byte) ((value & 0x00FF) >> 0));
+        mBuffer.setInt16(mPosition, value);
+
+        mPosition += 2;
+
         return (A) this;
     }
 
@@ -167,8 +176,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt16(int index, short value) {
-        writeInt8(index, (byte) ((value & 0xFF00) >> 8));
-        writeInt8(index + 1, (byte) ((value & 0x00FF) >> 0));
+        mBuffer.setInt16(index, value);
         return (A) this;
     }
 
@@ -177,10 +185,10 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt32(int value) {
-        writeInt8((byte) ((value & 0xFF000000) >> 24));
-        writeInt8((byte) ((value & 0x00FF0000) >> 16));
-        writeInt8((byte) ((value & 0x0000FF00) >> 8));
-        writeInt8((byte) ((value & 0x000000FF) >> 0));
+        mBuffer.setInt32(mPosition, value);
+
+        mPosition += 4;
+
         return (A) this;
     }
 
@@ -189,10 +197,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt32(int index, int value) {
-        writeInt8(index, (byte) ((value & 0xFF000000) >> 24));
-        writeInt8(index + 1, (byte) ((value & 0x00FF0000) >> 16));
-        writeInt8(index + 2, (byte) ((value & 0x0000FF00) >> 8));
-        writeInt8(index + 3, (byte) ((value & 0x000000FF) >> 0));
+        mBuffer.setInt32(index, value);
         return (A) this;
     }
 
@@ -201,14 +206,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt64(long value) {
-        writeInt8((byte) ((value & 0xFF00000000000000L) >> 54));
-        writeInt8((byte) ((value & 0x00FF000000000000L) >> 48));
-        writeInt8((byte) ((value & 0x0000FF0000000000L) >> 40));
-        writeInt8((byte) ((value & 0x000000FF00000000L) >> 32));
-        writeInt8((byte) ((value & 0x00000000FF000000L) >> 24));
-        writeInt8((byte) ((value & 0x0000000000FF0000L) >> 16));
-        writeInt8((byte) ((value & 0x000000000000FF00L) >> 8));
-        writeInt8((byte) ((value & 0x00000000000000FFL) >> 0));
+        writeFloat64(Double.longBitsToDouble(value));
         return (A) this;
     }
 
@@ -217,14 +215,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt64(int index, long value) {
-        writeInt8(index, (byte) ((value & 0xFF00000000000000L) >> 54));
-        writeInt8(index + 1, (byte) ((value & 0x00FF000000000000L) >> 48));
-        writeInt8(index + 2, (byte) ((value & 0x0000FF0000000000L) >> 40));
-        writeInt8(index + 3, (byte) ((value & 0x000000FF00000000L) >> 32));
-        writeInt8(index + 4, (byte) ((value & 0x00000000FF000000L) >> 24));
-        writeInt8(index + 5, (byte) ((value & 0x0000000000FF0000L) >> 16));
-        writeInt8(index + 6, (byte) ((value & 0x000000000000FF00L) >> 8));
-        writeInt8(index + 7, (byte) ((value & 0x00000000000000FFL) >> 0));
+        writeFloat64(index, Double.longBitsToDouble(value));
         return (A) this;
     }
 
@@ -233,7 +224,10 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat32(float value) {
-        writeInt32(Float.floatToIntBits(value));
+        mBuffer.setFloat32(mPosition, value);
+
+        mPosition += 4;
+
         return (A) this;
     }
 
@@ -242,7 +236,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat32(int index, float value) {
-        writeInt32(index, Float.floatToIntBits(value));
+        mBuffer.setFloat32(index, value);
         return (A) this;
     }
 
@@ -251,7 +245,10 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat64(double value) {
-        writeInt64(Double.doubleToLongBits(value));
+        mBuffer.setFloat64(mPosition, value);
+
+        mPosition += 8;
+
         return (A) this;
     }
 
@@ -260,7 +257,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat64(int index, double value) {
-        writeInt64(index, Double.doubleToLongBits(value));
+        mBuffer.setFloat64(index, value);
         return (A) this;
     }
 
@@ -269,7 +266,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public byte readInt8() {
-        return mBuffer.get(mPosition++);
+        return mBuffer.getInt8(mPosition++);
     }
 
     /**
@@ -277,7 +274,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public byte readInt8(int index) {
-        return mBuffer.get(index);
+        return mBuffer.getInt8(index);
     }
 
     /**
@@ -285,7 +282,11 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public short readInt16() {
-        return (short) ((readInt8() << 0x08) & 0x0000ff00 | (readInt8() << 0x00) & 0x000000ff);
+        final short value = mBuffer.getInt16(mPosition);
+
+        mPosition += 0x02;
+
+        return value;
     }
 
     /**
@@ -293,7 +294,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public short readInt16(int index) {
-        return (short) ((readInt8(index) << 0x08) & 0x0000ff00 | (readInt8(index + 1) << 0x00) & 0x000000ff);
+        return mBuffer.getInt16(index);
     }
 
     /**
@@ -301,10 +302,11 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public int readInt32() {
-        return (readInt8() << 0x18) & 0xff000000 |
-                (readInt8() << 0x10) & 0x00ff0000 |
-                (readInt8() << 0x08) & 0x0000ff00 |
-                (readInt8() << 0x00) & 0x000000ff;
+        final int value = mBuffer.getInt32(mPosition);
+
+        mPosition += 0x04;
+
+        return value;
     }
 
     /**
@@ -312,10 +314,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public int readInt32(int index) {
-        return (readInt8(index) << 0x18) & 0xff000000 |
-                (readInt8(index + 1) << 0x10) & 0x00ff0000 |
-                (readInt8(index + 2) << 0x08) & 0x0000ff00 |
-                (readInt8(index + 3) << 0x00) & 0x000000ff;
+        return mBuffer.getInt32(index);
     }
 
     /**
@@ -323,14 +322,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public long readInt64() {
-        return ((long) readInt8() << 0x36) & 0xff00000000000000L |
-                ((long) readInt8() << 0x30) & 0x00ff000000000000L |
-                ((long) readInt8() << 0x28) & 0x0000ff0000000000L |
-                ((long) readInt8() << 0x20) & 0x000000ff00000000L |
-                ((long) readInt8() << 0x18) & 0x00000000ff000000L |
-                ((long) readInt8() << 0x10) & 0x0000000000ff0000L |
-                ((long) readInt8() << 0x08) & 0x000000000000ff00L |
-                ((long) readInt8() << 0x00) & 0x00000000000000ffL;
+        return Double.doubleToLongBits(readFloat64());
     }
 
     /**
@@ -338,14 +330,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public long readInt64(int index) {
-        return ((long) readInt8(index) << 0x36) & 0xff00000000000000L |
-                ((long) readInt8(index + 1) << 0x30) & 0x00ff000000000000L |
-                ((long) readInt8(index + 2) << 0x28) & 0x0000ff0000000000L |
-                ((long) readInt8(index + 3) << 0x20) & 0x000000ff00000000L |
-                ((long) readInt8(index + 4) << 0x18) & 0x00000000ff000000L |
-                ((long) readInt8(index + 5) << 0x10) & 0x0000000000ff0000L |
-                ((long) readInt8(index + 6) << 0x08) & 0x000000000000ff00L |
-                ((long) readInt8(index + 7) << 0x00) & 0x00000000000000ffL;
+        return Double.doubleToLongBits(readFloat64(index));
     }
 
     /**
@@ -353,7 +338,11 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public float readFloat32() {
-        return Float.intBitsToFloat(readInt32());
+        final float value = mBuffer.getFloat32(mPosition);
+
+        mPosition += 0x04;
+
+        return value;
     }
 
     /**
@@ -361,7 +350,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public float readFloat32(int index) {
-        return Float.intBitsToFloat(readInt32(index));
+        return mBuffer.getFloat32(index);
     }
 
     /**
@@ -369,7 +358,11 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public double readFloat64() {
-        return Double.longBitsToDouble(readInt64());
+        final double value = mBuffer.getFloat64(mPosition);
+
+        mPosition += 0x08;
+
+        return value;
     }
 
     /**
@@ -377,6 +370,74 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public double readFloat64(int index) {
-        return Double.longBitsToDouble(readInt64(index));
+        return mBuffer.getFloat64(index);
+    }
+
+    /**
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
+     */
+    @JSBody(params = {"buffer"}, script = "return new DataView(buffer)")
+    public static native DataView create(ArrayBuffer buffer);
+
+    /**
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
+     */
+    public interface DataView extends JSObject {
+        @JSProperty
+        ArrayBuffer getBuffer();
+
+        @JSProperty
+        int getByteLength();
+
+        @JSProperty
+        int getByteOffset();
+
+        @JSMethod
+        byte getInt8(int index);
+
+        @JSMethod
+        short getUInt8(int index);
+
+        @JSMethod
+        short getInt16(int index);
+
+        @JSMethod
+        int getUInt16(int index);
+
+        @JSMethod
+        int getInt32(int index);
+
+        @JSMethod
+        long getUInt32(int index);
+
+        @JSMethod
+        float getFloat32(int index);
+
+        @JSMethod
+        double getFloat64(int index);
+
+        @JSMethod
+        void setInt8(int index, int value);
+
+        @JSMethod
+        void setUInt8(int index, int value);
+
+        @JSMethod
+        void setInt16(int index, int value);
+
+        @JSMethod
+        void setUInt16(int index, int value);
+
+        @JSMethod
+        void setInt32(int index, int value);
+
+        @JSMethod
+        void setUInt32(int index, long value);
+
+        @JSMethod
+        void setFloat32(int index, float value);
+
+        @JSMethod
+        void setFloat64(int index, double value);
     }
 }

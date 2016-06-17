@@ -18,18 +18,18 @@
 package org.quark.backend.teavm.system;
 
 import org.quark.audio.AudioManager;
-import org.quark.audio.DefaultAudioManager;
+import org.quark.audio.SimpleAudioManager;
 import org.quark.backend.teavm.input.TeaVMInputKeyboard;
 import org.quark.backend.teavm.input.TeaVMInputMouse;
 import org.quark.backend.teavm.openal.TeaVMOpenALES10;
 import org.quark.backend.teavm.opengl.TeaVMOpenGLES32;
+import org.quark.backend.teavm.resource.locator.XHRAssetLocator;
 import org.quark.backend.teavm.utility.array.TeaVMArrayFactory;
-import org.quark.input.DefaultInputManager;
 import org.quark.input.InputManager;
-import org.quark.render.DefaultRender;
+import org.quark.input.SimpleInputManager;
 import org.quark.render.Render;
-import org.quark.resource.DefaultAssetManager;
-import org.quark.resource.loader.*;
+import org.quark.render.SimpleRender;
+import org.quark.resource.SimpleAssetManager;
 import org.quark.system.Display;
 import org.quark.system.DisplayLifecycle;
 import org.quark.system.utility.array.ArrayFactory;
@@ -39,6 +39,9 @@ import org.teavm.jso.JSMethod;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.quark.Quark.*;
 
@@ -68,8 +71,8 @@ public final class TeaVM {
     /**
      * Hold all thread(s).
      */
-    private final Thread mInputThread = new Thread(this::onModuleUpdateInput, "QK-Input-Thread");
-    private final Thread mAudioThread = new Thread(this::onModuleUpdateAudio, "QK-Audio-Thread");
+    private final Timer mInputThread = new Timer("QK-Input-Thread");
+    private final Timer mAudioThread = new Timer("QK-Audio-Thread");
 
     /**
      * Hold the delta time (in normalised millisecond).
@@ -84,17 +87,17 @@ public final class TeaVM {
     /**
      * Hold {@link Render} module.
      */
-    private final DefaultRender mRender = (DefaultRender) (QKRender = new DefaultRender());
+    private final SimpleRender mRender = (SimpleRender) (QKRender = new SimpleRender());
 
     /**
      * Hold {@link AudioManager} module.
      */
-    private final DefaultAudioManager mAudio = (DefaultAudioManager) (QKAudio = new DefaultAudioManager());
+    private final SimpleAudioManager mAudio = (SimpleAudioManager) (QKAudio = new SimpleAudioManager());
 
     /**
      * Hold {@link InputManager} module.
      */
-    private final DefaultInputManager mInput = (DefaultInputManager) (QKInput = new DefaultInputManager());
+    private final SimpleInputManager mInput = (SimpleInputManager) (QKInput = new SimpleInputManager());
 
     /**
      * <p>Constructor</p>
@@ -136,13 +139,25 @@ public final class TeaVM {
         //! Create audio module.
         //!
         mAudio.onModuleCreate(new TeaVMOpenALES10());
-        mAudioThread.start();
+        mAudioThread.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mAudio.onModuleUpdate();
+            }
+        }, 0L, THREAD_AUDIO_DELAY);
 
         //!
         //! Create input module.
         //!
-        mInput.onModuleCreate(new TeaVMInputKeyboard(element), new TeaVMInputMouse(element));
-        mInputThread.start();
+        mInput.onModuleCreate(
+                new TeaVMInputKeyboard(Window.current().getDocument().getDocumentElement()),
+                new TeaVMInputMouse(element));
+        mInputThread.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mInput.onModuleUpdate();
+            }
+        }, 0L, THREAD_INPUT_DELAY);
 
         //!
         //! Create render module.
@@ -153,12 +168,17 @@ public final class TeaVM {
         //!
         //! Create resource module.
         //!
-        QKResources = new DefaultAssetManager();
+
+        QKResources = new SimpleAssetManager();
+
+        QKResources.registerAssetLocator("EXTERNAL", new XHRAssetLocator());
+
+ /*
         QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         QKResources.registerAssetLoader(new ShaderGLSLAssetLoader(QKRender.getCapabilities()), "pipeline");
         QKResources.registerAssetLoader(new AudioWAVEAssetLoader(), "wav");
-        QKResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
+        QKResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");*/
 
         //!
         //! Handle the create notification.
@@ -185,13 +205,13 @@ public final class TeaVM {
         //!
         //! Unload input module.
         //!
-        mInputThread.interrupt();
+        mInputThread.cancel();
         mInput.onModuleDestroy();
 
         //!
         //! Unload audio module.
         //!
-        mAudioThread.interrupt();
+        mAudioThread.cancel();
         mAudio.onModuleDestroy();
 
         //!
@@ -225,42 +245,6 @@ public final class TeaVM {
         //! Request to render again.
         //!
         onAnimationRequest(this::onModuleUpdate);
-    }
-
-    /**
-     * <p>Handle when the module update audio</p>
-     */
-    private void onModuleUpdateAudio() {
-        while (true) {
-            mAudio.onModuleUpdate();
-
-            try {
-                //!
-                //! Update every 50 millisecond.
-                //!
-                Thread.sleep(THREAD_AUDIO_DELAY);
-            } catch (InterruptedException e) {
-                return;
-            }
-        }
-    }
-
-    /**
-     * <p>Handle when the module update input</p>
-     */
-    private void onModuleUpdateInput() {
-        while (true) {
-            mInput.onModuleUpdate();
-
-            try {
-                //!
-                //! Update every 25 millisecond.
-                //!
-                Thread.sleep(THREAD_INPUT_DELAY);
-            } catch (InterruptedException e) {
-                return;
-            }
-        }
     }
 
     /**

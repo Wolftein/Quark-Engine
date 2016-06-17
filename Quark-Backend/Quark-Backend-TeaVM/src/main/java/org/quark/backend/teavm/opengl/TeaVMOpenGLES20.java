@@ -390,7 +390,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Array<?> data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -398,7 +398,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Int8Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -406,7 +406,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Int16Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -414,7 +414,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Int32Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -422,7 +422,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, UInt8Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -430,7 +430,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, UInt16Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -438,7 +438,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, UInt32Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -446,7 +446,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Float16Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -454,7 +454,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Float32Array data, int usage) {
-        mGL.bufferData(target, data.<org.teavm.jso.typedarrays.Int8Array>data(), usage);
+        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
 
     /**
@@ -462,7 +462,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Array<?> data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -470,7 +470,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Int8Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -478,7 +478,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Int16Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -486,7 +486,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Int32Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -494,7 +494,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, UInt8Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -502,7 +502,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, UInt16Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -510,7 +510,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, UInt32Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -518,7 +518,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Float16Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -526,7 +526,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Float32Array data) {
-        mGL.bufferSubData(target, offset, data.<org.teavm.jso.typedarrays.Int8Array>data());
+        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
@@ -755,7 +755,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniform1fv(int name, Float32Array buffer) {
-        final ArrayBuffer array = buffer.<org.teavm.jso.typedarrays.Int8Array>data().getBuffer();
+        final ArrayBuffer array = buffer.data();
 
         mGL.uniform1fv(mUniformFactory.get(name), org.teavm.jso.typedarrays.Float32Array.create(array));
     }
@@ -797,7 +797,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniform1iv(int name, Int32Array buffer) {
-        final ArrayBuffer array = buffer.<org.teavm.jso.typedarrays.Int8Array>data().getBuffer();
+        final ArrayBuffer array = buffer.data();
 
         mGL.uniform1iv(mUniformFactory.get(name), org.teavm.jso.typedarrays.Int32Array.create(array));
     }
@@ -807,10 +807,9 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniformMatrix3fv(int name, Float32Array buffer) {
-        for (int i = 0; i < 3 * 3; i++) {
-            mTemp1.set(i, buffer.read());
-        }
-        mGL.uniformMatrix3fv(mUniformFactory.get(name), false, mTemp1);
+        final ArrayBuffer array = buffer.data();
+
+        mGL.uniformMatrix3fv(mUniformFactory.get(name), false, org.teavm.jso.typedarrays.Float32Array.create(array));
     }
 
     /**
@@ -818,10 +817,9 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniformMatrix4fv(int name, Float32Array buffer) {
-        for (int i = 0; i < 4 * 4; i++) {
-            mTemp2.set(i, buffer.read());
-        }
-        mGL.uniformMatrix4fv(mUniformFactory.get(name), false, mTemp2);
+        final ArrayBuffer array = buffer.data();
+
+        mGL.uniformMatrix4fv(mUniformFactory.get(name), false , org.teavm.jso.typedarrays.Float32Array.create(array));
     }
 
     /**

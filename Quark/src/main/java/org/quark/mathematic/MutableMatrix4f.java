@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 import org.quark.system.utility.array.Float32Array;
 
-import java.nio.FloatBuffer;
-
 /**
  * Represent a mutable {@link Matrix4f}.
  */
@@ -75,7 +73,7 @@ public final class MutableMatrix4f extends Matrix4f {
     }
 
     /**
-     * <p>Set the values of the matrix from a {@link FloatBuffer}</p>
+     * <p>Set the values of the matrix from a {@link Float32Array}</p>
      *
      * @param buffer the buffer
      *

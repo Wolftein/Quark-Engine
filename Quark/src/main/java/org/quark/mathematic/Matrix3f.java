@@ -19,8 +19,6 @@ package org.quark.mathematic;
 
 import org.quark.system.utility.array.Float32Array;
 
-import java.nio.FloatBuffer;
-
 /**
  * <code>Matrix3f</code> encapsulate a single precision floating point 3 by 3 matrix.
  */
@@ -58,7 +56,7 @@ public abstract class Matrix3f {
     }
 
     /**
-     * <p>Put the matrix into a {@link FloatBuffer}</p>
+     * <p>Put the matrix into a {@link Float32Array}</p>
      *
      * @param buffer the buffer
      *
@@ -69,7 +67,7 @@ public abstract class Matrix3f {
     }
 
     /**
-     * <p>Put the matrix into a {@link FloatBuffer}</p>
+     * <p>Put the matrix into a {@link Float32Array}</p>
      *
      * @param index  the buffer's offset
      * @param buffer the buffer

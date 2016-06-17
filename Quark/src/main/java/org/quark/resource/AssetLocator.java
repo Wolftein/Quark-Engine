@@ -17,6 +17,7 @@
  */
 package org.quark.resource;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -24,11 +25,128 @@ import java.io.InputStream;
  */
 public interface AssetLocator {
     /**
+     * <code>AsynchronousInputStream</code> represent a future implementation for {@link InputStream}.
+     */
+    final class AsynchronousInputStream extends InputStream {
+        private InputStream mBackend = null;
+
+        /**
+         * Hold a callback for when the input-stream is being notified.
+         */
+        private final AssetCallback<AsynchronousInputStream> mCallback;
+
+        /**
+         * Hold a flag to indicate when the stream has finished.
+         */
+        private boolean mFinished = false;
+
+        /**
+         * <p>Constructor</p>
+         */
+        public AsynchronousInputStream(AssetCallback<AsynchronousInputStream> callback) {
+            mCallback = callback;
+        }
+
+        /**
+         * <p>Constructor</p>
+         */
+        public AsynchronousInputStream(InputStream stream, AssetCallback<AsynchronousInputStream> callback) {
+            notify(stream);
+
+            mCallback = callback;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int read() throws IOException {
+            return mBackend.read();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int available() throws IOException {
+            return mBackend.available();
+        }
+
+        /**
+         * <p>Handle when the {@link InputStream} has finished and request notification</p>
+         *
+         * @param input the new input stream
+         */
+        public void notify(InputStream input) {
+            if (mFinished) {
+                throw new IllegalStateException("The stream has already being notified");
+            }
+            mFinished = true;
+
+            //!
+            //! NOTE: The back-end may be null, ensure validation using [isLoaded].
+            //!
+            mBackend = input;
+
+            //!
+            //! Notify about the stream if the request is asynchronously.
+            //!
+            if (isLoaded()) {
+                mCallback.onSuccess(this);
+            } else {
+                mCallback.onFail();
+            }
+        }
+
+        /**
+         * <p>Check if the {@link InputStream} is valid</p>
+         *
+         * @return <code>true</code> if the stream is valid, <code>false</code> otherwise
+         */
+        public boolean isLoaded() {
+            return mFinished && mBackend != null;
+        }
+
+        /**
+         * <p>Check if the {@link InputStream} has finished</p>
+         *
+         * @return <code>true</code> if the stream has finished, <code>false</code> otherwise
+         */
+        public boolean isFinished() {
+            return mFinished;
+        }
+    }
+
+    /**
+     * <p>Check if the locator support synchronous request(s)</p>
+     *
+     * @return <code>true</code> if the locator support synchronous request(s), <code>false</code> otherwise
+     */
+    boolean isSynchronousSupported();
+
+    /**
+     * <p>Check if the locator support asynchronous request(s)</p>
+     *
+     * @return <code>true</code> if the locator support asynchronous request(s), <code>false</code> otherwise
+     */
+    boolean isAsynchronousSupported();
+
+    /**
      * <p>Locate an asset</p>
      *
-     * @param name the name of the asset
+     * @param filename the filename of the asset
      *
-     * @return the input-stream if found, otherwise <code>null</code>
+     * @return a {@link AsynchronousInputStream} to handle both synchronous and asynchronous requests.
      */
-    InputStream locate(String name);
+    AsynchronousInputStream locate(String filename);
+
+    /**
+     * <p>Locate an asset (asynchronously)</p>
+     *
+     * @param filename the filename of the asset
+     * @param callback the callback
+     *
+     * @return a {@link AsynchronousInputStream} to handle both synchronous and asynchronous requests.
+     */
+    AsynchronousInputStream locate(String filename, AssetCallback<AsynchronousInputStream> callback);
 }

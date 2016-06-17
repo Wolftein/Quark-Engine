@@ -17,8 +17,6 @@
  */
 package org.quark.mathematic;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * <code>Camera</code> encapsulate a camera with position and rotation.
  */
@@ -55,8 +53,7 @@ public class Camera {
     /**
      * Encapsulate the dirty flag of the camera, to prevent updating it all the time (saves CPU).
      */
-    protected final AtomicBoolean mDirty0 = new AtomicBoolean(true);
-    protected final AtomicBoolean mDirty1 = new AtomicBoolean(true);
+    protected boolean mDirty = true;
 
     /**
      * Hold temporally matrix for calculation.
@@ -88,11 +85,21 @@ public class Camera {
      * @return a reference to the view matrix
      */
     public Matrix4f getView() {
-        if (mDirty0.compareAndSet(true, false)) {
+        if (mDirty) {
             mPosition.negate(mTemp2);
             mRotation.invert(mTemp3);
 
+            //!
+            //! Calculate the view.
+            //!
             mView = mTemp0.setRotation(mTemp3).mul(mTemp1.setTranslation(mTemp2));
+
+            //!
+            //! Calculate the projection-view combination.
+            //!
+            mCombination.set(mProjection).mul(getView());
+
+            mDirty = false;
         }
         return mView;
     }
@@ -103,8 +110,11 @@ public class Camera {
      * @return a reference to the projection-view combined matrix
      */
     public Matrix4f getViewProjection() {
-        if (mDirty1.compareAndSet(true, false)) {
-            mCombination.set(mProjection).mul(getView());
+        if (mDirty) {
+            //!
+            //! Update the camera if required.
+            //!
+            getView();
         }
         return mCombination;
     }
@@ -161,7 +171,7 @@ public class Camera {
      */
     public final void setProjection(Matrix4f projection) {
         mProjection.set(projection);
-        mDirty1.set(true);
+        mDirty = true;
     }
 
     /**
@@ -173,8 +183,7 @@ public class Camera {
      */
     public final void setPosition(float x, float y, float z) {
         mPosition.setXYZ(x, y, z);
-        mDirty0.set(true);
-        mDirty1.set(true);
+        mDirty = true;
     }
 
     /**
@@ -204,8 +213,7 @@ public class Camera {
      */
     public final void translate(float x, float y, float z) {
         mPosition.add(x, y, z);
-        mDirty0.set(true);
-        mDirty1.set(true);
+        mDirty = true;
     }
 
     /**
@@ -246,8 +254,7 @@ public class Camera {
      */
     public final void rotate(float angle, float x, float y, float z) {
         mRotation.rotateAxis(angle, x, y, z);
-        mDirty0.set(true);
-        mDirty1.set(true);
+        mDirty = true;
     }
 
     /**
@@ -270,7 +277,6 @@ public class Camera {
      */
     public final void rotateByDegrees(float angle, float x, float y, float z) {
         mRotation.rotateAxisByDegrees(angle, x, y, z);
-        mDirty0.set(true);
-        mDirty1.set(true);
+        mDirty = true;
     }
 } 

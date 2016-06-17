@@ -34,16 +34,17 @@ import org.quark.system.utility.array.Array;
 import org.quark.system.utility.array.Float32Array;
 import org.quark.system.utility.array.Int32Array;
 import org.quark.system.utility.array.UInt32Array;
+import org.quark.system.utility.emulation.Emulation;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Default implementation for {@link Render}.
  */
-public final class DefaultRender implements Render {
+public final class SimpleRender implements Render {
     /**
      * Hold {@link GLES32} context.
      */
@@ -55,7 +56,7 @@ public final class DefaultRender implements Render {
     private RenderCapabilities mCapabilities;
 
     /**
-     * Hold the states of the renderer.
+     * Hold the states of the renderer (Set all default states)
      */
     private final RenderState mStates = new RenderState()
             .setAlphaToCoverage(RenderState.Flag.DISABLE)
@@ -75,7 +76,7 @@ public final class DefaultRender implements Render {
     /**
      * Hold all object(s) that is being removed.
      */
-    private final Queue<Manageable> mManageable = new LinkedList<>();
+    private final Queue<Manageable> mManageable = new LinkedBlockingDeque<>();
 
     /**
      * <p>Handle when the module initialise</p>
@@ -90,7 +91,7 @@ public final class DefaultRender implements Render {
         //!
         mCapabilities = mGL.glCapabilities();
 
-        mTexture = new int[mCapabilities.getIntLimit(RenderCapabilities.Limit.TEXTURE_STAGE)];
+        mTexture = new int[mCapabilities.getInteger(RenderCapabilities.Limit.TEXTURE_STAGE)];
         mStorage = new int[StorageTarget.values().length];
     }
 
@@ -517,7 +518,7 @@ public final class DefaultRender implements Render {
         //!
         //! Delete all attachment.
         //!
-        frame.getAttachment().forEach((name, target) -> onDeleteFrameTarget(frame, target));
+        Emulation.forEach(frame.getAttachment(), (name, attachment) -> onDeleteFrameTarget(frame, attachment));
 
         mGL.glDeleteFramebuffers(frame.setHandle(Manageable.INVALID_HANDLE));
     }
@@ -657,10 +658,11 @@ public final class DefaultRender implements Render {
     @Override
     public void update(Storage<?> storage) {
         if (storage.hasUpdate(Storage.CONCEPT_DATA)) {
-            //!
-            //! Client-side storage.
-            //!
+
             if (storage.getType() == StorageType.CLIENT) {
+                //!
+                //! Client-side storage.
+                //!
                 mGL.glBufferData(storage.getTarget().eValue, storage.map(), storage.getMode().eValue);
             } else {
                 //!
@@ -670,6 +672,9 @@ public final class DefaultRender implements Render {
             }
             storage.setUpdated();
         } else if (storage.hasUpdate(Storage.CONCEPT_DATA_CHANGE)) {
+            //!
+            //! Update the storage.
+            //!
             mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.map());
 
             storage.setUpdated();
@@ -784,7 +789,7 @@ public final class DefaultRender implements Render {
             //! Bind all attribute(s) of the storage(s)
             //!
             if (descriptor.hasVertices()) {
-                descriptor.getVertices().forEach(this::onUpdateDescriptorVertices);
+                Emulation.forEach(descriptor.getVertices(), this::onUpdateDescriptorVertices);
             }
 
             //!
@@ -983,7 +988,7 @@ public final class DefaultRender implements Render {
                 //! Handle TEXTURE_ANISOTROPIC extension.
                 //!
                 final float anisotropic = Math.min(
-                        mCapabilities.getLimit(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC), filter.eAnisotropicLevel);
+                        mCapabilities.getFloat(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC), filter.eAnisotropicLevel);
 
                 mGL.glTexParameter(texture.getType().eValue, GLESExtension.GL_TEXTURE_MAX_ANISOTROPY, anisotropic);
             }
@@ -1125,7 +1130,7 @@ public final class DefaultRender implements Render {
         //!
         frame.acquire();
         {
-            frame.getAttachment().forEach((attachment, target) -> onUpdateFrameTarget(frame, attachment, target));
+            Emulation.forEach(frame.getAttachment(), (name, attachment) -> onUpdateFrameTarget(frame, name, attachment));
         }
         frame.release();
     }
@@ -1192,7 +1197,7 @@ public final class DefaultRender implements Render {
         if (frame.getSamples() > 1
                 && mCapabilities.hasExtension(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE)) {
             final int samples = Math.min(
-                    frame.getSamples(), mCapabilities.getIntLimit(RenderCapabilities.Limit.FRAME_SAMPLE));
+                    frame.getSamples(), mCapabilities.getInteger(RenderCapabilities.Limit.FRAME_SAMPLE));
 
             mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, target.format.eValue,
                     frame.getWidth(),
@@ -1252,15 +1257,18 @@ public final class DefaultRender implements Render {
         //!
         //! Update each stage of the shader.
         //!
-        final List<Integer> stages = shader.getStages()
-                .stream()
-                .map(stage -> onUpdateShaderStage(shader, stage)).collect(Collectors.toList());
+        final List<Integer> stages = new ArrayList<>(shader.getStages().size());
+
+        for (int i = 0, j = shader.getStages().size(); i < j; i++) {
+            stages.add(onUpdateShaderStage(shader, shader.getStages().get(i)));
+        }
 
         //!
         //! Bind each attribute (if attribute-layout is not supported).
         //!
         if (!mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
-            shader.getAttributes().forEach((name, attribute) -> onUpdateShaderAttribute(shader, name, attribute));
+            Emulation.forEach(
+                    shader.getAttributes(), (name, attachment) -> onUpdateShaderAttribute(shader, name, attachment));
         }
 
         //!
@@ -1278,12 +1286,12 @@ public final class DefaultRender implements Render {
         //!
         //! Bind each uniform.
         //!
-        shader.getUniforms().forEach((name, uniform) -> onUpdateShaderUniform(shader, name, uniform));
+        Emulation.forEach(shader.getUniforms(), (name, uniform) -> onUpdateShaderUniform(shader, name, uniform));
 
         //!
         //! Dispose all intermediary shader compiled.
         //!
-        stages.forEach(mGL::glDeleteShader);
+        Emulation.forEach(stages, mGL::glDeleteShader);
     }
 
     /**
@@ -1349,9 +1357,9 @@ public final class DefaultRender implements Render {
     private void onUpdateDescriptorVertices(FactoryArrayStorage<?> vertices) {
         vertices.create();
         vertices.acquire();
-        {
-            vertices.getAttributes().forEach(T -> onUpdateDescriptorVertex(vertices, T));
-        }
+
+        Emulation.forEach(vertices.getAttributes(), (attribute) -> onUpdateDescriptorVertex(vertices, attribute));
+
         vertices.update();
     }
 

@@ -289,7 +289,7 @@ public final class RenderCapabilities {
      *
      * @return the value of the limit
      */
-    public float getLimit(Limit limit) {
+    public float getFloat(Limit limit) {
         return mLimits.get(limit);
     }
 
@@ -300,8 +300,8 @@ public final class RenderCapabilities {
      *
      * @return the value of the limit
      */
-    public int getIntLimit(Limit limit) {
-        return (int) ((float) mLimits.get(limit));
+    public int getInteger(Limit limit) {
+        return (int) getFloat(limit);
     }
 
     /**

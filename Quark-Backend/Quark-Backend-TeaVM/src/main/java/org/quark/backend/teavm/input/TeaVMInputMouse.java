@@ -19,7 +19,6 @@ package org.quark.backend.teavm.input;
 
 import org.quark.input.device.InputMouse;
 import org.quark.input.device.InputMouseButton;
-import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Int32Array;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSProperty;
@@ -35,11 +34,6 @@ import static org.quark.Quark.QKInput;
  */
 public final class TeaVMInputMouse implements InputMouse {
     /**
-     * Hold the mutex for allowing polling from another thread.
-     */
-    private final Object mLock = new Object();
-
-    /**
      * Hold the canvas handle.
      */
     private final HTMLElement mHandle;
@@ -51,11 +45,6 @@ public final class TeaVMInputMouse implements InputMouse {
     private final EventListener<MouseEvent> mRegistration2 = this::onMouseButtonDown;
     private final EventListener<MovementEvent> mRegistration3 = this::onMouseMove;
     private final EventListener<WheelEvent> mRegistration4 = this::onMouseWheel;
-
-    /**
-     * Hold the device buffer.
-     */
-    private Int32Array mBuffer = ArrayFactory.allocateInt32Array(1024);
 
     /**
      * <p>Constructor</p>
@@ -80,14 +69,6 @@ public final class TeaVMInputMouse implements InputMouse {
      */
     @Override
     public void update(Int32Array buffer) {
-        synchronized (mLock) {
-            buffer.write(mBuffer.flip());
-
-            //!
-            //! Change the buffer mode to write-mode.
-            //!
-            mBuffer.clear();
-        }
     }
 
     /**
@@ -125,10 +106,9 @@ public final class TeaVMInputMouse implements InputMouse {
      */
     private void onMouseButtonUp(MouseEvent event) {
         final InputMouseButton input = transform(event.getButton());
+
         if (input != null) {
-            synchronized (mLock) {
-                InputMouse.onFactoryButtonUp(mBuffer, input);
-            }
+            QKInput.invokeMouseButtonUp(input);
         }
     }
 
@@ -139,9 +119,7 @@ public final class TeaVMInputMouse implements InputMouse {
         final InputMouseButton input = transform(event.getButton());
 
         if (input != null) {
-            synchronized (mLock) {
-                InputMouse.onFactoryButtonDown(mBuffer, input);
-            }
+            QKInput.invokeMouseButtonDown(input);
         }
     }
 
@@ -149,14 +127,12 @@ public final class TeaVMInputMouse implements InputMouse {
      * <p>Handle mouse-move event</p>
      */
     private void onMouseMove(MovementEvent event) {
-        synchronized (mLock) {
-            if (isPointerLocked(mHandle)) {
-                InputMouse.onFactoryMove(mBuffer,
-                        QKInput.getCursorX() + event.getMovementX(),
-                        QKInput.getCursorY() + event.getMovementY());
-            } else {
-                InputMouse.onFactoryMove(mBuffer, event.getClientX(), event.getClientY());
-            }
+        if (isPointerLocked(mHandle)) {
+            QKInput.invokeMouseMove(
+                    QKInput.getCursorX() + event.getMovementX(),
+                    QKInput.getCursorY() + event.getMovementY());
+        } else {
+            QKInput.invokeMouseMove(event.getClientX(), event.getClientY());
         }
     }
 
@@ -164,9 +140,7 @@ public final class TeaVMInputMouse implements InputMouse {
      * <p>Handle mouse-wheel event</p>
      */
     private void onMouseWheel(WheelEvent event) {
-        synchronized (mLock) {
-            InputMouse.onFactoryWheel(mBuffer, Math.min(-1, Math.max(1, (int) event.getDeltaY())));
-        }
+        QKInput.invokeMouseWheel(Math.min(-1, Math.max(1, (int) event.getDeltaY())));
     }
 
     /**

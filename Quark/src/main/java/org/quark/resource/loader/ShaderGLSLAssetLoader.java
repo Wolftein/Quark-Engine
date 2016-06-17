@@ -94,6 +94,8 @@ public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.D
      * @throws IOException indicates failing loading the shader
      */
     private Shader readShader(Shader.Descriptor descriptor, InputStream input) throws IOException {
+        System.out.println("Hello");
+
         //!
         //! Parse the XML file that contain(s) the pipeline.
         //!

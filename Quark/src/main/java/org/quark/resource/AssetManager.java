@@ -17,9 +17,6 @@
  */
 package org.quark.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * <code>AssetManager</code> encapsulate an interface that holds every resource.
  * <p>
@@ -38,6 +35,13 @@ public interface AssetManager {
     AssetDescriptor DEFAULT_CACHEABLE_DESCRIPTOR = new AssetDescriptor(true, true);
 
     /**
+     * <p>Register an {@link AssetListener}</p>
+     *
+     * @param listener the unique instance of the listener
+     */
+    void registerEventListener(AssetListener listener);
+
+    /**
      * <p>Register an {@link AssetLocator}</p>
      *
      * @param name    the unique identifier (as name) of the locator
@@ -52,6 +56,13 @@ public interface AssetManager {
      * @param extensions the unique extension(s) being handled by the loader
      */
     void registerAssetLoader(AssetLoader loader, String... extensions);
+
+    /**
+     * <p>Remove an {@link AssetListener}</p>
+     *
+     * @param listener the unique instance of the listener
+     */
+    void removeEventListener(AssetListener listener);
 
     /**
      * <p>Remove an {@link AssetLocator}</p>
@@ -73,10 +84,18 @@ public interface AssetManager {
      * @param filename the filename (as unique identifier) of the asset
      *
      * @return a reference to the <code>InputStream</code> of the asset
-     *
-     * @throws IOException indicates if the asset hasn't been found
      */
-    InputStream findAsset(String filename) throws IOException;
+    AssetLocator.AsynchronousInputStream findAsset(String filename);
+
+    /**
+     * <p>Tries to find an asset from any of the {@link AssetLocator} registered</p>
+     *
+     * @param filename the filename (as unique identifier) of the asset
+     * @param callback the callback
+     *
+     * @return a reference to the <code>InputStream</code> of the asset
+     */
+    AssetLocator.AsynchronousInputStream findAsset(String filename, AssetCallback<AssetLocator.AsynchronousInputStream> callback);
 
     /**
      * <p>Request an asset that has been loaded</p>
@@ -93,34 +112,20 @@ public interface AssetManager {
      *
      * @param filename the name (as unique identifier) of the asset
      *
-     * @return a reference to the asset requested
-     *
-     * @throws IOException indicates if the asset hasn't been found or failed to load
+     * @return a reference to the asset requested or <code>null</code> if doesn't exist
      */
-    <A> A loadAsset(String filename) throws IOException;
+    <A> A loadAsset(String filename);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
      * {@link AssetLocator} registered to find it</p>
+     * <p>
+     * NOTE: This method will execute asynchronous and not return
      *
      * @param filename the name (as unique identifier) of the asset
-     *
-     * @return a reference to the asset requested or <code>null</code> if doesn't exist
+     * @param callback the callback
      */
-    <A> A loadAssetOrNull(String filename);
-
-    /**
-     * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
-     * {@link AssetLocator} registered to find it</p>
-     *
-     * @param filename   the name (as unique identifier) of the asset
-     * @param descriptor the descriptor that contains all parameters and information about the asset
-     *
-     * @return a reference to the asset requested
-     *
-     * @throws IOException indicates if the asset hasn't been found or failed to load
-     */
-    <A, B extends AssetDescriptor> A loadAsset(String filename, B descriptor) throws IOException;
+    <A> void loadAssetAsynchronous(String filename, AssetCallback<A> callback);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
@@ -131,7 +136,21 @@ public interface AssetManager {
      *
      * @return a reference to the asset requested or <code>null</code> if doesn't exist
      */
-    <A, B extends AssetDescriptor> A loadAssetOrNull(String filename, B descriptor);
+    <A, B extends AssetDescriptor> A loadAsset(String filename, B descriptor);
+
+    /**
+     * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
+     * {@link AssetLocator} registered to find it</p>
+     * <p>
+     * NOTE: This method will execute asynchronous and not return
+     *
+     * @param filename   the name (as unique identifier) of the asset
+     * @param descriptor the descriptor that contains all parameters and information about the asset
+     * @param callback   the callback
+     *
+     * @return a reference to the asset requested (if was in cache) or <code>null</code> if not
+     */
+    <A, B extends AssetDescriptor> A loadAssetAsynchronous(String filename, B descriptor, AssetCallback<A> callback);
 
     /**
      * <p>Unload an asset</p>
