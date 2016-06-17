@@ -23,7 +23,7 @@ import org.quark.render.texture.TextureFormat;
 import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
 
-import java.util.EnumMap;
+import java.util.Map;
 
 import static org.quark.Quark.QKRender;
 
@@ -31,7 +31,7 @@ import static org.quark.Quark.QKRender;
  * <code>Frame</code> is a collection of buffers that can be used as the destination for rendering.
  */
 public final class Frame extends Manageable implements Disposable {
-    private final EnumMap<FrameAttachment, Target> mAttachment;
+    private final Map<FrameAttachment, Target> mAttachment;
     private final int mWidth;
     private final int mHeight;
     private final int mSamples;
@@ -39,7 +39,7 @@ public final class Frame extends Manageable implements Disposable {
     /**
      * <p>Constructor</p>
      */
-    public Frame(EnumMap<FrameAttachment, Target> attachment, int width, int height, int samples) {
+    public Frame(Map<FrameAttachment, Target> attachment, int width, int height, int samples) {
         mAttachment = attachment;
         mWidth = width;
         mHeight = height;
@@ -51,7 +51,7 @@ public final class Frame extends Manageable implements Disposable {
      *
      * @return all attachment(s)
      */
-    public EnumMap<FrameAttachment, Target> getAttachment() {
+    public Map<FrameAttachment, Target> getAttachment() {
         return mAttachment;
     }
 

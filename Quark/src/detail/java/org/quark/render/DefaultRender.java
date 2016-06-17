@@ -991,7 +991,7 @@ public final class DefaultRender implements Render {
                 final float anisotropic = Math.min(
                         mCapabilities.getLimit(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC), filter.eAnisotropicLevel);
 
-                mGL.glTexParameter(texture.getType().eValue, GLESExtension.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropic);
+                mGL.glTexParameter(texture.getType().eValue, GLESExtension.GL_TEXTURE_MAX_ANISOTROPY, anisotropic);
             }
         } else {
             mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_MIN_FILTER, filter.eMinFilter);

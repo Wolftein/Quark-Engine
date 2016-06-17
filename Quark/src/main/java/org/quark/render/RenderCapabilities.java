@@ -21,7 +21,7 @@ import org.quark.render.storage.VertexDescriptor;
 import org.quark.render.texture.Texture;
 import org.quark.render.texture.frame.Frame;
 
-import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * <code>RenderCapabilities</code> contain(s) all capabilities supported by {@link Render}.
@@ -259,13 +259,13 @@ public final class RenderCapabilities {
     }
 
     private final LanguageVersion mVersion;
-    private final EnumMap<Limit, Float> mLimits;
-    private final EnumMap<Extension, Boolean> mExtensions;
+    private final Map<Limit, Float> mLimits;
+    private final Map<Extension, Boolean> mExtensions;
 
     /**
      * <p>Constructor</p>
      */
-    public RenderCapabilities(LanguageVersion version, EnumMap<Extension, Boolean> extensions, EnumMap<Limit, Float> limits) {
+    public RenderCapabilities(LanguageVersion version, Map<Extension, Boolean> extensions, Map<Limit, Float> limits) {
         mVersion = version;
         mExtensions = extensions;
         mLimits = limits;

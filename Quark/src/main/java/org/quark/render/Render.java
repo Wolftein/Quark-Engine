@@ -709,7 +709,7 @@ public interface Render extends ManageableManager {
         int GL_COMPRESSED_RG = 0x8226;
         int GL_COMPRESSED_RGB = 0x84ED;
         int GL_COMPRESSED_RGBA = 0x84EE;
-        int GL_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FE;
+        int GL_TEXTURE_MAX_ANISOTROPY = 0x84FE;
         int S3TC_RGBA_DXT1 = 0x83F1;
         int S3TC_RGBA_DXT3 = 0x83F2;
         int S3TC_RGBA_DXT5 = 0x83F3;

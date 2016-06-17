@@ -7,4 +7,4 @@ include ':Quark'
 //                                                [BACKEND]
 // #####################################################################################################################
 include ':Quark-Backend:Quark-Backend-LWJGL'
-include ':Quark-Backend:Quark-Backend-WEB'
+include ':Quark-Backend:Quark-Backend-TeaVM'
