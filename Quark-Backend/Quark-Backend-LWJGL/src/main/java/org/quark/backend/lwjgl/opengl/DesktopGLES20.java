@@ -26,7 +26,8 @@ import org.quark.system.utility.Manageable;
 import org.quark.system.utility.array.*;
 
 import java.nio.ByteBuffer;
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <a href="http://lwjgl.org">LWJGL 3</a> implementation for {@link Render.GLES2}.
@@ -90,32 +91,38 @@ public class DesktopGLES20 implements Render.GLES2 {
         //!
         //! Retrieves the limitation from the context.
         //!
-        final EnumMap<RenderCapabilities.Limit, Float> limit = new EnumMap<>(RenderCapabilities.Limit.class);
+        final Map<RenderCapabilities.Limit, Float> limit = new HashMap<>();
+
         limit.put(RenderCapabilities.Limit.FRAME_ATTACHMENT,
-                GL11.glGetFloat(GL20.GL_MAX_TEXTURE_IMAGE_UNITS));
+                GL11.glGetFloat(GL30.GL_MAX_COLOR_ATTACHMENTS));
 
         limit.put(RenderCapabilities.Limit.FRAME_MULTIPLE_RENDER_ATTACHMENT,
                 GL11.glGetFloat(ARBDrawBuffers.GL_MAX_DRAW_BUFFERS_ARB));
+
         limit.put(RenderCapabilities.Limit.FRAME_SAMPLE,
                 GL11.glGetFloat(GL30.GL_MAX_SAMPLES));
 
         limit.put(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC,
                 GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+
         limit.put(RenderCapabilities.Limit.TEXTURE_SIZE,
                 GL11.glGetFloat(GL11.GL_MAX_TEXTURE_SIZE));
+
         limit.put(RenderCapabilities.Limit.TEXTURE_STAGE,
                 GL11.glGetFloat(GL20.GL_MAX_TEXTURE_IMAGE_UNITS));
 
         //!
         //! Retrieves the extension from the context.
         //!
-        final EnumMap<RenderCapabilities.Extension, Boolean> extension = new EnumMap<>(RenderCapabilities.Extension.class);
+        final Map<RenderCapabilities.Extension, Boolean> extension = new HashMap<>();
+
         extension.put(RenderCapabilities.Extension.FRAME_BUFFER,
                 capabilities.GL_ARB_framebuffer_object);
         extension.put(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_RENDER_TARGET,
                 capabilities.GL_ARB_draw_buffers);
         extension.put(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE,
                 capabilities.GL_ARB_multisample);
+
         extension.put(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT,
                 capabilities.GL_ARB_vertex_array_object);
 

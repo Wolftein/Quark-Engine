@@ -25,8 +25,6 @@ import org.quark.system.utility.array.Int32Array;
 
 /**
  * <a href="http://lwjgl.org">LWJGL 3</a> implementation for {@link InputKeyboard}.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class DesktopInputKeyboard implements InputKeyboard {
     /**

@@ -1,5 +1,5 @@
 /*
- * This file is part of Quark Engine, licensed under the APACHE License.
+ * This file is part of Quark Framework, licensed under the APACHE License.
  *
  * Copyright (c) 2014-2016 Agustin L. Alvarez <wolftein1@gmail.com>
  *
@@ -46,8 +46,6 @@ import static org.quark.Quark.*;
 
 /**
  * <a href="http://lwjgl.org">LWJGL 3</a> entry.
- *
- * @author Agustin L. Alvarez (wolftein1@gmail.com)
  */
 public final class Desktop {
     /**
