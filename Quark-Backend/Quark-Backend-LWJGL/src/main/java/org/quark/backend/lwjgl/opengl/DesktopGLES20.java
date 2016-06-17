@@ -50,7 +50,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         mCapabilities = GL.getCapabilities();
 
         //!
-        //! Attach the the extension(s).
+        //! Attach the extension(s).
         //!
         if (mCapabilities.OpenGL30) {
             mFrameBufferObjectExtension = EXT_Frame_Buffer_Object.CORE;

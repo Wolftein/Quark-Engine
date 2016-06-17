@@ -35,9 +35,9 @@ import org.quark.system.utility.array.Float32Array;
 import org.quark.system.utility.array.Int32Array;
 import org.quark.system.utility.array.UInt32Array;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +75,7 @@ public final class DefaultRender implements Render {
     /**
      * Hold all object(s) that is being removed.
      */
-    private final Queue<Manageable> mManageable = new ConcurrentLinkedDeque<>();
+    private final Queue<Manageable> mManageable = new LinkedList<>();
 
     /**
      * <p>Handle when the module initialise</p>
@@ -90,7 +90,7 @@ public final class DefaultRender implements Render {
         //!
         mCapabilities = mGL.glCapabilities();
 
-        mTexture = new int[(int) mCapabilities.getLimit(RenderCapabilities.Limit.TEXTURE_STAGE)];
+        mTexture = new int[mCapabilities.getIntLimit(RenderCapabilities.Limit.TEXTURE_STAGE)];
         mStorage = new int[StorageTarget.values().length];
     }
 
@@ -98,18 +98,19 @@ public final class DefaultRender implements Render {
      * <p>Handle when the module destroy</p>
      */
     public void onModuleDestroy() {
-        while (mManageable.size() > 0) {
-            //!
-            //! Manage the delete all component(s) on the correct thread.
-            //!
-            mManageable.poll().delete();
-        }
+        onModuleUpdate();
     }
 
     /**
      * <p>Handle when the module update</p>
      */
     public void onModuleUpdate() {
+        while (mManageable.size() > 0) {
+            //!
+            //! Manage the delete all component(s) on the correct thread.
+            //!
+            mManageable.poll().delete();
+        }
     }
 
     /**
@@ -577,7 +578,7 @@ public final class DefaultRender implements Render {
      */
     @Override
     public void acquire(VertexDescriptor descriptor) {
-        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT) && !isActive(descriptor)) {
+        if (!isActive(descriptor) && mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
@@ -777,7 +778,7 @@ public final class DefaultRender implements Render {
      */
     @Override
     public void update(VertexDescriptor descriptor) {
-        if (descriptor.hasUpdate()) {
+        if (descriptor.hasUpdate() || !mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
 
             //!
             //! Bind all attribute(s) of the storage(s)
@@ -791,13 +792,6 @@ public final class DefaultRender implements Render {
             //!
             if (descriptor.hasIndices()) {
                 onUpdateDescriptorIndices(descriptor.getIndices());
-            }
-
-            if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
-                //!
-                //! Handle VERTEX_ARRAY extension, since it will only need to update once.
-                //!
-                descriptor.setUpdated();
             }
         }
     }
@@ -1197,8 +1191,8 @@ public final class DefaultRender implements Render {
 
         if (frame.getSamples() > 1
                 && mCapabilities.hasExtension(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE)) {
-            final int samples = (int) Math.min(
-                    frame.getSamples(), mCapabilities.getLimit(RenderCapabilities.Limit.FRAME_SAMPLE));
+            final int samples = Math.min(
+                    frame.getSamples(), mCapabilities.getIntLimit(RenderCapabilities.Limit.FRAME_SAMPLE));
 
             mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, target.format.eValue,
                     frame.getWidth(),

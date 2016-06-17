@@ -56,7 +56,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         super();
 
         //!
-        //! Attach the the extension(s).
+        //! Attach the extension(s).
         //!
         if (mCapabilities.OpenGL30) {
             mVertexArrayObjectExtension = EXT_Vertex_Array_Object.CORE;

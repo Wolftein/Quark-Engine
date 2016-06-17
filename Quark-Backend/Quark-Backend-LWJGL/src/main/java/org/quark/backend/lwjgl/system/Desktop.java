@@ -181,6 +181,7 @@ public final class Desktop {
         //! Handle the create notification.
         //!
         mLifecycle.onCreate();
+        mLifecycle.onResize(mDisplay.getWidth(), mDisplay.getHeight());
     }
 
     /**
@@ -215,7 +216,6 @@ public final class Desktop {
         //!
         //! NOTE: Update the render to destroy all render component(s)
         //!
-        mRender.onModuleUpdate();
         mRender.onModuleDestroy();
 
         //!

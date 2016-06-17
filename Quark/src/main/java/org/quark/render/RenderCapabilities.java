@@ -279,7 +279,7 @@ public final class RenderCapabilities {
      * @return <code>true</code> if the extension is supported, <code>false</code> otherwise
      */
     public boolean hasExtension(Extension extension) {
-        return mExtensions.getOrDefault(extension, false);
+        return mExtensions.get(extension);
     }
 
     /**
@@ -290,7 +290,18 @@ public final class RenderCapabilities {
      * @return the value of the limit
      */
     public float getLimit(Limit limit) {
-        return mLimits.getOrDefault(limit, 0.0f);
+        return mLimits.get(limit);
+    }
+
+    /**
+     * <p>Get the limit of a variable in the <b>OpenGL framework</b></p>
+     *
+     * @param limit the limit to retrieve
+     *
+     * @return the value of the limit
+     */
+    public int getIntLimit(Limit limit) {
+        return (int) ((float) mLimits.get(limit));
     }
 
     /**
