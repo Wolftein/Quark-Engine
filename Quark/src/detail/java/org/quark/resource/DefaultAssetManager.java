@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation for {@link AssetManager}.
@@ -35,8 +34,8 @@ public final class DefaultAssetManager implements AssetManager {
      */
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetManager.class);
 
-    private final Map<String, AssetLocator> mLocators = new ConcurrentHashMap<>();
-    private final Map<String, AssetLoader<?, ?>> mLoaders = new ConcurrentHashMap<>();
+    private final Map<String, AssetLocator> mLocators = new HashMap<>();
+    private final Map<String, AssetLoader<?, ?>> mLoaders = new HashMap<>();
     private final Map<Object, String> mCacheNames = new HashMap<>();
     private final Map<String, AssetKey> mCache = new HashMap<>();
 
@@ -45,7 +44,7 @@ public final class DefaultAssetManager implements AssetManager {
      */
     @Override
     public void registerAssetLocator(String name, AssetLocator locator) {
-        mLocators.putIfAbsent(name, locator);
+        mLocators.put(name, locator);
     }
 
     /**
@@ -54,7 +53,7 @@ public final class DefaultAssetManager implements AssetManager {
     @Override
     public void registerAssetLoader(AssetLoader loader, String... extensions) {
         for (String extension : extensions) {
-            mLoaders.putIfAbsent(extension.toLowerCase(), loader);
+            mLoaders.put(extension.toLowerCase(), loader);
         }
     }
 
