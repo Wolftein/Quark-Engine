@@ -61,10 +61,20 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      * <p>Constructor</p>
      */
     public TeaVMOpenGLES20(HTMLCanvasElement canvas) {
-        final WebGLRenderingContext primary = (WebGLRenderingContext) canvas.getContext("webgl");
+        //!
+        //! The attribute(s) of the context.
+        //!
+        final WebGLContextAttributes attributes = WebGLContextAttributes.create();
+        attributes.setAlpha(true);
+        attributes.setDepth(true);
+        attributes.setStencil(true);
+        attributes.setPremultipliedAlpha(false);
+
+        final WebGLRenderingContext primary
+                = (WebGLRenderingContext) canvas.getContext("webgl", attributes);
 
         if (primary == null) {
-            mGL = (WebGLRenderingContext) canvas.getContext("experimental-webgl");
+            mGL = (WebGLRenderingContext) canvas.getContext("experimental-webgl", attributes);
         } else {
             mGL = primary;
         }

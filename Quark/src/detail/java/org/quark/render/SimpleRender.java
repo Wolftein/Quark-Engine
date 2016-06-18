@@ -140,6 +140,8 @@ public final class SimpleRender implements Render {
         //!
         if (states.getAlphaToCoverage() != mStates.getAlphaToCoverage()) {
             onUpdateState(states.getAlphaToCoverage(), GLES2.GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+            mStates.setAlphaToCoverage(states.getAlphaToCoverage());
         }
 
         //!
@@ -150,6 +152,8 @@ public final class SimpleRender implements Render {
         if (RenderState.isFlagDirty(states.getBlend(), mStates.getBlend())
                 && onUpdateState(states.getBlend(), mStates.getBlend(), RenderState.Blend.NONE, GLES2.GL_BLEND)) {
             mGL.glBlendFunc(states.getBlend().eSource, states.getBlend().eDestination);
+
+            mStates.setBlend(states.getBlend());
         }
 
         //!
@@ -158,14 +162,17 @@ public final class SimpleRender implements Render {
         if (isBlend && states.getBlendEquationColour() != mStates.getBlendEquationColour()
                 || states.getBlendEquationAlpha() != mStates.getBlendEquationAlpha()) {
             mGL.glBlendEquationSeparate(states.getBlendEquationColour().eValue, states.getBlendEquationAlpha().eValue);
+
+            mStates.setBlendEquation(states.getBlendEquationColour(), states.getBlendEquationAlpha());
         }
 
         //!
         //! CULL
         //!
-        if (RenderState.isFlagDirty(states.getCullFace(), mStates.getCullFace())
-                && onUpdateState(states.getCullFace(), mStates.getCullFace(), RenderState.Cull.NONE, GLES2.GL_CULL_FACE)) {
-            mGL.glBlendFunc(states.getBlend().eSource, states.getBlend().eDestination);
+        if (RenderState.isFlagDirty(states.getCullFace(), mStates.getCullFace())) {
+            onUpdateState(states.getCullFace(), mStates.getCullFace(), RenderState.Cull.NONE, GLES2.GL_CULL_FACE);
+
+            mStates.setDepth(states.getDepth());
         }
 
         //!
@@ -173,8 +180,10 @@ public final class SimpleRender implements Render {
         //!
         final boolean isDepth = RenderState.isFlagEnabled(states.getDepth(), mStates.getDepth());
 
-        if (states.getDepth() != mStates.getDepth()) {
+        if (RenderState.isFlagDirty(states.getDepth(), mStates.getDepth())) {
             onUpdateState(states.getDepth(), GLES2.GL_DEPTH_TEST);
+
+            mStates.setDepth(states.getDepth());
         }
 
         //!
@@ -182,6 +191,8 @@ public final class SimpleRender implements Render {
         //!
         if (isDepth && RenderState.isFlagDirty(states.getDepthMask(), mStates.getDepthMask())) {
             mGL.glDepthMask(states.getDepthMask() == RenderState.Flag.ENABLE);
+
+            mStates.setDepthMask(states.getDepthMask());
         }
 
         //!
@@ -189,6 +200,8 @@ public final class SimpleRender implements Render {
         //!
         if (isDepth && states.getDepthOp() != mStates.getDepthOp()) {
             mGL.glDepthFunc(states.getDepthOp().eValue);
+
+            mStates.setDepthOp(states.getDepthOp());
         }
 
         //!
@@ -198,6 +211,8 @@ public final class SimpleRender implements Render {
             final Vector2f range = states.getDepthRange();
 
             mGL.glDepthRange(range.getX(), range.getY());
+
+            mStates.setDepthRange(range);
         }
 
         //!
@@ -218,6 +233,8 @@ public final class SimpleRender implements Render {
                     = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
 
             mGL.glColorMask(red, green, blue, alpha);
+
+            //mStates.setColourMask(states) TODO
         }
 
         //!
@@ -227,6 +244,8 @@ public final class SimpleRender implements Render {
 
         if (RenderState.isFlagDirty(states.getScissor(), mStates.getScissor())) {
             onUpdateState(states.getScissor(), GLES2.GL_SCISSOR_TEST);
+
+            mStates.setStencil(states.getScissor());
         }
 
         //!
@@ -236,6 +255,8 @@ public final class SimpleRender implements Render {
             final Vector4i viewport = states.getScissorViewport();
 
             mGL.glScissor(viewport.getX(), viewport.getY(), viewport.getZ(), viewport.getW());
+
+            mStates.setScissorViewport(viewport.getX(), viewport.getY(), viewport.getZ(), viewport.getW());
         }
 
         //!
@@ -245,6 +266,8 @@ public final class SimpleRender implements Render {
 
         if (RenderState.isFlagDirty(states.getStencil(), mStates.getStencil())) {
             onUpdateState(states.getStencil(), GLES2.GL_STENCIL_TEST);
+
+            mStates.setStencil(states.getStencil());
         }
 
         //!
@@ -273,8 +296,16 @@ public final class SimpleRender implements Render {
                     states.getStencilFrontOp().eValue, 1, Integer.MAX_VALUE);
             mGL.glStencilFuncSeparate(GLES2.GL_BACK,
                     states.getStencilBackOp().eValue, 1, Integer.MAX_VALUE);
+
+            mStates.setStencilOp(states.getStencilFrontOp(), states.getStencilBackOp());
+            mStates.setStencilFrontOp(states.getStencilFrontFailOp(),
+                    states.getStencilFrontDepthFailOp(),
+                    states.getStencilFrontDepthPassOp());
+            mStates.setStencilBackOp(states.getStencilBackFailOp(),
+                    states.getStencilBackDepthFailOp(),
+                    states.getStencilBackDepthPassOp());
         }
-        mStates.merge(states);
+
     }
 
     /**
