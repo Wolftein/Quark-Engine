@@ -67,7 +67,7 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
      */
     private Audio readAudio(Audio.Descriptor descriptor, DataInputStream input) throws IOException {
         if (readIntLittleEndian(input) != 0x46464952) {
-            throw new IOException("Trying to read an invalid <WAVE> sound.");
+            throw new IOException("Trying to read an invalid <WAV> sound.");
         }
 
         //!
@@ -76,7 +76,7 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
         input.skipBytes(4);
 
         if (readIntLittleEndian(input) != 0x45564157) {
-            throw new IOException("Trying to read an empty <WAVE> sound.");
+            throw new IOException("Trying to read an empty <WAV> sound.");
         }
 
         //!
@@ -91,12 +91,13 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
             switch (type) {
                 case 0x20746D66:
                     header = readHeader(input, length);
+
                     break;
                 case 0x61746164:
                     if (header == null) {
-                        throw new IOException("Missing <WAVE> header.");
+                        throw new IOException("Missing <WAV> header.");
                     }
-                    header.mAudioDuration = (length / header.mAudioBlock) * 1000;
+                    header.mAudioDuration = (int) (((float) length / header.mAudioBlock) * 1000);
 
                     if (descriptor.isCloseable()) {
                         final Int8Array content = ArrayFactory.allocateInt8Array(length);
@@ -112,14 +113,17 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     } else {
+
                         return new FactoryStreamingAudio(input, getUncompressedFormat(header),
                                 header.mAudioDuration,
                                 header.mAudioRate);
                     }
                 default:
+
                     if (input.skipBytes(length) <= 0) {
-                        throw new IOException("Failed to read the <WAVE> sound.");
+                        throw new IOException("Failed to read the <WAV> sound.");
                     }
+
                     break;
             }
         } while (true);
@@ -221,24 +225,26 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
     }
 
     /**
-     * <b>Read a little endian integer (Required for WAVE format)</b>
+     * <b>Read a little endian integer (Required for WAV format)</b>
      */
     private int readIntLittleEndian(DataInputStream in) throws IOException {
-        final int int1 = in.readByte();
-        final int int2 = in.readByte();
-        final int int3 = in.readByte();
-        final int int4 = in.readByte();
+        final int b0 = in.readInt();
+        final int b1 = (b0 >> 0) & 0xFF;
+        final int b2 = (b0 >> 8) & 0xFF;
+        final int b3 = (b0 >> 16) & 0xFF;
+        final int b4 = (b0 >> 24) & 0xFF;
 
-        return (int4 << 24 | (int3 & 0xFF) << 16 | (int2 & 0xFF) << 8 | (int1 & 0xFF));
+        return b1 << 24 | b2 << 16 | b3 << 8 | b4 << 0;
     }
 
     /**
-     * <b>Read a little endian short (Required for WAVE format)</b>
+     * <b>Read a little endian short (Required for WAV format)</b>
      */
     private int readShortLittleEndian(DataInputStream in) throws IOException {
-        final int int1 = in.readByte();
-        final int int2 = in.readByte();
+        final int b0 = in.readShort();
+        final int b1 = (b0 & 0xFF);
+        final int b2 = (b0 >> 8) & 0xFF;
 
-        return ((int2 & 0xFF) << 8 | (int1 & 0xFF));
+        return (short) (b1 << 8 | b2 << 0);
     }
 }

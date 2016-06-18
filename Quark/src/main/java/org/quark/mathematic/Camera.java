@@ -28,12 +28,12 @@ public class Camera {
     /**
      * Encapsulate the projection of the camera.
      */
-    protected MutableMatrix4f mProjection;
+    protected MutableMatrix4f mProjectionMatrix;
 
     /**
      * Encapsulate the view of the camera.
      */
-    protected MutableMatrix4f mView = MutableMatrix4f.createIdentity();
+    protected MutableMatrix4f mViewMatrix = MutableMatrix4f.createIdentity();
 
     /**
      * Encapsulate the projection-view of the camera.
@@ -67,7 +67,7 @@ public class Camera {
      * <p>Constructor</p>
      */
     public Camera(Matrix4f projection) {
-        mProjection = new MutableMatrix4f(projection);
+        mProjectionMatrix = new MutableMatrix4f(projection);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Camera {
      * @return a reference to the projection matrix
      */
     public Matrix4f getProjection() {
-        return mProjection;
+        return mProjectionMatrix;
     }
 
     /**
@@ -92,16 +92,16 @@ public class Camera {
             //!
             //! Calculate the view.
             //!
-            mView = mTemp0.setRotation(mTemp3).mul(mTemp1.setTranslation(mTemp2));
+            mViewMatrix = mTemp0.setRotation(mTemp3).mul(mTemp1.setTranslation(mTemp2));
 
             //!
             //! Calculate the projection-view combination.
             //!
-            mCombination.set(mProjection).mul(getView());
+            mCombination.set(mProjectionMatrix).mul(mViewMatrix);
 
             mDirty = false;
         }
-        return mView;
+        return mViewMatrix;
     }
 
     /**
@@ -170,7 +170,7 @@ public class Camera {
      * @param projection the new projection of the camera
      */
     public final void setProjection(Matrix4f projection) {
-        mProjection.set(projection);
+        mProjectionMatrix.set(projection);
         mDirty = true;
     }
 

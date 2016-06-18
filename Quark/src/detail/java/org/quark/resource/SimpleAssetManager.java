@@ -204,7 +204,7 @@ public final class SimpleAssetManager implements AssetManager {
             //!
             final AssetLocator.AsynchronousInputStream input = findAsset(filename);
 
-            if (input != null) {
+            if (input != null && input.isLoaded()) {
                 //!
                 //! Tries to load the asset.
                 //!

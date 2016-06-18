@@ -33,7 +33,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     private final DataView mBuffer;
 
-    private int mPosition;
+    private int mPosition = 0;
     private int mLimit;
 
     /**
@@ -43,7 +43,6 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         mBuffer = create(array);
 
         mLimit = capacity();
-        mPosition = 0;
     }
 
     /**
@@ -164,7 +163,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt16(short value) {
-        mBuffer.setInt16(mPosition, value);
+        mBuffer.setInt16(mPosition, value, true);
 
         mPosition += 2;
 
@@ -176,7 +175,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt16(int index, short value) {
-        mBuffer.setInt16(index, value);
+        mBuffer.setInt16(index, value, true);
         return (A) this;
     }
 
@@ -185,7 +184,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt32(int value) {
-        mBuffer.setInt32(mPosition, value);
+        mBuffer.setInt32(mPosition, value, true);
 
         mPosition += 4;
 
@@ -197,7 +196,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt32(int index, int value) {
-        mBuffer.setInt32(index, value);
+        mBuffer.setInt32(index, value, true);
         return (A) this;
     }
 
@@ -224,7 +223,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat32(float value) {
-        mBuffer.setFloat32(mPosition, value);
+        mBuffer.setFloat32(mPosition, value, true);
 
         mPosition += 4;
 
@@ -236,7 +235,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat32(int index, float value) {
-        mBuffer.setFloat32(index, value);
+        mBuffer.setFloat32(index, value, true);
         return (A) this;
     }
 
@@ -245,7 +244,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat64(double value) {
-        mBuffer.setFloat64(mPosition, value);
+        mBuffer.setFloat64(mPosition, value, true);
 
         mPosition += 8;
 
@@ -257,7 +256,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat64(int index, double value) {
-        mBuffer.setFloat64(index, value);
+        mBuffer.setFloat64(index, value, true);
         return (A) this;
     }
 
@@ -282,7 +281,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public short readInt16() {
-        final short value = mBuffer.getInt16(mPosition);
+        final short value = mBuffer.getInt16(mPosition, true);
 
         mPosition += 0x02;
 
@@ -294,7 +293,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public short readInt16(int index) {
-        return mBuffer.getInt16(index);
+        return mBuffer.getInt16(index, true);
     }
 
     /**
@@ -302,7 +301,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public int readInt32() {
-        final int value = mBuffer.getInt32(mPosition);
+        final int value = mBuffer.getInt32(mPosition, true);
 
         mPosition += 0x04;
 
@@ -314,7 +313,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public int readInt32(int index) {
-        return mBuffer.getInt32(index);
+        return mBuffer.getInt32(index, true);
     }
 
     /**
@@ -338,7 +337,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public float readFloat32() {
-        final float value = mBuffer.getFloat32(mPosition);
+        final float value = mBuffer.getFloat32(mPosition, true);
 
         mPosition += 0x04;
 
@@ -350,7 +349,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public float readFloat32(int index) {
-        return mBuffer.getFloat32(index);
+        return mBuffer.getFloat32(index, true);
     }
 
     /**
@@ -358,7 +357,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public double readFloat64() {
-        final double value = mBuffer.getFloat64(mPosition);
+        final double value = mBuffer.getFloat64(mPosition, true);
 
         mPosition += 0x08;
 
@@ -370,17 +369,17 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public double readFloat64(int index) {
-        return mBuffer.getFloat64(index);
+        return mBuffer.getFloat64(index, true);
     }
 
     /**
-     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
+     * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
      */
     @JSBody(params = {"buffer"}, script = "return new DataView(buffer)")
     public static native DataView create(ArrayBuffer buffer);
 
     /**
-     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
+     * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
      */
     public interface DataView extends JSObject {
         @JSProperty
@@ -396,25 +395,25 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         byte getInt8(int index);
 
         @JSMethod
-        short getUInt8(int index);
+        short getUInt8(int index, boolean isLittleEndian);
 
         @JSMethod
-        short getInt16(int index);
+        short getInt16(int index, boolean isLittleEndian);
 
         @JSMethod
-        int getUInt16(int index);
+        int getUInt16(int index, boolean isLittleEndian);
 
         @JSMethod
-        int getInt32(int index);
+        int getInt32(int index, boolean isLittleEndian);
 
         @JSMethod
-        long getUInt32(int index);
+        long getUInt32(int index, boolean isLittleEndian);
 
         @JSMethod
-        float getFloat32(int index);
+        float getFloat32(int index, boolean isLittleEndian);
 
         @JSMethod
-        double getFloat64(int index);
+        double getFloat64(int index, boolean isLittleEndian);
 
         @JSMethod
         void setInt8(int index, int value);
@@ -423,21 +422,21 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         void setUInt8(int index, int value);
 
         @JSMethod
-        void setInt16(int index, int value);
+        void setInt16(int index, int value, boolean isLittleEndian);
 
         @JSMethod
-        void setUInt16(int index, int value);
+        void setUInt16(int index, int value, boolean isLittleEndian);
 
         @JSMethod
-        void setInt32(int index, int value);
+        void setInt32(int index, int value, boolean isLittleEndian);
 
         @JSMethod
-        void setUInt32(int index, long value);
+        void setUInt32(int index, long value, boolean isLittleEndian);
 
         @JSMethod
-        void setFloat32(int index, float value);
+        void setFloat32(int index, float value, boolean isLittleEndian);
 
         @JSMethod
-        void setFloat64(int index, double value);
+        void setFloat64(int index, double value, boolean isLittleEndian);
     }
 }

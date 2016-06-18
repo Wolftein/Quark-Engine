@@ -956,13 +956,6 @@ public interface Render extends ManageableManager {
     void update(Uniform uniform);
 
     /**
-     * <p>Update the <code>VertexDescriptor</code> given</p>
-     *
-     * @param descriptor the descriptor
-     */
-    void update(VertexDescriptor descriptor);
-
-    /**
      * <p>Unbind the <code>Texture</code> given</p>
      *
      * @param texture the texture

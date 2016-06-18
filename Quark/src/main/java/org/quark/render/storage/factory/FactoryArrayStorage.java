@@ -19,7 +19,6 @@ package org.quark.render.storage.factory;
 
 import org.quark.render.storage.*;
 import org.quark.system.utility.array.*;
-import org.quark.system.utility.emulation.Emulation;
 
 import java.util.List;
 
@@ -41,7 +40,12 @@ public class FactoryArrayStorage<A extends Array> extends Storage<A> {
         //!
         //! Calculate the length of the storage.
         //!
-        mAttributesLength = Emulation.forEachToMapInt(vertex, Vertex::getLength);
+        int length = 0;
+
+        for (final Vertex item : vertex) {
+            length += item.getLength();
+        }
+        mAttributesLength = length;
     }
 
     /***

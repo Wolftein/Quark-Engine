@@ -68,8 +68,40 @@ public interface AssetLocator {
          * {@inheritDoc}
          */
         @Override
+        public int read(byte[] bytes) throws IOException {
+            return mBackend.read(bytes);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int read(byte[] bytes, int offset, int length) throws IOException {
+            return mBackend.read(bytes, offset, length);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public int available() throws IOException {
             return mBackend.available();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long skip(long count) throws IOException {
+            return mBackend.skip(count);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void close() throws IOException {
+            mBackend.close();
         }
 
         /**
@@ -91,10 +123,12 @@ public interface AssetLocator {
             //!
             //! Notify about the stream if the request is asynchronously.
             //!
-            if (isLoaded()) {
-                mCallback.onSuccess(this);
-            } else {
-                mCallback.onFail();
+            if (mCallback != null) {
+                if (isLoaded()) {
+                    mCallback.onSuccess(this);
+                } else {
+                    mCallback.onFail();
+                }
             }
         }
 

@@ -18,7 +18,12 @@
 package org.quark.backend.teavm.utility.array;
 
 import org.quark.system.utility.array.*;
-import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.quark.system.utility.array.Float32Array;
+import org.quark.system.utility.array.Float64Array;
+import org.quark.system.utility.array.Int16Array;
+import org.quark.system.utility.array.Int32Array;
+import org.quark.system.utility.array.Int8Array;
+import org.teavm.jso.typedarrays.*;
 
 /**
  * <a href="http://teavm.org/">TeaVM</a> implementation for {@link ArrayFactory}.

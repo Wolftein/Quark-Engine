@@ -308,21 +308,21 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
     public static <T extends Array> T create(int capacity, VertexFormat format) {
         switch (format) {
             case BYTE:
-                return (T) ArrayFactory.allocateInt8Array(capacity);
+                return (T) ArrayFactory.allocateInt8Array(capacity / format.eLength);
             case UNSIGNED_BYTE:
-                return (T) ArrayFactory.allocateUInt8Array(capacity);
+                return (T) ArrayFactory.allocateUInt8Array(capacity / format.eLength);
             case HALF_FLOAT:
-                return (T) ArrayFactory.allocateFloat16Array(capacity);
+                return (T) ArrayFactory.allocateFloat16Array(capacity / format.eLength);
             case SHORT:
-                return (T) ArrayFactory.allocateInt16Array(capacity);
+                return (T) ArrayFactory.allocateInt16Array(capacity / format.eLength);
             case UNSIGNED_SHORT:
-                return (T) ArrayFactory.allocateUInt16Array(capacity);
+                return (T) ArrayFactory.allocateUInt16Array(capacity / format.eLength);
             case INT:
-                return (T) ArrayFactory.allocateInt32Array(capacity);
+                return (T) ArrayFactory.allocateInt32Array(capacity / format.eLength);
             case UNSIGNED_INT:
-                return (T) ArrayFactory.allocateUInt32Array(capacity);
+                return (T) ArrayFactory.allocateUInt32Array(capacity / format.eLength);
             case FLOAT:
-                return (T) ArrayFactory.allocateFloat32Array(capacity);
+                return (T) ArrayFactory.allocateFloat32Array(capacity / format.eLength);
         }
         throw new IllegalArgumentException("Trying to create an array with invalid format");
     }

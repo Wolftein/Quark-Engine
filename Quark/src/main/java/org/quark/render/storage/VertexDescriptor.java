@@ -119,13 +119,6 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     }
 
     /**
-     * @see Render#update(VertexDescriptor)
-     */
-    public void update() {
-        QKRender.update(this);
-    }
-
-    /**
      * @see Render#release(VertexDescriptor)
      */
     public void release() {

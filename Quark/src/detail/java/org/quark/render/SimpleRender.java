@@ -412,7 +412,18 @@ public final class SimpleRender implements Render {
             //!
             //! Prevent leaking the component if it was created.
             //!
+            //! NOTE: Update the component once.
+            //!
             descriptor.setHandle(mGL.glGenVertexArrays());
+
+            //!
+            //! NOTE: Update the component once.
+            //!
+            descriptor.acquire();
+            {
+                onUpdateDescriptor(descriptor);
+            }
+            descriptor.release();
         }
     }
 
@@ -579,7 +590,12 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void acquire(VertexDescriptor descriptor) {
-        if (!isActive(descriptor) && mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
+        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
+            //!
+            //! NOTE: When is not available fallback to legacy.
+            //!
+            onUpdateDescriptor(descriptor);
+        } else if (!isActive(descriptor)) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
@@ -782,29 +798,6 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public void update(VertexDescriptor descriptor) {
-        if (descriptor.hasUpdate() || !mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
-
-            //!
-            //! Bind all attribute(s) of the storage(s)
-            //!
-            if (descriptor.hasVertices()) {
-                Emulation.forEach(descriptor.getVertices(), this::onUpdateDescriptorVertices);
-            }
-
-            //!
-            //! Bind indices storage.
-            //!
-            if (descriptor.hasIndices()) {
-                onUpdateDescriptorIndices(descriptor.getIndices());
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void release(Texture texture) {
         release(texture, 0);
     }
@@ -857,7 +850,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void release(VertexDescriptor descriptor) {
-        if (isActive(descriptor)) {
+        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT) && isActive(descriptor)) {
             //!
             //! Prevent releasing the component if not acquired.
             //!
@@ -1130,7 +1123,8 @@ public final class SimpleRender implements Render {
         //!
         frame.acquire();
         {
-            Emulation.forEach(frame.getAttachment(), (name, attachment) -> onUpdateFrameTarget(frame, name, attachment));
+            Emulation.forEach(frame.getAttachment(),
+                    (name, attachment) -> onUpdateFrameTarget(frame, name, attachment));
         }
         frame.release();
     }
@@ -1334,6 +1328,27 @@ public final class SimpleRender implements Render {
     }
 
     /**
+     * <p>Handle update {@link VertexDescriptor}</p>
+     *
+     * @implNote [INTERNAL]
+     */
+    private void onUpdateDescriptor(VertexDescriptor descriptor) {
+        //!
+        //! Bind all attribute(s) of the storage(s)
+        //!
+        if (descriptor.hasVertices()) {
+            Emulation.forEach(descriptor.getVertices(), this::onUpdateDescriptorVertices);
+        }
+
+        //!
+        //! Bind indices storage.
+        //!
+        if (descriptor.hasIndices()) {
+            onUpdateDescriptorIndices(descriptor.getIndices());
+        }
+    }
+
+    /**
      * <p>Handle update {@link FactoryElementStorage} inside a {@link VertexDescriptor}</p>
      *
      * @implNote [INTERNAL]
@@ -1341,11 +1356,21 @@ public final class SimpleRender implements Render {
     private void onUpdateDescriptorIndices(FactoryElementStorage<?> indices) {
         indices.create();
 
-        //!
-        //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
-        //!
-        mGL.glBindBuffer(StorageTarget.ELEMENT.eValue, indices.getHandle());
+        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
+            //!
+            //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
+            //!
+            mGL.glBindBuffer(StorageTarget.ELEMENT.eValue, indices.getHandle());
+        } else {
+            //!
+            //! NOTE: Update it normally if fallback to legacy
+            //!
+            indices.acquire();
+        }
 
+        //!
+        //! Trigger an update if isn't updated.
+        //!
         indices.update();
     }
 
@@ -1358,9 +1383,16 @@ public final class SimpleRender implements Render {
         vertices.create();
         vertices.acquire();
 
-        Emulation.forEach(vertices.getAttributes(), (attribute) -> onUpdateDescriptorVertex(vertices, attribute));
-
+        //!
+        //! Trigger an update if isn't updated.
+        //!
         vertices.update();
+
+        //!
+        //! Bind each attribute of the buffer.
+        //!
+        Emulation.forEach(
+                vertices.getAttributes(), (attribute) -> onUpdateDescriptorVertex(vertices, attribute));
     }
 
     /**
@@ -1370,6 +1402,7 @@ public final class SimpleRender implements Render {
      */
     private void onUpdateDescriptorVertex(FactoryArrayStorage<?> vertices, Vertex vertex) {
         mGL.glEnableVertexAttribArray(vertex.getID());
+
         mGL.glVertexAttribPointer(vertex.getID(),
                 vertex.getComponent(),
                 vertex.getType().eValue,

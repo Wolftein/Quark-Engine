@@ -17,6 +17,7 @@
  */
 package org.quark.backend.teavm.opengl;
 
+import org.quark.backend.teavm.utility.array.TeaVMArray;
 import org.quark.render.Render;
 import org.quark.render.RenderCapabilities;
 import org.quark.system.utility.array.*;
@@ -57,12 +58,6 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
     protected int mUniform = 1;
 
     /**
-     * Hold temporally buffer(s).
-     */
-    protected final org.teavm.jso.typedarrays.Float32Array mTemp1;
-    protected final org.teavm.jso.typedarrays.Float32Array mTemp2;
-
-    /**
      * <p>Constructor</p>
      */
     public TeaVMOpenGLES20(HTMLCanvasElement canvas) {
@@ -74,12 +69,6 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
             mGL = primary;
         }
         mGL.pixelStorei(WebGLRenderingContext.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 0);
-
-        //!
-        //! Reusable buffer(s) for uniform matrix.
-        //!
-        mTemp1 = org.teavm.jso.typedarrays.Float32Array.create(3 * 3);
-        mTemp2 = org.teavm.jso.typedarrays.Float32Array.create(4 * 4);
     }
 
     /**
@@ -755,9 +744,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniform1fv(int name, Float32Array buffer) {
-        final ArrayBuffer array = buffer.data();
-
-        mGL.uniform1fv(mUniformFactory.get(name), org.teavm.jso.typedarrays.Float32Array.create(array));
+        mGL.uniform1fv(mUniformFactory.get(name),
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<TeaVMArray.DataView>data().getBuffer()));
     }
 
     /**
@@ -797,9 +785,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniform1iv(int name, Int32Array buffer) {
-        final ArrayBuffer array = buffer.data();
-
-        mGL.uniform1iv(mUniformFactory.get(name), org.teavm.jso.typedarrays.Int32Array.create(array));
+        mGL.uniform1iv(mUniformFactory.get(name),
+                org.teavm.jso.typedarrays.Int32Array.create(buffer.<TeaVMArray.DataView>data().getBuffer()));
     }
 
     /**
@@ -807,9 +794,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniformMatrix3fv(int name, Float32Array buffer) {
-        final ArrayBuffer array = buffer.data();
-
-        mGL.uniformMatrix3fv(mUniformFactory.get(name), false, org.teavm.jso.typedarrays.Float32Array.create(array));
+        mGL.uniformMatrix3fv(mUniformFactory.get(name), false,
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<TeaVMArray.DataView>data().getBuffer()));
     }
 
     /**
@@ -817,9 +803,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      */
     @Override
     public void glUniformMatrix4fv(int name, Float32Array buffer) {
-        final ArrayBuffer array = buffer.data();
-
-        mGL.uniformMatrix4fv(mUniformFactory.get(name), false , org.teavm.jso.typedarrays.Float32Array.create(array));
+        mGL.uniformMatrix4fv(mUniformFactory.get(name), false,
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<TeaVMArray.DataView>data().getBuffer()));
     }
 
     /**

@@ -30,6 +30,8 @@ import org.quark.input.SimpleInputManager;
 import org.quark.render.Render;
 import org.quark.render.SimpleRender;
 import org.quark.resource.SimpleAssetManager;
+import org.quark.resource.loader.AudioWAVAssetLoader;
+import org.quark.resource.loader.TextureDDSAssetLoader;
 import org.quark.system.Display;
 import org.quark.system.DisplayLifecycle;
 import org.quark.system.utility.array.ArrayFactory;
@@ -111,13 +113,6 @@ public final class TeaVM {
      */
     private void onModuleCreate(HTMLCanvasElement element, Display.Preference preference) {
         //!
-        //! Create memory factory.
-        //!
-        //! NOTE: Most module requires this module.
-        //!
-        ArrayFactory.instance = new TeaVMArrayFactory();
-
-        //!
         //! Create display module.
         //!
         element.addEventListener("resize", (Event) ->
@@ -168,17 +163,11 @@ public final class TeaVM {
         //!
         //! Create resource module.
         //!
-
         QKResources = new SimpleAssetManager();
-
         QKResources.registerAssetLocator("EXTERNAL", new XHRAssetLocator());
 
- /*
-        QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
-        QKResources.registerAssetLoader(new ShaderGLSLAssetLoader(QKRender.getCapabilities()), "pipeline");
-        QKResources.registerAssetLoader(new AudioWAVEAssetLoader(), "wav");
-        QKResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");*/
+        QKResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
 
         //!
         //! Handle the create notification.
@@ -282,6 +271,16 @@ public final class TeaVM {
     public static void create(String element, DisplayLifecycle lifecycle, Display.Preference preference) {
         final HTMLCanvasElement canvas = (HTMLCanvasElement) Window.current().getDocument().getElementById(element);
 
+        //!
+        //! Create memory factory.
+        //!
+        //! NOTE: Most module requires this module.
+        //!
+        ArrayFactory.instance = new TeaVMArrayFactory();
+
+        //!
+        //! Create entry
+        //!
         final TeaVM entry = new TeaVM(lifecycle);
         entry.onModuleCreate(canvas, preference);
         entry.onModuleUpdate();

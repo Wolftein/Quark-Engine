@@ -85,13 +85,11 @@ public final class XHRAssetLocator implements AssetLocator {
      */
     private void onAssetReadStateChange(XMLHttpRequest request, AsynchronousInputStream stream) {
         if (request.getStatus() == 200 || request.getStatus() == 0) {
-
             //!
             //! Get the content of the request.
             //!
-            final ArrayBuffer content = (ArrayBuffer) request.getResponse();
-
-            stream.notify(new XHRInputStream(new TeaVMArrayFactory.TeaVMInt8Array(content)));
+            stream.notify(new XHRInputStream(
+                    new TeaVMArrayFactory.TeaVMInt8Array((ArrayBuffer) request.getResponse())));
         } else {
             stream.notify(null);
         }
@@ -115,7 +113,35 @@ public final class XHRAssetLocator implements AssetLocator {
          */
         @Override
         public int read() throws IOException {
-            return mArray.read();
+            if (!mArray.hasRemaining()) {
+                return -1;
+            }
+            return mArray.read() & 0xFF;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int read(byte[] bytes) throws IOException {
+            return read(bytes, 0, bytes.length);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int read(byte[] bytes, int offset, int length) throws IOException {
+            if (!mArray.hasRemaining()) {
+                return -1;
+            }
+
+            length = Math.min(length, mArray.remaining());
+
+            for (int i = 0; i < length; i++) {
+                bytes[offset + i] = (byte) read();
+            }
+            return length;
         }
 
         /**
@@ -124,6 +150,18 @@ public final class XHRAssetLocator implements AssetLocator {
         @Override
         public int available() throws IOException {
             return mArray.remaining();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long skip(long count) throws IOException {
+            final int skip = (int) (mArray.position() + count);
+
+            mArray.position(skip);
+
+            return skip;
         }
     }
 }

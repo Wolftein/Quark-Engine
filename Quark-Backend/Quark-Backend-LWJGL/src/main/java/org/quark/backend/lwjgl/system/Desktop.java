@@ -110,13 +110,6 @@ public final class Desktop {
      */
     private void onModuleCreate(Display.Preference preference) {
         //!
-        //! Create memory factory.
-        //!
-        //! NOTE: Most module requires this module.
-        //!
-        ArrayFactory.instance = new DesktopArrayFactory();
-
-        //!
         //! Create display module.
         //!
         final GLFWFramebufferSizeCallback resize = GLFWFramebufferSizeCallback.create((window, width, height) ->
@@ -275,6 +268,16 @@ public final class Desktop {
      * <p>Initialise <code>Desktop</code></p>
      */
     public static void create(DisplayLifecycle lifecycle, Display.Preference preference) {
+        //!
+        //! Create memory factory.
+        //!
+        //! NOTE: Most module requires this module.
+        //!
+        ArrayFactory.instance = new DesktopArrayFactory();
+
+        //!
+        //! Create entry
+        //!
         final Desktop entry = new Desktop(lifecycle);
         entry.onModuleCreate(preference);
         entry.onModuleUpdate();

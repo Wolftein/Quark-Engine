@@ -318,11 +318,12 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
      * <b>Read a little endian integer (Required for DDS format)</b>
      */
     private int readIntLittleEndian(DataInputStream in) throws IOException {
-        final int int1 = in.readByte();
-        final int int2 = in.readByte();
-        final int int3 = in.readByte();
-        final int int4 = in.readByte();
+        final int b0 = in.readInt();
+        final int b1 = (b0 >> 0) & 0xFF;
+        final int b2 = (b0 >> 8) & 0xFF;
+        final int b3 = (b0 >> 16) & 0xFF;
+        final int b4 = (b0 >> 24) & 0xFF;
 
-        return (int4 << 24 | (int3 & 0xFF) << 16 | (int2 & 0xFF) << 8 | (int1 & 0xFF));
+        return b1 << 24 | b2 << 16 | b3 << 8 | b4 << 0;
     }
 }
