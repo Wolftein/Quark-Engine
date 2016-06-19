@@ -1203,28 +1203,28 @@ public final class SimpleRender implements Render {
     private void onUpdateStorage(Storage storage) {
         switch (storage.getFormat()) {
             case BYTE:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<Int8Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (Int8Array) storage.map(), storage.getMode().eValue);
                 break;
             case UNSIGNED_BYTE:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt8Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (UInt8Array) storage.map(), storage.getMode().eValue);
                 break;
             case SHORT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<Int16Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (Int16Array) storage.map(), storage.getMode().eValue);
                 break;
             case UNSIGNED_SHORT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt16Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (UInt16Array) storage.map(), storage.getMode().eValue);
                 break;
             case INT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<Int32Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (Int32Array) storage.map(), storage.getMode().eValue);
                 break;
             case UNSIGNED_INT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt32Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (UInt32Array) storage.map(), storage.getMode().eValue);
                 break;
             case HALF_FLOAT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<Float16Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (Float16Array) storage.map(), storage.getMode().eValue);
                 break;
             case FLOAT:
-                mGL.glBufferData(storage.getTarget().eValue, storage.<Float32Array>map(), storage.getMode().eValue);
+                mGL.glBufferData(storage.getTarget().eValue, (Float32Array) storage.map(), storage.getMode().eValue);
                 break;
         }
     }
@@ -1235,28 +1235,28 @@ public final class SimpleRender implements Render {
     private void onUpdateStorageAgain(Storage storage) { // TODO: Allow offset specification
         switch (storage.getFormat()) {
             case BYTE:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int8Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (Int8Array) storage.map());
                 break;
             case UNSIGNED_BYTE:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt8Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (UInt8Array) storage.map());
                 break;
             case SHORT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int16Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (Int16Array) storage.map());
                 break;
             case UNSIGNED_SHORT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt16Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (UInt16Array) storage.map());
                 break;
             case INT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int32Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (Int32Array) storage.map());
                 break;
             case UNSIGNED_INT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt32Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (UInt32Array) storage.map());
                 break;
             case HALF_FLOAT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Float16Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (Float16Array) storage.map());
                 break;
             case FLOAT:
-                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Float32Array>map());
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, (Float32Array) storage.map());
                 break;
         }
     }

@@ -401,14 +401,6 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Array<?> data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void glBufferData(int target, Int8Array data, int usage) {
         GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
@@ -418,7 +410,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Int16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -426,7 +418,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Int32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -442,7 +434,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, UInt16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -450,7 +442,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, UInt32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -458,7 +450,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Float16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -466,12 +458,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferData(int target, Float32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
-    }
-
-    @Override
-    public void glBufferSubData(int target, int offset, Array<?> data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
     }
 
     /**
@@ -487,7 +474,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Int16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**
@@ -495,7 +482,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Int32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**
@@ -511,7 +498,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, UInt16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**
@@ -519,7 +506,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, UInt32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**
@@ -527,7 +514,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Float16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 1, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**
@@ -535,7 +522,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glBufferSubData(int target, int offset, Float32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining() << 2, MemoryUtil.memAddress(data.<ByteBuffer>data()));
+        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
     }
 
     /**

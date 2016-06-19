@@ -54,7 +54,19 @@ public final class XHRAssetLocator implements AssetLocator {
      */
     @Override
     public AsynchronousInputStream locate(String filename) {
-        throw new UnsupportedOperationException("This feature is deprecated due to bad performance");
+        //!
+        //! Build the request.
+        //!
+        final XMLHttpRequest xhr = XMLHttpRequest.create();
+
+        xhr.open("GET", filename, false);
+        xhr.setResponseType(BINARY_REQUEST);
+        xhr.send();
+
+        final InputStream stream = (xhr.getStatus() == 200 || xhr.getStatus() == 0
+                ? new XHRInputStream(new TeaVMArrayFactory.TeaVMInt8Array((ArrayBuffer) xhr.getResponse()))
+                : null);
+        return new AsynchronousInputStream(stream, null);
     }
 
     /**

@@ -86,7 +86,7 @@ public final class RenderState {
          *
          * @since OpenGL ES 2.0
          */
-        ALPHA(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
+        ALPHA(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE_MINUS_SRC_ALPHA),
 
         /**
          * Result = (source_alpha * source_colour) + destination_colour.

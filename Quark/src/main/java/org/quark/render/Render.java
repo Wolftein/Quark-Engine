@@ -308,11 +308,6 @@ public interface Render extends ManageableManager {
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
-        void glBufferData(int target, Array<?> data, int usage);
-
-        /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
-         */
         void glBufferData(int target, Int8Array data, int usage);
 
         /**
@@ -349,11 +344,6 @@ public interface Render extends ManageableManager {
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferData.xml">Link</a>
          */
         void glBufferData(int target, Float32Array data, int usage);
-
-        /**
-         * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>
-         */
-        void glBufferSubData(int target, int offset, Array<?> data);
 
         /**
          * @see <a href="https://www.opengl.org/sdk/docs/man2/xhtml/glBufferSubData.xml">Link</a>

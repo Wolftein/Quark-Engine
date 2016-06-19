@@ -392,14 +392,6 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Array<?> data, int usage) {
-        mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void glBufferData(int target, Int8Array data, int usage) {
         mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
     }
@@ -458,14 +450,6 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
     @Override
     public void glBufferData(int target, Float32Array data, int usage) {
         mGL.bufferData(target, data.<ArrayBuffer>data(), usage);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void glBufferSubData(int target, int offset, Array<?> data) {
-        mGL.bufferSubData(target, offset, data.<ArrayBuffer>data());
     }
 
     /**
