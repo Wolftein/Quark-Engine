@@ -29,7 +29,7 @@ import org.quark.system.utility.array.Int8Array;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 /**
  * <code>TexturePNGAssetLoader</code> encapsulate an {@link AssetLoader} for loading PNG image(s).
@@ -214,16 +214,15 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
         final byte[] zipBuffer2 = new byte[imageLineSize];
         final byte[] indexedBuffer = new byte[header.mImageWidth];
 
-        //!
-        //! Decompress the data of the image (using lib-z)
-        //!
-        final Inflater inflater = new Inflater();
-        inflater.setInput(input);
 
-        try {
+        //!
+        //! Decompress the data of the image (using z-lib)
+        //!
+        try (final InflaterInputStream inflater = new InflaterInputStream(new ByteArrayInputStream(input))) {
+
             for (int y = 0; y < header.mImageHeight; ++y) {
-                inflater.inflate(zipFilter);
-                inflater.inflate(zipBuffer1);
+                readAll(inflater, zipFilter);
+                readAll(inflater, zipBuffer1);
 
                 switch (zipFilter[0]) {
                     case 0:
@@ -316,8 +315,6 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
 
         } catch (Exception exception) {
             throw new IOException(exception);
-        } finally {
-            inflater.end();
         }
         imageBuffer.flip();
 
@@ -564,5 +561,21 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
                 return 0x04;
         }
         throw new IOException("Uncompressed format not supported");
+    }
+
+    /**
+     * <p>Helper method to read all byte(s) from an {@link InflaterInputStream}</p>
+     */
+    private int readAll(InflaterInputStream input, byte[] data) throws IOException {
+        int length = data.length;
+        int offset = 0;
+
+        while (length > 0) {
+            final int read = input.read(data, offset, length);
+
+            length -= read;
+            offset += read;
+        }
+        return offset;
     }
 }

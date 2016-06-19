@@ -32,6 +32,7 @@ import org.quark.render.SimpleRender;
 import org.quark.resource.SimpleAssetManager;
 import org.quark.resource.loader.AudioWAVAssetLoader;
 import org.quark.resource.loader.TextureDDSAssetLoader;
+import org.quark.resource.loader.TexturePNGAssetLoader;
 import org.quark.system.Display;
 import org.quark.system.DisplayLifecycle;
 import org.quark.system.utility.array.ArrayFactory;
@@ -166,6 +167,7 @@ public final class TeaVM {
         QKResources = new SimpleAssetManager();
         QKResources.registerAssetLocator("EXTERNAL", new XHRAssetLocator());
 
+        QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         QKResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
 

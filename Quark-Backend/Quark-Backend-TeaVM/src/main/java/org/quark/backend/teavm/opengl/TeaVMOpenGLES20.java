@@ -21,9 +21,13 @@ import org.quark.backend.teavm.utility.array.TeaVMArray;
 import org.quark.render.Render;
 import org.quark.render.RenderCapabilities;
 import org.quark.system.utility.array.*;
+import org.quark.system.utility.array.Float32Array;
+import org.quark.system.utility.array.Int16Array;
+import org.quark.system.utility.array.Int32Array;
+import org.quark.system.utility.array.Int8Array;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
-import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.*;
 import org.teavm.jso.webgl.*;
 
 import java.util.HashMap;
@@ -571,7 +575,23 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
     @Override
     public void glTexImage2D(int target, int level, int internal, int width, int height,
             int border, int format, int type, Int8Array data) {
-        mGL.texImage2D(target, level, internal, width, height, border, format, type, data.data());
+        final ArrayBufferView view;
+
+        switch (format) {
+            case WebGLRenderingContext.UNSIGNED_BYTE:
+                view = Uint8Array.create(data.<TeaVMArray.DataView>data().getBuffer());
+                break;
+            case WebGLRenderingContext.UNSIGNED_SHORT:
+                view = Uint16Array.create(data.<TeaVMArray.DataView>data().getBuffer());
+                break;
+            case WebGLRenderingContext.FLOAT:
+                view = org.teavm.jso.typedarrays.Float32Array.create(data.<TeaVMArray.DataView>data().getBuffer());
+                break;
+            default:
+                view = Uint8Array.create(data.<TeaVMArray.DataView>data().getBuffer());
+                break;
+        }
+        mGL.texImage2D(target, level, format /* WebGL 1.0 */, width, height, border, format, type, view);
     }
 
     /**
