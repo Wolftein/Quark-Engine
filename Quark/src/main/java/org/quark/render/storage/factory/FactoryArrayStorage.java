@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Specialised implementation for {@link StorageTarget#ARRAY}.
  */
-public class FactoryArrayStorage<A extends Array> extends Storage<A> {
+public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     private final List<Vertex> mAttributes;
     private final int mAttributesLength;
 

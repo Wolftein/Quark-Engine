@@ -1026,7 +1026,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Array> T map(Storage<T> storage);
+    <T extends Array<?>> T map(Storage<T> storage);
 
     /**
      * <p>Map a <code>Storage</code></p>
@@ -1038,7 +1038,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Array> T map(Storage<T> storage, int access);
+    <T extends Array<?>> T map(Storage<T> storage, int access);
 
     /**
      * <p>Map a range of the <code>Storage</code></p>
@@ -1051,7 +1051,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Array> T map(Storage<T> storage, int offset, int length);
+    <T extends Array<?>> T map(Storage<T> storage, int offset, int length);
 
     /**
      * <p>Map a range of the <code>Storage</code></p>
@@ -1065,7 +1065,7 @@ public interface Render extends ManageableManager {
      *
      * @see #unmap(Storage)
      */
-    <T extends Array> T map(Storage<T> storage, int access, int offset, int length);
+    <T extends Array<?>> T map(Storage<T> storage, int access, int offset, int length);
 
     /**
      * <p>Un-map a <code>Storage</code></p>
@@ -1077,5 +1077,5 @@ public interface Render extends ManageableManager {
      * @see #map(Storage, int, int, int)
      * @see #map(Storage, int, int)
      */
-    <T extends Array> void unmap(Storage<T> storage);
+    <T extends Array<?>> void unmap(Storage<T> storage);
 }

@@ -57,6 +57,11 @@ public final class RenderCapabilities {
         VERTEX_ARRAY_OBJECT,
 
         /**
+         * Indicates if {@link Texture} support 3D.
+         */
+        TEXTURE_3D,
+
+        /**
          * Indicates if {@link Texture} support S3TC compression.
          */
         TEXTURE_COMPRESSION_S3TC,

@@ -126,6 +126,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         extension.put(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT,
                 capabilities.GL_ARB_vertex_array_object);
 
+        extension.put(RenderCapabilities.Extension.TEXTURE_3D, true);
         extension.put(RenderCapabilities.Extension.TEXTURE_COMPRESSION_S3TC,
                 capabilities.GL_EXT_texture_compression_s3tc);
         extension.put(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
@@ -574,7 +575,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glTexParameter(int target, int type, int value) {
-        GL11.glTexParameteri(target, target, value);
+        GL11.glTexParameteri(target, type, value);
     }
 
     /**
@@ -582,7 +583,7 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glTexParameter(int target, int type, float value) {
-        GL11.glTexParameterf(target, target, value);
+        GL11.glTexParameterf(target, type, value);
     }
 
     /**

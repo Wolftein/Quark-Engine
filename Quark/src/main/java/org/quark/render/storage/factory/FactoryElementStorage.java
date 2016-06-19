@@ -26,7 +26,7 @@ import org.quark.system.utility.array.UInt8Array;
 /**
  * Specialised implementation for {@link StorageTarget#ELEMENT}.
  */
-public class FactoryElementStorage<A extends Array> extends Storage<A> {
+public class FactoryElementStorage<A extends Array<?>> extends Storage<A> {
     /**
      * <p>Constructor</p>
      */

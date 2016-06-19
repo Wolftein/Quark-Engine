@@ -295,13 +295,6 @@ public final class SimpleAudioManager implements AudioManager {
         if (audio.getHandle() != Manageable.INVALID_HANDLE) {
             mAL.alDeleteBuffers(audio.setHandle(Manageable.INVALID_HANDLE));
         }
-
-        //!
-        //! Clear the buffer.
-        //!
-        //! NOTE: This is to ease some memory in cause it wasn't uploaded.
-        //!
-        audio.getData().clear();
     }
 
     /**
@@ -309,12 +302,6 @@ public final class SimpleAudioManager implements AudioManager {
      */
     @Override
     public void delete(FactoryStreamingAudio audio) {
-        //!
-        //! Close the stream.
-        //!
-        //! NOTE: Since streaming is using shared buffer, doesn't require to actually dispose them.
-        //!
-        audio.close();
     }
 
     /**

@@ -41,6 +41,14 @@ public abstract class Manageable {
      * <p>Handle when the object requires to delete</p>
      */
     public void delete() {
+        deleteAllMemory();
+    }
+
+    /**
+     * <p>Handle when the object requires to delete bound memory (CPU-side memory)</p>
+     */
+    public void deleteAllMemory() {
+
     }
 
     /**

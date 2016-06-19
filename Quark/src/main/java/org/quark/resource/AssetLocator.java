@@ -51,9 +51,9 @@ public interface AssetLocator {
          * <p>Constructor</p>
          */
         public AsynchronousInputStream(InputStream stream, AssetCallback<AsynchronousInputStream> callback) {
-            notify(stream);
-
             mCallback = callback;
+
+            notify(stream);
         }
 
         /**

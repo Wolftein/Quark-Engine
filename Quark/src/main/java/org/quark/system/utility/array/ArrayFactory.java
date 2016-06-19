@@ -138,9 +138,14 @@ public abstract class ArrayFactory {
 
     /**
      * <p>Deallocate a {@link Array}</p>
+     *
+     * @return <code>null</code>
      */
-    public static void free(Array<?> view) {
-        instance.nFree(view);
+    public static <T extends Array<?>> T free(T view) {
+        if (view != null) {
+            instance.nFree(view);
+        }
+        return null;
     }
 
     /**

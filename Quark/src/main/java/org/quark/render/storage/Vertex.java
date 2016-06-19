@@ -26,27 +26,27 @@ import java.util.List;
  */
 public final class Vertex {
     /**
-     * Encapsulate the unique identifier of the attribute.
+     * Hold the unique identifier of the attribute.
      */
     private final int mID;
 
     /**
-     * Encapsulate the number of component(s) the attribute has.
+     * Hold the number of component(s) the attribute has.
      */
     private final int mComponent;
 
     /**
-     * Encapsulate the offset of the attribute.
+     * Hold the offset of the attribute.
      */
     private final int mOffset;
 
     /**
-     * Encapsulate the type of the attribute.
+     * Hold the type of the attribute.
      */
     private final VertexFormat mType;
 
     /**
-     * Encapsulate if the attribute is normalised.
+     * Hold if the attribute is normalised.
      */
     private final boolean mNormalised;
 

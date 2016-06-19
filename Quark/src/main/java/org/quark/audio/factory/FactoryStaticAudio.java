@@ -20,6 +20,8 @@ package org.quark.audio.factory;
 import org.quark.audio.Audio;
 import org.quark.audio.AudioFormat;
 import org.quark.system.utility.Disposable;
+import org.quark.system.utility.Manageable;
+import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Int8Array;
 
 import static org.quark.Quark.QKAudio;
@@ -28,7 +30,10 @@ import static org.quark.Quark.QKAudio;
  * Specialised implementation for {@link Audio} that are being loaded at once.
  */
 public final class FactoryStaticAudio extends Audio {
-    private final Int8Array mData;
+    /**
+     * @apiNote [MUTABLE-DISPOSABLE]
+     */
+    private Int8Array mData;
 
     /**
      * <p>Constructor</p>
@@ -53,6 +58,24 @@ public final class FactoryStaticAudio extends Audio {
     @Override
     public boolean isStreaming() {
         return false;
+    }
+
+    /**
+     * @see Manageable#delete()
+     */
+    @Override
+    public void delete() {
+        super.delete();
+
+        QKAudio.delete(this);
+    }
+
+    /**
+     * @see Manageable#deleteAllMemory()
+     */
+    @Override
+    public void deleteAllMemory() {
+        mData = ArrayFactory.free(mData);
     }
 
     /**

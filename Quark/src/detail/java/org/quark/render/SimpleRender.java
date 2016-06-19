@@ -30,10 +30,7 @@ import org.quark.render.texture.*;
 import org.quark.render.texture.frame.Frame;
 import org.quark.render.texture.frame.FrameAttachment;
 import org.quark.system.utility.Manageable;
-import org.quark.system.utility.array.Array;
-import org.quark.system.utility.array.Float32Array;
-import org.quark.system.utility.array.Int32Array;
-import org.quark.system.utility.array.UInt32Array;
+import org.quark.system.utility.array.*;
 import org.quark.system.utility.emulation.Emulation;
 
 import java.util.ArrayList;
@@ -58,20 +55,12 @@ public final class SimpleRender implements Render {
     /**
      * Hold the states of the renderer (Set all default states)
      */
-    private final RenderState mStates = new RenderState()
-            .setAlphaToCoverage(RenderState.Flag.DISABLE)
-            .setBlend(RenderState.Blend.NONE)
-            .setColourMask(RenderState.Flag.ENABLE)
-            .setCullFace(RenderState.Cull.BACK)
-            .setScissor(RenderState.Flag.DISABLE)
-            .setDepth(RenderState.Flag.ENABLE)
-            .setDepthMask(RenderState.Flag.ENABLE)
-            .setStencil(RenderState.Flag.DISABLE);
+    private final RenderState mStates = new RenderState();
 
     /**
      * Hold all object(s) acquired (cache).
      */
-    private int mTexture[], mStorage[], mShader, mDescriptor, mFrame;
+    private int mTexture[], mTextureActive, mStorage[], mShader, mDescriptor, mFrame;
 
     /**
      * Hold all object(s) that is being removed.
@@ -79,9 +68,12 @@ public final class SimpleRender implements Render {
     private final Queue<Manageable> mManageable = new LinkedBlockingDeque<>();
 
     /**
+     * Hold all emulated feature(s).
+     */
+    private VertexArrayObjectExtension mVertexArrayObjectExtension;
+
+    /**
      * <p>Handle when the module initialise</p>
-     *
-     * @param gl the render implementation
      */
     public void onModuleCreate(GLES32 gl) {
         this.mGL = gl;
@@ -93,13 +85,30 @@ public final class SimpleRender implements Render {
 
         mTexture = new int[mCapabilities.getInteger(RenderCapabilities.Limit.TEXTURE_STAGE)];
         mStorage = new int[StorageTarget.values().length];
+
+        //!
+        //! Get all emulated feature(s).
+        //!
+        if (hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
+            mVertexArrayObjectExtension = new VertexArrayObjectExtensionCore();
+        } else {
+            mVertexArrayObjectExtension = new VertexArrayObjectExtensionEmulated();
+        }
     }
 
     /**
      * <p>Handle when the module destroy</p>
      */
     public void onModuleDestroy() {
+        //!
+        //! clean-up all object(s).
+        //!
         onModuleUpdate();
+
+        //!
+        //! Remove all reference(s).
+        //!
+        mVertexArrayObjectExtension = null;
     }
 
     /**
@@ -149,9 +158,10 @@ public final class SimpleRender implements Render {
         //!
         final boolean isBlend = RenderState.isFlagEnabled(states.getBlend(), mStates.getBlend());
 
-        if (RenderState.isFlagDirty(states.getBlend(), mStates.getBlend())
-                && onUpdateState(states.getBlend(), mStates.getBlend(), RenderState.Blend.NONE, GLES2.GL_BLEND)) {
-            mGL.glBlendFunc(states.getBlend().eSource, states.getBlend().eDestination);
+        if (RenderState.isFlagDirty(states.getBlend(), mStates.getBlend())) {
+            if (onUpdateState(isBlend, GLES2.GL_BLEND) && states.getBlend() != RenderState.Blend.NONE) {
+                mGL.glBlendFunc(states.getBlend().eSource, states.getBlend().eDestination);
+            }
 
             mStates.setBlend(states.getBlend());
         }
@@ -159,20 +169,56 @@ public final class SimpleRender implements Render {
         //!
         //! BLEND_EQUATION
         //!
-        if (isBlend && states.getBlendEquationColour() != mStates.getBlendEquationColour()
-                || states.getBlendEquationAlpha() != mStates.getBlendEquationAlpha()) {
-            mGL.glBlendEquationSeparate(states.getBlendEquationColour().eValue, states.getBlendEquationAlpha().eValue);
+        if (isBlend
+                && (states.getBlendEquationColour() != mStates.getBlendEquationColour()
+                || states.getBlendEquationAlpha() != mStates.getBlendEquationAlpha())) {
+            mGL.glBlendEquationSeparate(
+                    states.getBlendEquationColour().eValue,
+                    states.getBlendEquationAlpha().eValue);
 
             mStates.setBlendEquation(states.getBlendEquationColour(), states.getBlendEquationAlpha());
         }
 
         //!
+        //! COLOR_MASK
+        //!
+        if (RenderState.isFlagDirty(states.getRedMask(), mStates.getRedMask())
+                || RenderState.isFlagDirty(states.getGreenMask(), mStates.getGreenMask())
+                || RenderState.isFlagDirty(states.getBlueMask(), mStates.getBlueMask())
+                || RenderState.isFlagDirty(states.getAlphaMask(), mStates.getAlphaMask())) {
+
+            final boolean red
+                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+            final boolean green
+                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+            final boolean blue
+                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+            final boolean alpha
+                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+
+            mGL.glColorMask(red, green, blue, alpha);
+
+            final RenderState.Flag fRed = (states.getRedMask() != RenderState.Flag.INHERIT)
+                    ? states.getRedMask() : mStates.getRedMask();
+            final RenderState.Flag fGreen = (states.getGreenMask() != RenderState.Flag.INHERIT)
+                    ? states.getGreenMask() : mStates.getGreenMask();
+            final RenderState.Flag fBlue = (states.getBlueMask() != RenderState.Flag.INHERIT)
+                    ? states.getBlueMask() : mStates.getBlueMask();
+            final RenderState.Flag fAlpha = (states.getAlphaMask() != RenderState.Flag.INHERIT)
+                    ? states.getAlphaMask() : mStates.getAlphaMask();
+            mStates.setColourMask(fRed, fGreen, fBlue, fAlpha);
+        }
+
+        //!
         //! CULL
         //!
-        if (RenderState.isFlagDirty(states.getCullFace(), mStates.getCullFace())) {
-            onUpdateState(states.getCullFace(), mStates.getCullFace(), RenderState.Cull.NONE, GLES2.GL_CULL_FACE);
+        final boolean isCull = RenderState.isFlagEnabled(states.getCullFace(), mStates.getCullFace());
 
-            mStates.setDepth(states.getDepth());
+        if (RenderState.isFlagDirty(states.getCullFace(), mStates.getCullFace())) {
+            if (onUpdateState(isCull, GLES2.GL_CULL_FACE) && states.getCullFace() != RenderState.Cull.NONE) {
+                mGL.glCullFace(states.getCullFace().eValue);
+            }
+            mStates.setCullFace(states.getCullFace());
         }
 
         //!
@@ -213,28 +259,6 @@ public final class SimpleRender implements Render {
             mGL.glDepthRange(range.getX(), range.getY());
 
             mStates.setDepthRange(range);
-        }
-
-        //!
-        //! COLOR_MASK
-        //!
-        if (RenderState.isFlagDirty(states.getRedMask(), mStates.getRedMask())
-                || RenderState.isFlagDirty(states.getGreenMask(), mStates.getGreenMask())
-                || RenderState.isFlagDirty(states.getBlueMask(), mStates.getBlueMask())
-                || RenderState.isFlagDirty(states.getAlphaMask(), mStates.getAlphaMask())) {
-
-            final boolean red
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
-            final boolean green
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
-            final boolean blue
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
-            final boolean alpha
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
-
-            mGL.glColorMask(red, green, blue, alpha);
-
-            //mStates.setColourMask(states) TODO
         }
 
         //!
@@ -305,7 +329,6 @@ public final class SimpleRender implements Render {
                     states.getStencilBackDepthFailOp(),
                     states.getStencilBackDepthPassOp());
         }
-
     }
 
     /**
@@ -355,7 +378,8 @@ public final class SimpleRender implements Render {
         if (stage > mTexture.length) {
             throw new IllegalStateException("Maximum texture stage is " + mTexture.length);
         }
-        return mTexture[stage] == texture.getHandle();
+        return mTexture[stage] ==
+                (texture != null ? texture.getHandle() : Manageable.INVALID_HANDLE);
     }
 
     /**
@@ -371,7 +395,8 @@ public final class SimpleRender implements Render {
      */
     @Override
     public boolean isActive(Shader shader) {
-        return mShader == shader.getHandle();
+        return mShader ==
+                (shader != null ? shader.getHandle() : Manageable.INVALID_HANDLE);
     }
 
     /**
@@ -379,7 +404,8 @@ public final class SimpleRender implements Render {
      */
     @Override
     public boolean isActive(VertexDescriptor descriptor) {
-        return mDescriptor == descriptor.getHandle();
+        return mDescriptor ==
+                (descriptor != null ? descriptor.getHandle() : Manageable.INVALID_HANDLE);
     }
 
     /**
@@ -387,7 +413,8 @@ public final class SimpleRender implements Render {
      */
     @Override
     public boolean isActive(Frame frame) {
-        return mFrame == frame.getHandle();
+        return mFrame ==
+                (frame != null ? frame.getHandle() : Manageable.INVALID_HANDLE);
     }
 
     /**
@@ -438,23 +465,15 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void create(VertexDescriptor descriptor) {
-        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)
-                && descriptor.getHandle() == Manageable.INVALID_HANDLE) {
+        if (descriptor.getHandle() == Manageable.INVALID_HANDLE) {
             //!
             //! Prevent leaking the component if it was created.
             //!
             //! NOTE: Update the component once.
             //!
-            descriptor.setHandle(mGL.glGenVertexArrays());
+            descriptor.setHandle(mVertexArrayObjectExtension.glCreateVertexArray());
 
-            //!
-            //! NOTE: Update the component once.
-            //!
-            descriptor.acquire();
-            {
-                onUpdateDescriptor(descriptor);
-            }
-            descriptor.release();
+            mVertexArrayObjectExtension.glUpdateVertexArray(descriptor);
         }
     }
 
@@ -463,8 +482,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void create(Frame frame) {
-        if (mCapabilities.hasExtension(RenderCapabilities.Extension.FRAME_BUFFER)
-                && frame.getHandle() == Manageable.INVALID_HANDLE) {
+        if (hasExtension(RenderCapabilities.Extension.FRAME_BUFFER) && frame.getHandle() == Manageable.INVALID_HANDLE) {
             //!
             //! Prevent leaking the component if it was created.
             //!
@@ -530,8 +548,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void delete(VertexDescriptor descriptor) {
-        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)
-                || descriptor.getHandle() == Manageable.INVALID_HANDLE) {
+        if (descriptor.getHandle() == Manageable.INVALID_HANDLE) {
             return;
         } else {
             //!
@@ -539,7 +556,7 @@ public final class SimpleRender implements Render {
             //!
             release(descriptor);
         }
-        mGL.glDeleteVertexArrays(descriptor.setHandle(Manageable.INVALID_HANDLE));
+        mVertexArrayObjectExtension.glDeleteVertexArray(descriptor);
     }
 
     /**
@@ -547,8 +564,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void delete(Frame frame) {
-        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.FRAME_BUFFER)
-                || frame.getHandle() == Manageable.INVALID_HANDLE) {
+        if (frame.getHandle() == Manageable.INVALID_HANDLE) {
             return;
         } else {
             //!
@@ -562,6 +578,9 @@ public final class SimpleRender implements Render {
         //!
         Emulation.forEach(frame.getAttachment(), (name, attachment) -> onDeleteFrameTarget(frame, attachment));
 
+        //!
+        //! Delete all frame-buffer.
+        //!
         mGL.glDeleteFramebuffers(frame.setHandle(Manageable.INVALID_HANDLE));
     }
 
@@ -581,11 +600,15 @@ public final class SimpleRender implements Render {
         if (stage > mTexture.length) {
             throw new IllegalStateException("Maximum texture stage is " + mTexture.length);
         }
-        if (!isActive(texture, stage)) {
+        if (!isActive(texture, stage) && texture.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
-            mGL.glActiveTexture(GLES2.GL_TEXTURE0 + stage);
+            if (mTextureActive != stage) {
+                mGL.glActiveTexture(GLES2.GL_TEXTURE0 + stage);
+
+                mTextureActive = stage;
+            }
             mGL.glBindTexture(texture.getType().eValue, mTexture[stage] = texture.getHandle());
         }
     }
@@ -595,7 +618,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void acquire(Storage<?> storage) {
-        if (!isActive(storage)) {
+        if (!isActive(storage) && storage.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
@@ -608,7 +631,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void acquire(Shader shader) {
-        if (!isActive(shader)) {
+        if (!isActive(shader) && shader.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
@@ -621,16 +644,11 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void acquire(VertexDescriptor descriptor) {
-        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
-            //!
-            //! NOTE: When is not available fallback to legacy.
-            //!
-            onUpdateDescriptor(descriptor);
-        } else if (!isActive(descriptor)) {
+        if (!isActive(descriptor)) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
-            mGL.glBindVertexArray(mDescriptor = descriptor.getHandle());
+            mVertexArrayObjectExtension.glBindVertexArray(descriptor);
         }
     }
 
@@ -639,7 +657,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void acquire(Frame frame) {
-        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT) && !isActive(frame)) {
+        if (!isActive(frame) && frame.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent acquiring the component if isn't needed.
             //!
@@ -658,27 +676,26 @@ public final class SimpleRender implements Render {
             //!
             switch (texture.getType()) {
                 case TEXTURE_2D:
-                    final Texture2D texture2D = (Texture2D) texture;
+                    final Texture2D tex2D = (Texture2D) texture;
 
-                    onUpdateTextureBorder(texture,
-                            texture2D.getBorderX(),
-                            texture2D.getBorderY());
+                    onUpdateTextureBorder(texture, tex2D.getBorderX(), tex2D.getBorderY());
                     break;
                 case TEXTURE_3D:
-                    final Texture3D texture3D = (Texture3D) texture;
+                    final Texture3D tex3D = (Texture3D) texture;
 
-                    onUpdateTextureBorder(texture,
-                            texture3D.getBorderX(),
-                            texture3D.getBorderY(),
-                            texture3D.getBorderZ());
+                    onUpdateTextureBorder(texture, tex3D.getBorderX(), tex3D.getBorderY(), tex3D.getBorderZ());
                     break;
                 case TEXTURE_CUBE:
-                    final Texture2DCube texture2DCube = (Texture2DCube) texture;
+                    final Texture2DCube tex2DCube = (Texture2DCube) texture;
 
-                    onUpdateTextureBorder(texture,
-                            texture2DCube.getBorderX(),
-                            texture2DCube.getBorderY(),
-                            texture2DCube.getBorderZ());
+                    if (hasExtension(RenderCapabilities.Extension.TEXTURE_3D)) {
+                        //!
+                        //! Requires TEXTURE_3D extension.
+                        //!
+                        onUpdateTextureBorder(texture, tex2DCube.getBorderX(), tex2DCube.getBorderY(), tex2DCube.getBorderZ());
+                    } else {
+                        onUpdateTextureBorder(texture, tex2DCube.getBorderX(), tex2DCube.getBorderY());
+                    }
                     break;
             }
 
@@ -705,25 +722,40 @@ public final class SimpleRender implements Render {
     @Override
     public void update(Storage<?> storage) {
         if (storage.hasUpdate(Storage.CONCEPT_DATA)) {
+            //!
+            //! Update the storage for the first time.
+            //!
+            switch (storage.getType()) {
+                case CLIENT:
+                    onUpdateStorage(storage);
 
-            if (storage.getType() == StorageType.CLIENT) {
-                //!
-                //! Client-side storage.
-                //!
-                mGL.glBufferData(storage.getTarget().eValue, storage.map(), storage.getMode().eValue);
-            } else {
-                //!
-                //! Server-side storage.
-                //!
-                mGL.glBufferData(storage.getTarget().eValue, storage.getCapacity(), storage.getMode().eValue);
+                    break;
+                case SERVER:
+                    onUpdateStorage(storage);
+
+                    //!
+                    //! Manually remove the memory from the cpu-side.
+                    //!
+                    storage.deleteAllMemory();
+                    break;
+                case SERVER_MAPPED:
+                    mGL.glBufferData(storage.getTarget().eValue, storage.getCapacity(), storage.getMode().eValue);
+
+                    break;
             }
             storage.setUpdated();
         } else if (storage.hasUpdate(Storage.CONCEPT_DATA_CHANGE)) {
             //!
-            //! Update the storage.
+            //! Update the storage (requires to have been updated for the first time).
             //!
-            mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.map());
+            switch (storage.getType()) {
+                case CLIENT:
+                    onUpdateStorageAgain(storage);
 
+                    break;
+                case SERVER:
+                    onUpdateStorageAgain(storage);
+            }
             storage.setUpdated();
         }
     }
@@ -841,11 +873,15 @@ public final class SimpleRender implements Render {
         if (stage > mTexture.length) {
             throw new IllegalStateException("Maximum texture stage is " + mTexture.length);
         }
-        if (isActive(texture, stage)) {
+        if (isActive(texture, stage) && texture.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent releasing the component if not acquired.
             //!
-            mGL.glActiveTexture(GLES2.GL_TEXTURE0 + stage);
+            if (mTextureActive != stage) {
+                mGL.glActiveTexture(GLES2.GL_TEXTURE0 + stage);
+
+                mTextureActive = stage;
+            }
             mGL.glBindTexture(texture.getType().eValue, mTexture[stage] = Manageable.INVALID_HANDLE);
         }
     }
@@ -855,11 +891,12 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void release(Storage<?> storage) {
-        if (isActive(storage)) {
+        if (isActive(storage) && storage.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent releasing the component if not acquired.
             //!
-            mGL.glBindBuffer(storage.getTarget().eValue, mStorage[storage.getTarget().ordinal()] = Manageable.INVALID_HANDLE);
+            mGL.glBindBuffer(storage.getTarget().eValue,
+                    mStorage[storage.getTarget().ordinal()] = Manageable.INVALID_HANDLE);
         }
     }
 
@@ -868,7 +905,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void release(Shader shader) {
-        if (isActive(shader)) {
+        if (isActive(shader) && shader.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent releasing the component if not acquired.
             //!
@@ -881,11 +918,11 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void release(VertexDescriptor descriptor) {
-        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT) && isActive(descriptor)) {
+        if (isActive(descriptor)) {
             //!
-            //! Prevent releasing the component if not acquired.
+            //! Prevent acquiring the component if isn't needed.
             //!
-            mGL.glBindVertexArray(mDescriptor = Manageable.INVALID_HANDLE);
+            mVertexArrayObjectExtension.glUnbindVertexArray(descriptor);
         }
     }
 
@@ -894,7 +931,7 @@ public final class SimpleRender implements Render {
      */
     @Override
     public void release(Frame frame) {
-        if (isActive(frame)) {
+        if (isActive(frame) && frame.getHandle() != Manageable.INVALID_HANDLE) {
             //!
             //! Prevent releasing the component if not acquired.
             //!
@@ -922,7 +959,7 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array> T map(Storage<T> storage) {
+    public <T extends Array<?>> T map(Storage<T> storage) {
         final int flag = (storage.getMode().eReadable ? GLES2.GL_MAP_READ_BIT : GLES2.GL_MAP_WRITE_BIT);
         return (T) mGL.glMapBuffer(storage.getTarget().eValue, flag);
     }
@@ -931,7 +968,7 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array> T map(Storage<T> storage, int access) {
+    public <T extends Array<?>> T map(Storage<T> storage, int access) {
         return map(storage, access, 0, 0);
     }
 
@@ -939,7 +976,7 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array> T map(Storage<T> storage, int offset, int length) {
+    public <T extends Array<?>> T map(Storage<T> storage, int offset, int length) {
         return map(storage, 0, offset, length);
     }
 
@@ -947,8 +984,9 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array> T map(Storage<T> storage, int access, int offset, int length) {
-        final int flag = (storage.getMode().eReadable ? GLES2.GL_MAP_READ_BIT : GLES2.GL_MAP_WRITE_BIT) | access;
+    public <T extends Array<?>> T map(Storage<T> storage, int access, int offset, int length) {
+        final int flag
+                = (storage.getMode().eReadable ? GLES2.GL_MAP_READ_BIT : GLES2.GL_MAP_WRITE_BIT) | access;
         return (T) mGL.glMapBufferRange(storage.getTarget().eValue, offset, length, flag);
     }
 
@@ -956,46 +994,60 @@ public final class SimpleRender implements Render {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array> void unmap(Storage<T> storage) {
+    public <T extends Array<?>> void unmap(Storage<T> storage) {
         mGL.glUnmapBuffer(storage.getTarget().eValue);
     }
 
     /**
-     * <p>Handle update {@link TextureBorder} inside a {@link Texture}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update{@link RenderState.Flag}</p>
      */
-    private void onUpdateTextureBorder(Texture texture, TextureBorder xBorder, TextureBorder yBorder) {
+    private boolean onUpdateState(RenderState.Flag flag, int state) {
+        if (flag == RenderState.Flag.ENABLE) {
+            mGL.glEnable(state);
+        } else if (flag == RenderState.Flag.DISABLE) {
+            mGL.glDisable(state);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * <p>Update{@link RenderState.Flag}</p>
+     */
+    private boolean onUpdateState(boolean flag, int state) {
+        return onUpdateState(flag ? RenderState.Flag.ENABLE : RenderState.Flag.DISABLE, state);
+    }
+
+    /**
+     * <p>Update {@link TextureBorder} with two coordinates</p>
+     */
+    private void onUpdateTextureBorder(Texture texture, TextureBorder x, TextureBorder y) {
         if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
-            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_S, xBorder.eValue);
+            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_S, x.eValue);
         }
         if (texture.hasUpdate(Texture.CONCEPT_CLAMP_Y)) {
-            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_T, yBorder.eValue);
+            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_T, y.eValue);
         }
     }
 
     /**
-     * <p>Handle update {@link TextureBorder} inside a {@link Texture}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link TextureBorder} with three coordinates</p>
      */
-    private void onUpdateTextureBorder(Texture texture, TextureBorder xBorder, TextureBorder yBorder,
-            TextureBorder zBorder) {
+    private void onUpdateTextureBorder(Texture texture, TextureBorder x, TextureBorder y, TextureBorder z) {
         if (texture.hasUpdate(Texture.CONCEPT_CLAMP_X)) {
-            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_S, xBorder.eValue);
+            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_S, x.eValue);
         }
         if (texture.hasUpdate(Texture.CONCEPT_CLAMP_Y)) {
-            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_T, yBorder.eValue);
+            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_T, y.eValue);
         }
         if (texture.hasUpdate(Texture.CONCEPT_CLAMP_Z)) {
-            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_R, zBorder.eValue);
+            mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_WRAP_R, z.eValue);
         }
     }
 
     /**
-     * <p>Handle update {@link TextureFilter} inside a {@link Texture}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link TextureFilter}</p>
      */
     private void onUpdateTextureFilter(Texture texture, TextureFilter filter) {
         //!
@@ -1007,13 +1059,12 @@ public final class SimpleRender implements Render {
             mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_MIN_FILTER, filter.eMinFilterWithMipmap);
             mGL.glTexParameter(texture.getType().eValue, GLES2.GL_TEXTURE_MAG_FILTER, filter.eMagFilter);
 
-            if (mCapabilities.hasExtension(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC)) {
+            if (hasExtension(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC)) {
                 //!
-                //! Handle TEXTURE_ANISOTROPIC extension.
+                //! [EXT: TEXTURE_FILTER_ANISOTROPIC]
                 //!
                 final float anisotropic = Math.min(
                         mCapabilities.getFloat(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC), filter.eAnisotropicLevel);
-
                 mGL.glTexParameter(texture.getType().eValue, GLESExtension.GL_TEXTURE_MAX_ANISOTROPY, anisotropic);
             }
         } else {
@@ -1023,11 +1074,9 @@ public final class SimpleRender implements Render {
     }
 
     /**
-     * <p>Handle update {@link Image} inside a {@link Texture}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Image}</p>
      */
-    private void onUpdateTextureImage(Texture texture, Image image) {
+    private void onUpdateTextureImage(Texture texture, Image image) {   /* TODO: Improve this function */
         final List<Image.Layer> layers = image.getLayer();
 
         //!
@@ -1039,7 +1088,7 @@ public final class SimpleRender implements Render {
             //!
             //! Iterate over all mipmap(s) in the layer.
             //!
-            for (int mipmap = 0; mipmap < imageLayer.images.length; ++mipmap) {
+            for (int mipmap = 0; mipmap < imageLayer.images.length; mipmap++) {
                 //!
                 //! Handle each mip-map
                 //!
@@ -1130,7 +1179,7 @@ public final class SimpleRender implements Render {
                 //! Change the position of the buffer.
                 //!
                 if (imageLayer.data != null) {
-                    imageLayer.data.position(imageLayer.data.position() + imageLayer.images[mipmap]);
+                    imageLayer.data.position(imageLayer.data.limit());
                 }
             }
 
@@ -1140,141 +1189,80 @@ public final class SimpleRender implements Render {
             if (imageLayer.mipmap && imageLayer.images.length <= 1) {
                 mGL.glGenerateMipmap(texture.getType().eValue);
             }
+
+            //!
+            //! Delete the image from memory.
+            //!
+            imageLayer.delete();
         }
     }
 
     /**
-     * <p>Handle update {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Storage}</p>
      */
-    private void onUpdateFrame(Frame frame) {
-        //!
-        //! To create teh frame, it requires to be acquired.
-        //!
-        frame.acquire();
-        {
-            Emulation.forEach(frame.getAttachment(),
-                    (name, attachment) -> onUpdateFrameTarget(frame, name, attachment));
-        }
-        frame.release();
-    }
-
-    /**
-     * <p>Handle update {@link Frame.Target} inside a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.Target target) {
-        if (target.isTexture()) {
-            onUpdateFrameTarget(frame, attachment, (Frame.TextureTarget) target);
-        } else {
-            onUpdateFrameTarget(frame, attachment, (Frame.RenderTarget) target);
-        }
-    }
-
-    /**
-     * <p>Handle update {@link Frame.TextureTarget} inside a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.TextureTarget target) {
-        final Texture texture = target.texture;
-
-        //!
-        //! Perform - if the texture isn't created, isn't acquired and isn't updated.
-        //!
-        texture.create();
-        texture.acquire();
-        texture.update();
-
-        //!
-        //! Attach the texture into the frame buffer.
-        //!
-        switch (texture.getType()) {
-            case TEXTURE_2D:
-                mGL.glFramebufferTexture2D(
-                        GLES2.GL_FRAMEBUFFER, attachment.eValue, texture.getType().eValue, texture.getHandle(), 0);
+    private void onUpdateStorage(Storage storage) {
+        switch (storage.getFormat()) {
+            case BYTE:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<Int8Array>map(), storage.getMode().eValue);
                 break;
-            case TEXTURE_3D:
-                throw new UnsupportedOperationException("Frame as Texture3D is not supported yet.");
-            case TEXTURE_CUBE:
-                throw new UnsupportedOperationException("Frame as Texture2DCube is not supported yet.");
+            case UNSIGNED_BYTE:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt8Array>map(), storage.getMode().eValue);
+                break;
+            case SHORT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<Int16Array>map(), storage.getMode().eValue);
+                break;
+            case UNSIGNED_SHORT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt16Array>map(), storage.getMode().eValue);
+                break;
+            case INT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<Int32Array>map(), storage.getMode().eValue);
+                break;
+            case UNSIGNED_INT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<UInt32Array>map(), storage.getMode().eValue);
+                break;
+            case HALF_FLOAT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<Float16Array>map(), storage.getMode().eValue);
+                break;
+            case FLOAT:
+                mGL.glBufferData(storage.getTarget().eValue, storage.<Float32Array>map(), storage.getMode().eValue);
+                break;
         }
     }
 
     /**
-     * <p>Handle update {@link Frame.RenderTarget} inside a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Storage}</p>
      */
-    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.RenderTarget target) {
-        //!
-        //! Generates the render buffer name.
-        //!
-        target.setHandle(mGL.glGenRenderbuffers());
-
-        //!
-        //! Update the render buffer.
-        //!
-        mGL.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, target.getHandle());
-
-        if (frame.getSamples() > 1
-                && mCapabilities.hasExtension(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE)) {
-            final int samples = Math.min(
-                    frame.getSamples(), mCapabilities.getInteger(RenderCapabilities.Limit.FRAME_SAMPLE));
-
-            mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, target.format.eValue,
-                    frame.getWidth(),
-                    frame.getHeight());
-        } else {
-            mGL.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, target.format.eValue,
-                    frame.getWidth(),
-                    frame.getHeight());
+    private void onUpdateStorageAgain(Storage storage) { // TODO: Allow offset specification
+        switch (storage.getFormat()) {
+            case BYTE:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int8Array>map());
+                break;
+            case UNSIGNED_BYTE:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt8Array>map());
+                break;
+            case SHORT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int16Array>map());
+                break;
+            case UNSIGNED_SHORT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt16Array>map());
+                break;
+            case INT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Int32Array>map());
+                break;
+            case UNSIGNED_INT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<UInt32Array>map());
+                break;
+            case HALF_FLOAT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Float16Array>map());
+                break;
+            case FLOAT:
+                mGL.glBufferSubData(storage.getTarget().eValue, 0, storage.<Float32Array>map());
+                break;
         }
     }
 
     /**
-     * <p>Handle delete {@link Frame.Target} from a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private void onDeleteFrameTarget(Frame frame, Frame.Target target) {
-        if (target.isTexture()) {
-            onDeleteFrameTarget(frame, (Frame.TextureTarget) target);
-        } else {
-            onDeleteFrameTarget(frame, (Frame.RenderTarget) target);
-        }
-    }
-
-    /**
-     * <p>Handle delete {@link Frame.TextureTarget} from a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private void onDeleteFrameTarget(Frame frame, Frame.TextureTarget target) {
-        //!
-        //! Delete the texture
-        //!
-        target.texture.delete();
-    }
-
-    /**
-     * <p>Handle delete {@link Frame.RenderTarget} from a {@link Frame}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private void onDeleteFrameTarget(Frame frame, Frame.RenderTarget target) {
-        //!
-        //! Delete the render buffer
-        //!
-        mGL.glDeleteRenderbuffers(target.setHandle(Manageable.INVALID_HANDLE));
-    }
-
-    /**
-     * <p>Handle update {@link Shader}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Shader}</p>
      */
     private void onUpdateShader(Shader shader) {
         final int handle = shader.getHandle();
@@ -1284,14 +1272,20 @@ public final class SimpleRender implements Render {
         //!
         final List<Integer> stages = new ArrayList<>(shader.getStages().size());
 
-        for (int i = 0, j = shader.getStages().size(); i < j; i++) {
-            stages.add(onUpdateShaderStage(shader, shader.getStages().get(i)));
+        for (final Stage stage : shader.getStages()) {
+            final int id = mGL.glCreateShader(stage.getType().eValue);
+
+            mGL.glShaderSource(id, stage.getSource());
+            mGL.glCompileShader(id);
+            mGL.glAttachShader(shader.getHandle(), id);
+
+            stages.add(id);
         }
 
-        //!
-        //! Bind each attribute (if attribute-layout is not supported).
-        //!
-        if (!mCapabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
+        if (!hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
+            //!
+            //! Bind each attribute (if attribute-layout is not supported).
+            //!
             Emulation.forEach(
                     shader.getAttributes(), (name, attachment) -> onUpdateShaderAttribute(shader, name, attachment));
         }
@@ -1311,7 +1305,9 @@ public final class SimpleRender implements Render {
         //!
         //! Bind each uniform.
         //!
-        Emulation.forEach(shader.getUniforms(), (name, uniform) -> onUpdateShaderUniform(shader, name, uniform));
+        final boolean force = !hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM);
+
+        Emulation.forEach(shader.getUniforms(), (name, uniform) -> onUpdateShaderUniform(shader, name, uniform, force));
 
         //!
         //! Dispose all intermediary shader compiled.
@@ -1320,24 +1316,7 @@ public final class SimpleRender implements Render {
     }
 
     /**
-     * <p>Handle update {@link Stage} inside a {@link Shader}</p>
-     *
-     * @implNote [INTERNAL]
-     */
-    private int onUpdateShaderStage(Shader shader, Stage stage) {
-        final int id = mGL.glCreateShader(stage.getType().eValue);
-
-        mGL.glShaderSource(id, stage.getSource());
-        mGL.glCompileShader(id);
-        mGL.glAttachShader(shader.getHandle(), id);
-
-        return id;
-    }
-
-    /**
-     * <p>Handle update {@link Attribute} inside a {@link Shader}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Attribute}</p>
      */
     private void onUpdateShaderAttribute(Shader shader, String name, Attribute attribute) {
         if (attribute.isInput()) {
@@ -1348,31 +1327,27 @@ public final class SimpleRender implements Render {
     }
 
     /**
-     * <p>Handle update {@link Uniform} inside a {@link Shader}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Uniform}</p>
      */
-    private void onUpdateShaderUniform(Shader shader, String name, Uniform uniform) {
-        if (uniform.getHandle() == Manageable.INVALID_HANDLE) {
+    private void onUpdateShaderUniform(Shader shader, String name, Uniform uniform, boolean force) {
+        if (force || uniform.getHandle() == Manageable.INVALID_HANDLE) {
             uniform.setHandle(mGL.glGetUniformLocation(shader.getHandle(), name));
         }
     }
 
     /**
-     * <p>Handle update {@link VertexDescriptor}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link VertexDescriptor}</p>
      */
     private void onUpdateDescriptor(VertexDescriptor descriptor) {
         //!
-        //! Bind all attribute(s) of the storage(s)
+        //! Bind all storage that contain(s) attribute(s).
         //!
         if (descriptor.hasVertices()) {
             Emulation.forEach(descriptor.getVertices(), this::onUpdateDescriptorVertices);
         }
 
         //!
-        //! Bind indices storage.
+        //!  Bind storage that contain(s) indices.
         //!
         if (descriptor.hasIndices()) {
             onUpdateDescriptorIndices(descriptor.getIndices());
@@ -1380,9 +1355,7 @@ public final class SimpleRender implements Render {
     }
 
     /**
-     * <p>Handle update {@link FactoryElementStorage} inside a {@link VertexDescriptor}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link FactoryElementStorage} in {@link VertexDescriptor}</p>
      */
     private void onUpdateDescriptorIndices(FactoryElementStorage<?> indices) {
         indices.create();
@@ -1391,7 +1364,8 @@ public final class SimpleRender implements Render {
             //!
             //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
             //!
-            mGL.glBindBuffer(StorageTarget.ELEMENT.eValue, indices.getHandle());
+            mGL.glBindBuffer(
+                    StorageTarget.ELEMENT.eValue, mStorage[StorageTarget.ELEMENT.ordinal()] = indices.getHandle());
         } else {
             //!
             //! NOTE: Update it normally if fallback to legacy
@@ -1400,36 +1374,41 @@ public final class SimpleRender implements Render {
         }
 
         //!
-        //! Trigger an update if isn't updated.
+        //! Force an update on the indices.
         //!
         indices.update();
     }
 
     /**
-     * <p>Handle update {@link FactoryArrayStorage} inside a {@link VertexDescriptor}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link FactoryArrayStorage} in {@link VertexDescriptor}</p>
      */
     private void onUpdateDescriptorVertices(FactoryArrayStorage<?> vertices) {
         vertices.create();
-        vertices.acquire();
 
-        //!
-        //! Trigger an update if isn't updated.
-        //!
-        vertices.update();
 
-        //!
-        //! Bind each attribute of the buffer.
-        //!
+        if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
+            //!
+            //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
+            //!
+            mGL.glBindBuffer(
+                    StorageTarget.ARRAY.eValue, mStorage[StorageTarget.ARRAY.ordinal()] = vertices.getHandle());
+        } else {
+            //!
+            //! NOTE: Update it normally if fallback to legacy
+            //!
+            vertices.acquire();
+        }
         Emulation.forEach(
                 vertices.getAttributes(), (attribute) -> onUpdateDescriptorVertex(vertices, attribute));
+
+        //!
+        //! Force an update on the storage.
+        //!
+        vertices.update();
     }
 
     /**
-     * <p>Handle update {@link Vertex} inside a {@link FactoryArrayStorage}</p>
-     *
-     * @implNote [INTERNAL]
+     * <p>Update {@link Vertex} in {@link VertexDescriptor}</p>
      */
     private void onUpdateDescriptorVertex(FactoryArrayStorage<?> vertices, Vertex vertex) {
         mGL.glEnableVertexAttribArray(vertex.getID());
@@ -1442,31 +1421,236 @@ public final class SimpleRender implements Render {
                 vertex.getOffset());
     }
 
+
     /**
-     * <p>Handle update {@link RenderState.Flag}</p>
+     * <p>Update {@link Frame}</p>
      */
-    private boolean onUpdateState(RenderState.Flag flag, int state) {
-        if (flag == RenderState.Flag.ENABLE) {
-            mGL.glEnable(state);
-        } else if (flag == RenderState.Flag.DISABLE) {
-            mGL.glDisable(state);
-        } else {
-            return false;
+    private void onUpdateFrame(Frame frame) {
+        frame.acquire();
+        {
+            Emulation.forEach(frame.getAttachment(), (name, attachment) -> onUpdateFrameTarget(frame, name, attachment));
         }
-        return true;
+        frame.release();
     }
 
     /**
-     * <p>Handle update {@link RenderState.Flag}</p>
+     * <p>Update {@link Frame.Target}</p>
      */
-    private boolean onUpdateState(Object source, Object destination, Object none, int state) {
-        final boolean isEnabled = (source != none);
-
-        if (!isEnabled) {
-            mGL.glDisable(state);
-        } else if (destination == none) {
-            mGL.glEnable(state);
+    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.Target target) {
+        if (target.isTexture()) {
+            onUpdateFrameTarget(frame, attachment, (Frame.TextureTarget) target);
+        } else {
+            onUpdateFrameTarget(frame, attachment, (Frame.RenderTarget) target);
         }
-        return (isEnabled);
+    }
+
+    /**
+     * <p>Update {@link Frame.TextureTarget}</p>
+     */
+    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.TextureTarget target) {
+        final Texture texture = target.texture;
+
+        //!
+        //! Create the texture (if not created)
+        //!
+        texture.create();
+
+        //!
+        //! Acquire the texture (if not acquired)
+        //!
+        texture.acquire();
+
+        //!
+        //! Update the texture (if not updated)
+        //!
+        texture.update();
+
+        //!
+        //! Attach the texture into the frame buffer.
+        //!
+        switch (texture.getType()) {
+            case TEXTURE_2D:
+                mGL.glFramebufferTexture2D(
+                        GLES2.GL_FRAMEBUFFER, attachment.eValue, texture.getType().eValue, texture.getHandle(), 0);
+                break;
+            default:
+                throw new IllegalArgumentException("Currently TEXTURE_2D is supported");
+        }
+    }
+
+    /**
+     * <p>Update {@link Frame.RenderTarget}</p>
+     */
+    private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.RenderTarget target) {
+        //!
+        //! Create the render buffer.
+        //!
+        target.setHandle(mGL.glGenRenderbuffers());
+
+        //!
+        //! Acquire the render buffer.
+        //!
+        mGL.glBindRenderbuffer(GLES2.GL_RENDERBUFFER, target.getHandle());
+
+        final int samples = Math.min(
+                frame.getSamples(), mCapabilities.getInteger(RenderCapabilities.Limit.FRAME_SAMPLE));
+
+        if (hasExtension(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE) && frame.getSamples() > 1) {
+            //!
+            //! Requires FRAME_BUFFER_MULTIPLE_SAMPLE extension.
+            //!
+            mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, target.format.eValue,
+                    frame.getWidth(),
+                    frame.getHeight());
+        } else {
+            mGL.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, target.format.eValue, frame.getWidth(), frame.getHeight());
+        }
+    }
+
+    /**
+     * <p>Delete {@link Frame.Target}</p>
+     */
+    private void onDeleteFrameTarget(Frame frame, Frame.Target target) {
+        if (target.isTexture()) {
+            onDeleteFrameTarget(frame, (Frame.TextureTarget) target);
+        } else {
+            onDeleteFrameTarget(frame, (Frame.RenderTarget) target);
+        }
+    }
+
+    /**
+     * <p>Delete {@link Frame.TextureTarget}</p>
+     */
+    private void onDeleteFrameTarget(Frame frame, Frame.TextureTarget target) {
+        target.texture.delete();
+    }
+
+    /**
+     * <p>Delete {@link Frame.RenderTarget}</p>
+     */
+    private void onDeleteFrameTarget(Frame frame, Frame.RenderTarget target) {
+        mGL.glDeleteRenderbuffers(target.setHandle(Manageable.INVALID_HANDLE));
+    }
+
+    /**
+     * <p>Short-hand method to check for extension</p>
+     */
+    private boolean hasExtension(RenderCapabilities.Extension extension) {
+        return mCapabilities.hasExtension(extension);
+    }
+
+    /**
+     * Encapsulate an interface for (VAO) on non supported platform(s).
+     */
+    private interface VertexArrayObjectExtension {
+        int glCreateVertexArray();
+
+        void glDeleteVertexArray(VertexDescriptor name);
+
+        void glBindVertexArray(VertexDescriptor name);
+
+        void glUnbindVertexArray(VertexDescriptor name);
+
+        void glUpdateVertexArray(VertexDescriptor name);
+    }
+
+    /**
+     * Specialised implementation of {@link VertexArrayObjectExtension} for emulated extension.
+     */
+    private final class VertexArrayObjectExtensionEmulated implements VertexArrayObjectExtension {
+        private int mFactory = 0;
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int glCreateVertexArray() {
+            return ++mFactory;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glDeleteVertexArray(VertexDescriptor name) {
+            name.setHandle(Manageable.INVALID_HANDLE);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glBindVertexArray(VertexDescriptor name) {
+            mDescriptor = name.getHandle();
+
+            //!
+            //! Update the descriptor once it has been acquired.
+            //!
+            onUpdateDescriptor(name);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUnbindVertexArray(VertexDescriptor name) {
+            mDescriptor = Manageable.INVALID_HANDLE;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUpdateVertexArray(VertexDescriptor name) {
+        }
+    }
+
+    /**
+     * Specialised implementation of {@link VertexArrayObjectExtension} for core extension.
+     */
+    private final class VertexArrayObjectExtensionCore implements VertexArrayObjectExtension {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int glCreateVertexArray() {
+            return mGL.glGenVertexArrays();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glDeleteVertexArray(VertexDescriptor name) {
+            mGL.glDeleteVertexArrays(name.setHandle(Manageable.INVALID_HANDLE));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glBindVertexArray(VertexDescriptor name) {
+            mGL.glBindVertexArray(mDescriptor = name.getHandle());
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUnbindVertexArray(VertexDescriptor name) {
+            mGL.glBindVertexArray(mDescriptor = Manageable.INVALID_HANDLE);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUpdateVertexArray(VertexDescriptor name) {
+            acquire(name);
+            {
+                onUpdateDescriptor(name);
+            }
+            release(name);
+        }
     }
 }

@@ -20,6 +20,7 @@ package org.quark.audio.factory;
 import org.quark.audio.Audio;
 import org.quark.audio.AudioFormat;
 import org.quark.system.utility.Disposable;
+import org.quark.system.utility.Manageable;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import static org.quark.Quark.QKAudio;
  * Specialised implementation for {@link Audio} that are being stream.
  */
 public final class FactoryStreamingAudio extends Audio {
-    private final InputStream mData;
+    private InputStream mData;
 
     /**
      * <p>Constructor</p>
@@ -88,6 +89,26 @@ public final class FactoryStreamingAudio extends Audio {
     @Override
     public boolean isStreaming() {
         return true;
+    }
+
+    /**
+     * @see Manageable#delete()
+     */
+    @Override
+    public void delete() {
+        super.delete();
+
+        QKAudio.delete(this);
+    }
+
+    /**
+     * @see Manageable#deleteAllMemory()
+     */
+    @Override
+    public void deleteAllMemory() {
+        close();
+
+        mData = null;
     }
 
     /**

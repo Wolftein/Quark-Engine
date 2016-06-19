@@ -30,7 +30,7 @@ import static org.quark.Quark.QKRender;
  * <p>
  * These can be used to store vertex data, pixel data retrieved from images or the frame-buffer.
  */
-public class Storage<A extends Array> extends Manageable implements Disposable {
+public class Storage<A extends Array<?>> extends Manageable implements Disposable {
     public final static int CONCEPT_DATA = (1 << 0);
     public final static int CONCEPT_DATA_CHANGE = (1 << 1);
 
@@ -75,18 +75,22 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
         mMode = mode;
         mFormat = format;
         mCapacity = format.eLength * capacity;
-        mFactory = (type == StorageType.CLIENT) ? new BufferClientFactory() : new BufferServerFactory();
+
+        switch (type) {
+            case CLIENT:
+                mFactory = new BufferClientFactory();
+                break;
+            case SERVER:
+                mFactory = new BufferServerFactory();
+                break;
+            case SERVER_MAPPED:
+                mFactory = new BufferServerMappedFactory();
+                break;
+            default:
+                throw new IllegalArgumentException("Storage type not supported.");
+        }
 
         setUpdate(CONCEPT_DATA);
-    }
-
-    /**
-     * <p>Get the type of the storage</p>
-     *
-     * @return the type of the storage
-     */
-    public final StorageType getType() {
-        return mType;
     }
 
     /**
@@ -96,6 +100,15 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
      */
     public final StorageTarget getTarget() {
         return mTarget;
+    }
+
+    /**
+     * <p>Get the type of the storage</p>
+     *
+     * @return the type of the storage
+     */
+    public final StorageType getType() {
+        return mType;
     }
 
     /**
@@ -138,6 +151,14 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
     @Override
     public final void delete() {
         QKRender.delete(this);
+    }
+
+    /**
+     * @see Manageable#delete()
+     */
+    @Override
+    public final void deleteAllMemory() {
+        mFactory.dispose();
     }
 
     /**
@@ -208,13 +229,15 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
         A map(Render gl, int access, int offset, int length);
 
         void unmap(Render gl);
+
+        void dispose();
     }
 
     /**
      * <code>Factory</code> implementation for {@link StorageType#CLIENT}
      */
     private final class BufferClientFactory implements Factory<A> {
-        private final A mData;
+        private A mData;
 
         /**
          * <p>Constructor</p>
@@ -244,10 +267,15 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
          */
         @Override
         public A map(Render gl, int access, int offset, int length) {
+            if ((access & ACCESS_INVALIDATE_ALL) != 0) {
+                //!
+                //! Emulate ACCESS_INVALIDATE_ALL
+                //!
+                mData.clear();
+            }
+
             //!
-            //! Only support offset and length (in the client-side) due to some limitation
-            //!
-            //! Missing: INVALIDATE, INVALIDATE_ALL requires mem-set which requires JNI.
+            //! Emulate offset and length.
             //!
             mData.position(offset).limit(length);
 
@@ -263,12 +291,95 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
 
             Storage.this.setUpdate(CONCEPT_DATA_CHANGE);
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void dispose() {
+            mData = ArrayFactory.free(mData);
+        }
     }
 
     /**
      * <code>Factory</code> implementation for {@link StorageType#SERVER}
      */
     private final class BufferServerFactory implements Factory<A> {
+        private A mData;
+
+        /**
+         * <p>Constructor</p>
+         */
+        public BufferServerFactory() {
+            mData = create(Storage.this.mCapacity, Storage.this.mFormat);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public A map(Render gl) {
+            return map(gl, 0, 0, mData.capacity());
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public A map(Render gl, int access) {
+            return map(gl, access, 0, mData.capacity());
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public A map(Render gl, int access, int offset, int length) {
+            if (mData == null) {
+                //!
+                //! Create the data (if the data has been disposed).
+                //!
+                mData = create(length, Storage.this.mFormat);
+            }
+
+            if ((access & ACCESS_INVALIDATE_ALL) != 0) {
+                //!
+                //! Emulate ACCESS_INVALIDATE_ALL
+                //!
+                mData.clear();
+            }
+
+            //!
+            //! Emulate offset and length.
+            //!
+            mData.position(offset).limit(length);
+
+            return mData;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void unmap(Render gl) {
+            mData.flip();
+
+            Storage.this.setUpdate(CONCEPT_DATA_CHANGE);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void dispose() {
+            mData = ArrayFactory.free(mData);
+        }
+    }
+
+    /**
+     * <code>Factory</code> implementation for {@link StorageType#SERVER_MAPPED}
+     */
+    private final class BufferServerMappedFactory implements Factory<A> {
         /**
          * {@inheritDoc}
          */
@@ -299,6 +410,13 @@ public class Storage<A extends Array> extends Manageable implements Disposable {
         @Override
         public void unmap(Render gl) {
             gl.unmap(Storage.this);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void dispose() {
         }
     }
 

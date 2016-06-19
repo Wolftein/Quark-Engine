@@ -58,7 +58,7 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
         public int mImageMipmapCount;
         public int mPixelFormatSize;
         public int mPixelFormatFlags;
-        public String mPixelFormatFourCC;
+        public int mPixelFormatFourCC;
         public int mPixelFormatRGBBitCount;
         public int mPixelFormatRBitMask;
         public int mPixelFormatGBitMask;
@@ -155,11 +155,9 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
         header.mPixelFormatFlags = readIntLittleEndian(input);
 
         if ((header.mPixelFormatFlags & DDPF_FOUR_CC) == 0) {
-            header.mPixelFormatFourCC = null;
+            header.mPixelFormatFourCC = -1;
         } else {
-            final byte[] name = new byte[0x04];
-            input.readFully(name);
-            header.mPixelFormatFourCC = new String(name, "US-ASCII");
+            header.mPixelFormatFourCC = input.readInt();
         }
         header.mPixelFormatRGBBitCount = readIntLittleEndian(input);
         header.mPixelFormatRBitMask = readIntLittleEndian(input);
@@ -246,7 +244,8 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
             //! Create the buffer.
             //!
             final Int8Array buffer = ArrayFactory.allocateInt8Array(imageLength);
-            buffer.write(content, 0, imageLength).flip();
+            buffer.write(content, 0, imageLength);
+            buffer.flip();
 
             //!
             //! Create the layer.
@@ -270,7 +269,7 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
      * @throws IOException indicates if the format is unsupported
      */
     private ImageFormat getFormat(ImageHeader header) throws IOException {
-        return header.mPixelFormatFourCC == null ? getUncompressedFormat(header) : getCompressedFormat(header);
+        return header.mPixelFormatFourCC == -1 ? getUncompressedFormat(header) : getCompressedFormat(header);
     }
 
     /**
@@ -302,13 +301,13 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
      */
     private ImageFormat getCompressedFormat(ImageHeader header) throws IOException {
         switch (header.mPixelFormatFourCC) {
-            case "DXT1":
+            case 0x44585431:
                 return (header.mPixelFormatFlags & DDPF_ALPHA_PIXELS) == 0
                         ? ImageFormat.RGB_DXT1
                         : ImageFormat.RGBA_DXT1;
-            case "DXT3":
+            case 0x44585433:
                 return ImageFormat.RGBA_DXT3;
-            case "DXT5":
+            case 0x44585435:
                 return ImageFormat.RGBA_DXT5;
         }
         throw new IOException(header.mPixelFormatFourCC + " compressed format not supported.");

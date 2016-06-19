@@ -374,7 +374,7 @@ public final class RenderState {
      *
      * @see Blend
      */
-    private Blend mBlend = Blend.NONE;
+    private Blend mBlend = Blend.INHERIT;
 
     /**
      * Specifies the RGB blend equation, how the red, green, and blue components colors are combined.
@@ -400,7 +400,7 @@ public final class RenderState {
      *
      * @see Cull
      */
-    private Cull mCull = Cull.BACK;
+    private Cull mCull = Cull.INHERIT;
 
     /**
      * Specifies whether discard fragments that are outside the scissor rectangle.
@@ -1022,7 +1022,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
      */
     public static boolean isFlagDirty(Flag source, Flag destination) {
-        return !(source == destination || source == Flag.INHERIT);
+        return (source != destination && source != Flag.INHERIT);
     }
 
     /**
@@ -1034,7 +1034,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
      */
     public static boolean isFlagEnabled(Flag source, Flag destination) {
-        return (source == Flag.ENABLE || (source == Flag.INHERIT && destination == Flag.ENABLE));
+        return ((source == Flag.INHERIT && destination != Flag.DISABLE) || source != Flag.DISABLE);
     }
 
     /**
@@ -1058,7 +1058,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
      */
     public static boolean isFlagDirty(Blend source, Blend destination) {
-        return !(source == destination || source == Blend.INHERIT);
+        return (source != destination && source != Blend.INHERIT);
     }
 
     /**
@@ -1070,7 +1070,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
      */
     public static boolean isFlagEnabled(Blend source, Blend destination) {
-        return (source != Blend.NONE || destination != Blend.NONE);
+        return ((source == Blend.INHERIT && destination != Blend.NONE) || source != Blend.NONE);
     }
 
     /**
@@ -1094,7 +1094,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is dirty, <code>false</code> otherwise
      */
     public static boolean isFlagDirty(Cull source, Cull destination) {
-        return !(source == destination || source == Cull.INHERIT);
+        return (source != destination && source != Cull.INHERIT);
     }
 
     /**
@@ -1106,7 +1106,7 @@ public final class RenderState {
      * @return <code>true</code> if the flag is enabled, <code>false</code> otherwise
      */
     public static boolean isFlagEnabled(Cull source, Cull destination) {
-        return (source != Cull.NONE || destination != Cull.NONE);
+        return ((source == Cull.INHERIT && destination != Cull.NONE) || source != Cull.NONE);
     }
 
     /**
@@ -1120,5 +1120,4 @@ public final class RenderState {
     public static boolean isFlagDisabled(Cull source, Cull destination) {
         return (source == Cull.NONE || (source == Cull.INHERIT && destination == Cull.NONE));
     }
-
 }

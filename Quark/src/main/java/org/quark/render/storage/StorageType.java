@@ -22,12 +22,17 @@ package org.quark.render.storage;
  */
 public enum StorageType {
     /**
-     * The buffer of the storage is located in the client-side and never disposed.
+     * The buffer of the storage is located in the client-side (never disposed, until the storage is being removed).
      */
     CLIENT,
 
     /**
+     * The buffer of the storage is located in the server-side (and be disposed once it's uploaded).
+     */
+    SERVER,
+
+    /**
      * The buffer of the storage is located in the server-side (and access though mapping).
      */
-    SERVER
+    SERVER_MAPPED
 }

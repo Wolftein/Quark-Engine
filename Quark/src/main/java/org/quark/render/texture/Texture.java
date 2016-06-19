@@ -21,6 +21,7 @@ import org.quark.render.Render;
 import org.quark.resource.AssetDescriptor;
 import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
+import org.quark.system.utility.emulation.Emulation;
 
 import static org.quark.Quark.QKRender;
 
@@ -112,7 +113,17 @@ public abstract class Texture extends Manageable implements Disposable {
      */
     @Override
     public final void delete() {
+        super.delete();
+
         QKRender.delete(this);
+    }
+
+    /**
+     * @see Manageable#deleteAllMemory()
+     */
+    @Override
+    public final void deleteAllMemory() {
+        Emulation.forEach(mImage.getLayer(), Image.Layer::delete);
     }
 
     /**

@@ -17,6 +17,7 @@
  */
 package org.quark.render.texture;
 
+import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Int8Array;
 
 import java.util.Collections;
@@ -112,8 +113,10 @@ public final class Image {
     public final static class Layer {
         /**
          * Hold the data of the layer (The layer and all mip-map).
+         *
+         * @apiNote [MUTABLE-DISPOSABLE]
          */
-        public final Int8Array data;
+        public Int8Array data;
 
         /**
          * Hold the images of each image in the layer (in bytes, including mip-map).
@@ -141,6 +144,13 @@ public final class Image {
             this.data = data;
             this.images = new int[]{hasData() ? data.capacity() : 0};
             this.mipmap = mipmap;
+        }
+
+        /**
+         * <p>Delete all memory allocated by the layer</p>
+         */
+        public void delete() {
+            data = ArrayFactory.free(data);
         }
 
         /**

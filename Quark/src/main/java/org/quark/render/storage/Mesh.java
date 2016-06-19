@@ -121,7 +121,6 @@ public class Mesh {
         {
             QKRender.draw(primitive, offset, count);
         }
-        mDescriptor.release();
     }
 
     /**
@@ -140,6 +139,5 @@ public class Mesh {
         {
             QKRender.draw(primitive, offset, count, format);
         }
-        mDescriptor.release();
     }
 }

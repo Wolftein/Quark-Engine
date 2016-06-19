@@ -34,6 +34,8 @@ import java.util.Map;
  */
 public class TeaVMOpenGLES30 extends TeaVMOpenGLES20 implements Render.GLES3 {
     private final OES_vertex_array_object mVertexArrayObjectExtension;
+    private final OES_texture_filter_anisotropic mTextureFilterAnisotropic;
+    private final OES_texture_compression_s3tc mTextureCompressionS3TC;
 
     /**
      * Hold all factories for all WebGL component(s).
@@ -55,6 +57,8 @@ public class TeaVMOpenGLES30 extends TeaVMOpenGLES20 implements Render.GLES3 {
         //! Attach the extension(s).
         //!
         mVertexArrayObjectExtension = getExtension(OES_vertex_array_object.NAMES);
+        mTextureFilterAnisotropic = getExtension(OES_texture_filter_anisotropic.NAMES);
+        mTextureCompressionS3TC = getExtension(OES_texture_compression_s3tc.NAMES);
     }
 
     /**
@@ -75,6 +79,7 @@ public class TeaVMOpenGLES30 extends TeaVMOpenGLES20 implements Render.GLES3 {
         extension.put(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT,
                 isExtension(OES_vertex_array_object.NAMES));
 
+        extension.put(RenderCapabilities.Extension.TEXTURE_3D, false);
         extension.put(RenderCapabilities.Extension.TEXTURE_COMPRESSION_S3TC,
                 isExtension(OES_texture_compression_s3tc.NAMES));
         extension.put(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
@@ -137,7 +142,7 @@ public class TeaVMOpenGLES30 extends TeaVMOpenGLES20 implements Render.GLES3 {
     @Override
     public Int8Array glMapBufferRange(int target, int offset, int size, int access) {
         //!
-        //! WebGL doesn't support raw memory.
+        //! NOTE: Javascript doesn't support access to raw memory.
         //!
         return null;
     }

@@ -534,7 +534,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
     @Override
     public void glUnmapBuffer(int target) {
         //!
-        //! WebGL doesn't support raw memory.
+        //! NOTE: Javascript doesn't support access to raw memory.
         //!
     }
 
@@ -544,7 +544,7 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
     @Override
     public Int8Array glMapBuffer(int target, int access) {
         //!
-        //! WebGL doesn't support raw memory.
+        //! NOTE: Javascript doesn't support access to raw memory.
         //!
         return null;
     }
@@ -569,7 +569,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glTexImage2D(int target, int level, int internal, int width, int height, int border, int format, int type, Int8Array data) {
+    public void glTexImage2D(int target, int level, int internal, int width, int height,
+            int border, int format, int type, Int8Array data) {
         mGL.texImage2D(target, level, internal, width, height, border, format, type, data.data());
     }
 
@@ -577,7 +578,8 @@ public class TeaVMOpenGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glCompressedTexImage2D(int target, int level, int internal, int width, int height, int border, Int8Array data) {
+    public void glCompressedTexImage2D(int target, int level, int internal, int width, int height,
+            int border, Int8Array data) {
         mGL.compressedTexImage2D(target, level, internal, width, height, border, data.data());
     }
 
