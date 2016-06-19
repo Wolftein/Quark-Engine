@@ -34,5 +34,10 @@ public enum InputMouseButton {
     /**
      * Represent the middle button of a pointing device.
      */
-    BUTTON_MIDDLE
+    BUTTON_MIDDLE;
+
+    /**
+     * Hold all value(s).
+     */
+    public final static InputMouseButton[] VALUES = InputMouseButton.values();
 }

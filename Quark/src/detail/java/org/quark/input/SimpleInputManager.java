@@ -48,8 +48,8 @@ public final class SimpleInputManager implements InputManager {
 
     private int mCursorX;
     private int mCursorY;
-    private final boolean[] mKey = new boolean[InputKey.values().length];
-    private final boolean[] mButton = new boolean[InputMouseButton.values().length];
+    private final boolean[] mKey = new boolean[InputKey.VALUES.length];
+    private final boolean[] mButton = new boolean[InputMouseButton.VALUES.length];
 
     /**
      * Hold all the event(s) from the device(s) efficiently.
@@ -121,10 +121,10 @@ public final class SimpleInputManager implements InputManager {
             //! KEYBOARD
             //!
             case InputKeyboard.EVENT_KEY_UP:
-                onKeyboardKeyUp(InputKey.values()[event[1]]);
+                onKeyboardKeyUp(InputKey.VALUES[event[1]]);
                 break;
             case InputKeyboard.EVENT_KEY_DOWN:
-                onKeyboardKeyDown(InputKey.values()[event[1]]);
+                onKeyboardKeyDown(InputKey.VALUES[event[1]]);
                 break;
             case InputKeyboard.EVENT_KEY_TYPE:
                 onKeyboardKeyType((char) event[1]);
@@ -137,10 +137,10 @@ public final class SimpleInputManager implements InputManager {
                 onMouseMove(event[1], event[2]);
                 break;
             case InputMouse.EVENT_BUTTON_UP:
-                onMouseButtonUp(InputMouseButton.values()[event[1]]);
+                onMouseButtonUp(InputMouseButton.VALUES[event[1]]);
                 break;
             case InputMouse.EVENT_BUTTON_DOWN:
-                onMouseButtonDown(InputMouseButton.values()[event[1]]);
+                onMouseButtonDown(InputMouseButton.VALUES[event[1]]);
                 break;
             case InputMouse.EVENT_WHEEL:
                 onMouseWheel(event[1]);
@@ -239,10 +239,10 @@ public final class SimpleInputManager implements InputManager {
                 //! KEYBOARD
                 //!
                 case InputKeyboard.EVENT_KEY_UP:
-                    onKeyboardKeyUp(InputKey.values()[mBuffer.read()]);
+                    onKeyboardKeyUp(InputKey.VALUES[mBuffer.read()]);
                     break;
                 case InputKeyboard.EVENT_KEY_DOWN:
-                    onKeyboardKeyDown(InputKey.values()[mBuffer.read()]);
+                    onKeyboardKeyDown(InputKey.VALUES[mBuffer.read()]);
                     break;
                 case InputKeyboard.EVENT_KEY_TYPE:
                     onKeyboardKeyType((char) mBuffer.read());
@@ -255,10 +255,10 @@ public final class SimpleInputManager implements InputManager {
                     onMouseMove(mBuffer.read(), mBuffer.read());
                     break;
                 case InputMouse.EVENT_BUTTON_UP:
-                    onMouseButtonUp(InputMouseButton.values()[mBuffer.read()]);
+                    onMouseButtonUp(InputMouseButton.VALUES[mBuffer.read()]);
                     break;
                 case InputMouse.EVENT_BUTTON_DOWN:
-                    onMouseButtonDown(InputMouseButton.values()[mBuffer.read()]);
+                    onMouseButtonDown(InputMouseButton.VALUES[mBuffer.read()]);
                     break;
                 case InputMouse.EVENT_WHEEL:
                     onMouseWheel(mBuffer.read());

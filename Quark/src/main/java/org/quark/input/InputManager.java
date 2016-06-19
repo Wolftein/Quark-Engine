@@ -70,7 +70,7 @@ public interface InputManager {
      */
     default void invokeKeyType(char key) {
         final int[] event = {
-                InputKeyboard.EVENT_KEY_DOWN, key
+                InputKeyboard.EVENT_KEY_TYPE, key
         };
         invoke(event);
     }

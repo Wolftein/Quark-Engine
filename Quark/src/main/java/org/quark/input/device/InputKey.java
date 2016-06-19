@@ -125,5 +125,10 @@ public enum InputKey {
     KEY_RIGHT_SHIFT,
     KEY_RIGHT_CONTROL,
     KEY_RIGHT_ALT,
-    KEY_RIGHT_SUPER
+    KEY_RIGHT_SUPER;
+
+    /**
+     * Hold all value(s).
+     */
+    public final static InputKey[] VALUES = InputKey.values();
 }
