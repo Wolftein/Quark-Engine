@@ -170,7 +170,7 @@ public final class SimpleAssetManager implements AssetManager {
         //!
         //! Tries to find the asset in the cache
         //!
-        final AssetKey<A, ?> key = (AssetKey<A, ?>) mCache.getOrDefault(filename, null);
+        final AssetKey<A, ?> key = (AssetKey<A, ?>) mCache.get(filename);
         return key != null ? key.getAsset() : null;
     }
 
