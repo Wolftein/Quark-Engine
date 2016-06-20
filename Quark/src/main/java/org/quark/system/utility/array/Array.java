@@ -94,12 +94,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.ByteBuffer#put(byte[], int, int)
      */
-    default A writeInt8(byte[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeInt8(value[i]);
-        }
-        return (A) this;
-    }
+    A writeInt8(byte[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#put(int, byte)
@@ -121,12 +116,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.ShortBuffer#put(short[], int, int)
      */
-    default A writeInt16(short[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeInt16(value[i]);
-        }
-        return (A) this;
-    }
+    A writeInt16(short[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#putShort(int, short)
@@ -148,12 +138,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.IntBuffer#put(int[], int, int)
      */
-    default A writeInt32(int[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeInt32(value[i]);
-        }
-        return (A) this;
-    }
+    A writeInt32(int[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#putInt(int, int)
@@ -175,12 +160,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.LongBuffer#put(long[], int, int)
      */
-    default A writeInt64(long[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeInt64(value[i]);
-        }
-        return (A) this;
-    }
+    A writeInt64(long[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#putLong(int, long)
@@ -202,12 +182,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.FloatBuffer#put(float[], int, int)
      */
-    default A writeFloat32(float[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeFloat32(value[i]);
-        }
-        return (A) this;
-    }
+    A writeFloat32(float[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#putFloat(int, float)
@@ -229,12 +204,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.DoubleBuffer#put(double[], int, int)
      */
-    default A writeFloat64(double[] value, int offset, int count) {
-        for (int i = offset, j = offset + count; i < j; i++) {
-            writeFloat64(value[i]);
-        }
-        return (A) this;
-    }
+    A writeFloat64(double[] value, int offset, int count);
 
     /**
      * @see java.nio.ByteBuffer#putDouble(int, double)

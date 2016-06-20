@@ -23,6 +23,7 @@ import org.teavm.jso.JSMethod;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.JSProperty;
 import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.platform.Platform;
 
 /**
  * <a href="http://teavm.org/">TeaVM</a> implementation for {@link Array}.
@@ -40,7 +41,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      * <p>Constructor</p>
      */
     public TeaVMArray(ArrayBuffer array) {
-        mBuffer = create(array);
+        mBuffer = allocate(array);
 
         mLimit = capacity();
     }
@@ -153,6 +154,18 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
+    public A writeInt8(byte[] value, int offset, int count) {
+        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count);
+
+        mPosition += count;
+
+        return (A) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public A writeInt8(int index, byte value) {
         mBuffer.setInt8(index, value);
         return (A) this;
@@ -166,6 +179,18 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         mBuffer.setInt16(mPosition, value, true);
 
         mPosition += 2;
+
+        return (A) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public A writeInt16(short[] value, int offset, int count) {
+        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 2);
+
+        mPosition += count;
 
         return (A) this;
     }
@@ -195,6 +220,18 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
+    public A writeInt32(int[] value, int offset, int count) {
+        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
+
+        mPosition += count;
+
+        return (A) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public A writeInt32(int index, int value) {
         mBuffer.setInt32(index, value, true);
         return (A) this;
@@ -205,8 +242,15 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt64(long value) {
-        writeFloat64(Double.longBitsToDouble(value));
-        return (A) this;
+        return (A) this;    // NOT_SUPPORTED
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public A writeInt64(long[] value, int offset, int count) {
+        return (A) this;    // NOT_SUPPORTED
     }
 
     /**
@@ -214,8 +258,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt64(int index, long value) {
-        writeFloat64(index, Double.longBitsToDouble(value));
-        return (A) this;
+        return (A) this;    // NOT_SUPPORTED
     }
 
     /**
@@ -226,6 +269,18 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         mBuffer.setFloat32(mPosition, value, true);
 
         mPosition += 4;
+
+        return (A) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public A writeFloat32(float[] value, int offset, int count) {
+        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
+
+        mPosition += count;
 
         return (A) this;
     }
@@ -247,6 +302,18 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         mBuffer.setFloat64(mPosition, value, true);
 
         mPosition += 8;
+
+        return (A) this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public A writeFloat64(double[] value, int offset, int count) {
+        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 8);
+
+        mPosition += count;
 
         return (A) this;
     }
@@ -376,7 +443,27 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
      */
     @JSBody(params = {"buffer"}, script = "return new DataView(buffer)")
-    public static native DataView create(ArrayBuffer buffer);
+    private static native DataView allocate(ArrayBuffer buffer);
+
+    /**
+     * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
+     */
+    @JSBody(params = {"dst", "offset", "src", "from", "length"},
+            script = "var array1 = new Uint8Array(dst, offset, length);" +
+                    "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
+    public static native void copy(JSObject dst, int offset, JSObject src, int from, int length);
+
+    /**
+     * <p>Perform a memory-copy operation</p>
+     */
+    public static <T extends Array<?>> int copy(T array, byte[] buffer, int offset, int length) {
+        length = Math.min(length, array.remaining());
+
+        for (int i = 0; i < length; i++) {
+            buffer[i + offset] = (byte) (array.readInt8() & 0xFF);
+        }
+        return length;
+    }
 
     /**
      * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
@@ -395,7 +482,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
         byte getInt8(int index);
 
         @JSMethod
-        short getUInt8(int index, boolean isLittleEndian);
+        short getUInt8(int index);
 
         @JSMethod
         short getInt16(int index, boolean isLittleEndian);

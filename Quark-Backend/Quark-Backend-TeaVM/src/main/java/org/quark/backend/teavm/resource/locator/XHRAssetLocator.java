@@ -17,6 +17,7 @@
  */
 package org.quark.backend.teavm.resource.locator;
 
+import org.quark.backend.teavm.utility.array.TeaVMArray;
 import org.quark.backend.teavm.utility.array.TeaVMArrayFactory;
 import org.quark.resource.AssetCallback;
 import org.quark.resource.AssetLocator;
@@ -100,8 +101,10 @@ public final class XHRAssetLocator implements AssetLocator {
             //!
             //! Get the content of the request.
             //!
-            stream.notify(new XHRInputStream(
-                    new TeaVMArrayFactory.TeaVMInt8Array((ArrayBuffer) request.getResponse())));
+            final ArrayBuffer response = (ArrayBuffer) request.getResponse();
+            stream.notify(
+                    new XHRInputStream(
+                            new TeaVMArrayFactory.TeaVMInt8Array(response)));
         } else {
             stream.notify(null);
         }
@@ -147,13 +150,7 @@ public final class XHRAssetLocator implements AssetLocator {
             if (!mArray.hasRemaining()) {
                 return -1;
             }
-
-            length = Math.min(length, mArray.remaining());
-
-            for (int i = 0; i < length; i++) {
-                bytes[offset + i] = (byte) read();
-            }
-            return length;
+            return TeaVMArray.copy(mArray, bytes, offset, length);
         }
 
         /**
