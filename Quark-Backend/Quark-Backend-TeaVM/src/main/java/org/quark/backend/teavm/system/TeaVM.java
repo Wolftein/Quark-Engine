@@ -103,6 +103,12 @@ public final class TeaVM {
     private final SimpleInputManager mInput = (SimpleInputManager) (QKInput = new SimpleInputManager());
 
     /**
+     * Hold {@link InputManager} module.
+     */
+    private final SimpleAssetManager mResources
+            = (SimpleAssetManager) (QKResources = new SimpleAssetManager(new ThreadGroupService()));
+
+    /**
      * <p>Constructor</p>
      */
     private TeaVM(DisplayLifecycle lifecycle) {
@@ -113,22 +119,7 @@ public final class TeaVM {
      * <p>Handle when the module create</p>
      */
     private void onModuleCreate(HTMLCanvasElement element, Display.Preference preference) {
-        //!
-        //! Create display module.
-        //!
-        element.addEventListener("resize", (Event) ->
-        {
-            mLifecycle.onResize(mDisplay.getWidth(), mDisplay.getHeight());
-        });
-        element.addEventListener("visibilitychange", (Event) ->
-        {
-            if (element.isHidden()) {
-                mLifecycle.onPause();
-            } else {
-                mLifecycle.onResume();
-            }
-        });
-
+        // <TODO: Resize, Pause and Resume listener>
         mDisplay.onModuleCreate(element, preference);
 
         //!
@@ -164,12 +155,11 @@ public final class TeaVM {
         //!
         //! Create resource module.
         //!
-        QKResources = new SimpleAssetManager();
-        QKResources.registerAssetLocator("EXTERNAL", new XHRAssetLocator());
+        mResources.registerAssetLocator("EXTERNAL", new XHRAssetLocator());
 
-        QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
-        QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
-        QKResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
+        mResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
+        mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
+        mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
 
         //!
         //! Handle the create notification.
@@ -191,7 +181,9 @@ public final class TeaVM {
         //!
         //! Unload resource module.
         //!
-        QKResources.unloadAllAssets();
+        mResources.onModuleDestroy();
+
+        mResources.unloadAllAssets();
 
         //!
         //! Unload input module.
@@ -303,5 +295,26 @@ public final class TeaVM {
     private interface AnimationHandler extends JSObject {
         @JSMethod
         void onAnimation();
+    }
+
+
+    /**
+     * Implementation for {@link SimpleAssetManager.Service}.
+     */
+    private final static class ThreadGroupService implements SimpleAssetManager.Service {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void shutdown() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void execute(Runnable command) {
+            new Thread(command).start();
+        }
     }
 }

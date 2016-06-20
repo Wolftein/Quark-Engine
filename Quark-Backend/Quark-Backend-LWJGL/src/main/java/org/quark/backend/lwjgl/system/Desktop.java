@@ -41,6 +41,8 @@ import org.quark.system.utility.array.ArrayFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.quark.Quark.*;
 
@@ -97,6 +99,12 @@ public final class Desktop {
      * Hold {@link InputManager} module.
      */
     private final SimpleInputManager mInput = (SimpleInputManager) (QKInput = new SimpleInputManager());
+
+    /**
+     * Hold {@link InputManager} module.
+     */
+    private final SimpleAssetManager mResources
+            = (SimpleAssetManager) (QKResources = new SimpleAssetManager(new ThreadGroupService()));
 
     /**
      * <p>Constructor</p>
@@ -161,15 +169,14 @@ public final class Desktop {
         //!
         //! Create resource module.
         //!
-        QKResources = new SimpleAssetManager();
-        QKResources.registerAssetLocator("INTERNAL", new ClassAssetLocator());
-        QKResources.registerAssetLocator("EXTERNAL", new FilesAssetLocator());
+        mResources.registerAssetLocator("INTERNAL", new ClassAssetLocator());
+        mResources.registerAssetLocator("EXTERNAL", new FilesAssetLocator());
 
-        QKResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
-        QKResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
-        QKResources.registerAssetLoader(new ShaderGLSLAssetLoader(mRender.getCapabilities()), "pipeline");
-        QKResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
-        QKResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
+        mResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
+        mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
+        mResources.registerAssetLoader(new ShaderGLSLAssetLoader(mRender.getCapabilities()), "pipeline");
+        mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
+        mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
 
         //!
         //! Handle the create notification.
@@ -191,7 +198,8 @@ public final class Desktop {
         //!
         //! Unload resource module.
         //!
-        QKResources.unloadAllAssets();
+        mResources.onModuleDestroy();
+        mResources.unloadAllAssets();
 
         //!
         //! Unload input module.
@@ -282,5 +290,29 @@ public final class Desktop {
         entry.onModuleCreate(preference);
         entry.onModuleUpdate();
         entry.onModuleDestroy();
+    }
+
+    /**
+     * Implementation for {@link SimpleAssetManager.Service}.
+     */
+    private final static class ThreadGroupService implements SimpleAssetManager.Service {
+        private final ExecutorService mExecutor
+                = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void shutdown() {
+            mExecutor.shutdown();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void execute(Runnable command) {
+            mExecutor.execute(command);
+        }
     }
 }

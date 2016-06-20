@@ -102,9 +102,14 @@ public final class XHRAssetLocator implements AssetLocator {
             //! Get the content of the request.
             //!
             final ArrayBuffer response = (ArrayBuffer) request.getResponse();
-            stream.notify(
-                    new XHRInputStream(
-                            new TeaVMArrayFactory.TeaVMInt8Array(response)));
+
+            final Thread thread = new Thread(() ->
+            {
+                stream.notify(
+                        new XHRInputStream(
+                                new TeaVMArrayFactory.TeaVMInt8Array(response)));
+            });
+            thread.start();
         } else {
             stream.notify(null);
         }

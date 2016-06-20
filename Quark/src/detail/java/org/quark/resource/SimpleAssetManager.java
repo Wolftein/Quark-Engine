@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.Executor;
 
 /**
  * Default implementation for {@link AssetManager}.
@@ -34,11 +35,27 @@ public final class SimpleAssetManager implements AssetManager {
      */
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetManager.class);
 
+    private final Service mService;
+
     private final Set<AssetListener> mListeners = new HashSet<>();
     private final Map<String, AssetLocator> mLocators = new HashMap<>();
     private final Map<String, AssetLoader<?, ?>> mLoaders = new HashMap<>();
     private final Map<Object, String> mCacheNames = new HashMap<>();
     private final Map<String, AssetKey> mCache = new HashMap<>();
+
+    /**
+     * <p>Constructor</p>
+     */
+    public SimpleAssetManager(Service service) {
+        mService = service;
+    }
+
+    /**
+     * <p>Handle when the module destroy</p>
+     */
+    public void onModuleDestroy() {
+        mService.shutdown();
+    }
 
     /**
      * {@inheritDoc}
@@ -231,23 +248,26 @@ public final class SimpleAssetManager implements AssetManager {
             //!
             //! Tries to find the asset (asynchronous).
             //!
-            findAsset(filename, new AssetCallback<AssetLocator.AsynchronousInputStream>() {
-                @Override
-                public void onFail() {
-                    LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
+            mService.execute(() ->
+            {
+                findAsset(filename, new AssetCallback<AssetLocator.AsynchronousInputStream>() {
+                    @Override
+                    public void onFail() {
+                        LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
 
-                    Emulation.forEach(
-                            mListeners, (listener) -> listener.onAssetFailed(filename)); /* NOTIFY */
-                }
-
-                @Override
-                public void onSuccess(AssetLocator.AsynchronousInputStream asset) {
-                    final AssetKey<A, B> asyncKey = loadAssetFrom(filename, descriptor, asset);
-
-                    if (asyncKey != null) {
-                        callback.onSuccess(asyncKey.getAsset());
+                        Emulation.forEach(
+                                mListeners, (listener) -> listener.onAssetFailed(filename)); /* NOTIFY */
                     }
-                }
+
+                    @Override
+                    public void onSuccess(AssetLocator.AsynchronousInputStream asset) {
+                        final AssetKey<A, B> asyncKey = loadAssetFrom(filename, descriptor, asset);
+
+                        if (asyncKey != null) {
+                            callback.onSuccess(asyncKey.getAsset());
+                        }
+                    }
+                });
             });
         }
         return (key != null ? key.getAsset() : null);
@@ -358,5 +378,12 @@ public final class SimpleAssetManager implements AssetManager {
             key.acquire();
         }
         return key;
+    }
+
+    /**
+     * Encapsulate a threading service.
+     */
+    public interface Service extends Executor {
+        void shutdown();
     }
 }
