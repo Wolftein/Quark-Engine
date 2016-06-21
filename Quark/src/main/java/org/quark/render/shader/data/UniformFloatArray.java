@@ -34,6 +34,8 @@ public final class UniformFloatArray extends Uniform {
     public UniformFloatArray(Float32Array buffer) {
         super(UniformType.FloatArray);
         mValue = buffer;
+
+        setUpdate(CONCEPT_VALUE);
     }
 
     /**

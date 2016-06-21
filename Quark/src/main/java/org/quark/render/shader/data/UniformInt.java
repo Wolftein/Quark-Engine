@@ -31,7 +31,7 @@ public final class UniformInt extends Uniform {
      */
     public UniformInt(int value) {
         super(UniformType.Int);
-        mValue = value;
+        setValue(value);
     }
 
     /**

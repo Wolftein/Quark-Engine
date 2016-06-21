@@ -31,7 +31,7 @@ public final class UniformFloat extends Uniform {
      */
     public UniformFloat(float value) {
         super(UniformType.Float);
-        mValue = value;
+        setValue(value);
     }
 
     /**

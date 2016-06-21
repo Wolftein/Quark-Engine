@@ -34,6 +34,8 @@ public final class UniformIntArray extends Uniform {
     public UniformIntArray(Int32Array buffer) {
         super(UniformType.IntArray);
         mValue = buffer;
+
+        setUpdate(CONCEPT_VALUE);
     }
 
     /**

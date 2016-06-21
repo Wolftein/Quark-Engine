@@ -43,6 +43,8 @@ public final class UniformMatrix4 extends Uniform {
     public UniformMatrix4(Matrix4f matrix) {
         super(UniformType.Matrix4x4);
         matrix.store(mBuffer);
+
+        setUpdate(CONCEPT_VALUE);
     }
 
     /**
