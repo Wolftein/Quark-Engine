@@ -188,7 +188,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt16(short[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 2);
+        copyWrapped(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 2);
 
         mPosition += count;
 
@@ -221,7 +221,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt32(int[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
+        copyWrapped(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
 
         mPosition += count;
 
@@ -278,7 +278,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat32(float[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
+        copyWrapped(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
 
         mPosition += count;
 
@@ -311,7 +311,7 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeFloat64(double[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 8);
+        copyWrapped(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 8);
 
         mPosition += count;
 
@@ -450,8 +450,16 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst, offset, length);" +
-                    "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
+                     "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
     public static native void copy(JSObject dst, int offset, JSObject src, int from, int length);
+
+    /**
+     * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
+     */
+    @JSBody(params = {"dst", "offset", "src", "from", "length"},
+            script = "var array1 = new Uint8Array(dst, offset, length);" +
+                     "var array2 = new Uint8Array(src.data.buffer, from, length); array1.set(array2);")
+    public static native void copyWrapped(JSObject dst, int offset, JSObject src, int from, int length);
 
     /**
      * <p>Perform a memory-copy operation</p>
