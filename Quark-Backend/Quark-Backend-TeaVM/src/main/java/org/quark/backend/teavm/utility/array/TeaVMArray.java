@@ -462,14 +462,24 @@ public abstract class TeaVMArray<A extends Array> implements Array<A> {
     public static native void copyWrapped(JSObject dst, int offset, JSObject src, int from, int length);
 
     /**
+     * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
+     */
+    @JSBody(params = {"dst", "offset", "src", "from", "length"},
+            script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
+                     "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
+    public static native void read(JSObject dst, int offset, JSObject src, int from, int length);
+
+    /**
      * <p>Perform a memory-copy operation</p>
      */
     public static <T extends Array<?>> int copy(T array, byte[] buffer, int offset, int length) {
         length = Math.min(length, array.remaining());
 
-        for (int i = 0; i < length; i++) {
-            buffer[i + offset] = (byte) (array.readInt8() & 0xFF);
-        }
+        read(Platform.getPlatformObject(buffer),
+                offset, array.<DataView>data().getBuffer(), array.position(), length);
+
+        array.position(array.position() + length);
+
         return length;
     }
 
