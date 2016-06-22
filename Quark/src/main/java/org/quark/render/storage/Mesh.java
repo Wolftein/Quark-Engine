@@ -33,9 +33,6 @@ import static org.quark.Quark.QKRender;
  * may not be present, except for position).
  */
 public class Mesh {
-    /**
-     * Hold the descriptor of the mesh.
-     */
     protected final VertexDescriptor mDescriptor;
 
     /**

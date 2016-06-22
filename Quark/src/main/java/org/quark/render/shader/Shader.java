@@ -40,17 +40,17 @@ import static org.quark.Quark.QKRender;
  */
 public final class Shader extends Manageable implements Disposable {
     /**
-     * Encapsulate all stage(s) of the pipeline.
+     * Hold all stage(s) of the pipeline.
      */
     private final List<Stage> mStages;
 
     /**
-     * Encapsulate all attribute(s) of the pipeline.
+     * Hold all attribute(s) of the pipeline.
      */
     private final Map<String, Attribute> mAttributes;
 
     /**
-     * Encapsulate all data(s) of the pipeline.
+     * Hold all data(s) of the pipeline.
      */
     private final Map<String, Uniform> mUniforms;
 
@@ -125,7 +125,6 @@ public final class Shader extends Manageable implements Disposable {
      *
      * @return the data with the given name
      */
-    @SuppressWarnings("unchecked")
     public <T extends Uniform> T getUniform(String name) {
         final Uniform value = mUniforms.get(name);
         if (value == null) {

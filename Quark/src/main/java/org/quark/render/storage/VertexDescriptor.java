@@ -31,16 +31,7 @@ import static org.quark.Quark.QKRender;
  * <code>VertexDescriptor</code> encapsulate how {@link FactoryArrayStorage} are fragmented.
  */
 public final class VertexDescriptor extends Manageable implements Disposable {
-    public final static int CONCEPT_DATA = (1 << 0);
-
-    /**
-     * Hold every <code>StorageFactoryVertex</code> that contain(s) the vertices.
-     */
     private final List<FactoryArrayStorage<?>> mFactoryVertices;
-
-    /**
-     * Hold an optional <code>StorageFactoryElement</code> that contain(s) the indices.
-     */
     private final FactoryElementStorage<?> mFactoryIndices;
 
     /**
@@ -49,8 +40,6 @@ public final class VertexDescriptor extends Manageable implements Disposable {
     public VertexDescriptor(List<FactoryArrayStorage<?>> vertices, FactoryElementStorage<?> indices) {
         mFactoryVertices = vertices;
         mFactoryIndices = indices;
-
-        setUpdate(CONCEPT_DATA);
     }
 
     /**

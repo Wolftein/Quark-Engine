@@ -273,10 +273,6 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
                 //!
                 mData.clear();
             }
-
-            //!
-            //! Emulate offset and length.
-            //!
             mData.position(offset).limit(length);
 
             return mData;
@@ -336,9 +332,6 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
         @Override
         public A map(Render gl, int access, int offset, int length) {
             if (mData == null) {
-                //!
-                //! Create the data (if the data has been disposed).
-                //!
                 mData = create(length, Storage.this.mFormat);
             }
 
@@ -348,10 +341,6 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
                 //!
                 mData.clear();
             }
-
-            //!
-            //! Emulate offset and length.
-            //!
             mData.position(offset).limit(length);
 
             return mData;
