@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * <o>Emulation</o> encapsulate a helper to emulate multiple method(s) not being present on every platform.
+ * <code>Emulation</code> encapsulate a helper to emulate multiple method(s) not being present on every platform.
  */
 @SuppressWarnings("WhileLoopReplaceableByForEach")
 public class Emulation {

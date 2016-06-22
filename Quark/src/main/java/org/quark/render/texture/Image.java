@@ -113,8 +113,6 @@ public final class Image {
     public final static class Layer {
         /**
          * Hold the data of the layer (The layer and all mip-map).
-         *
-         * @apiNote [MUTABLE-DISPOSABLE]
          */
         public Int8Array data;
 
