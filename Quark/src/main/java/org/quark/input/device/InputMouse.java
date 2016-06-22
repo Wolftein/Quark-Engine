@@ -62,7 +62,7 @@ public interface InputMouse extends Input {
     void setCursorPosition(int x, int y);
 
     /**
-     * <p>Queue a mouse_move event</p>
+     * <p>Queue a mouse move event</p>
      *
      * @see #EVENT_MOVE
      */
@@ -71,7 +71,7 @@ public interface InputMouse extends Input {
     }
 
     /**
-     * <p>Queue a mouse_button_up event</p>
+     * <p>Queue a mouse button up event</p>
      *
      * @see #EVENT_BUTTON_UP
      */
@@ -80,7 +80,7 @@ public interface InputMouse extends Input {
     }
 
     /**
-     * <p>Queue a mouse_button_down event</p>
+     * <p>Queue a mouse button down event</p>
      *
      * @see #EVENT_BUTTON_DOWN
      */
@@ -89,7 +89,7 @@ public interface InputMouse extends Input {
     }
 
     /**
-     * <p>Queue a mouse_wheel event</p>
+     * <p>Queue a mouse wheel event</p>
      *
      * @see #EVENT_WHEEL
      */

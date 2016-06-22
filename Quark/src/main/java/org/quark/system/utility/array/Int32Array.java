@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for 32-bit integer element(s).
+ * Specialised implementation of {@link Array} for 32-bit integer element(s).
  */
 public interface Int32Array extends Array<Int32Array> {
     /**

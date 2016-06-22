@@ -115,9 +115,11 @@ public class Mesh {
      */
     public final void draw(Primitive primitive, int offset, int count) {
         mDescriptor.acquire();
-        {
-            QKRender.draw(primitive, offset, count);
-        }
+
+        //!
+        //! Draw a single instance of the mesh using vertices only.
+        //!
+        QKRender.draw(primitive, offset, count);
     }
 
     /**
@@ -133,8 +135,10 @@ public class Mesh {
             throw new IllegalStateException("Cannot draw the mesh without an indices storage");
         }
         mDescriptor.acquire();
-        {
-            QKRender.draw(primitive, offset, count, format);
-        }
+
+        //!
+        //! Draw a single instance of the mesh using indices.
+        //!
+        QKRender.draw(primitive, offset, count, format);
     }
 }

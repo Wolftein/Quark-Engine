@@ -19,6 +19,7 @@ package org.quark.render.storage.factory;
 
 import org.quark.render.storage.*;
 import org.quark.system.utility.array.*;
+import org.quark.system.utility.emulation.Emulation;
 
 import java.util.List;
 
@@ -36,16 +37,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
         super(type, StorageTarget.ARRAY, mode, format, capacity);
 
         mAttributes = vertex;
-
-        //!
-        //! Calculate the length of the storage.
-        //!
-        int length = 0;
-
-        for (final Vertex item : vertex) {
-            length += item.getLength();
-        }
-        mAttributesLength = length;
+        mAttributesLength = Emulation.forEachMapToInt(vertex, Vertex::getLength);
     }
 
     /***
@@ -67,7 +59,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>VertexStorage</code> implementation using {@link Int8}.
+     * Specialised implementation using {@link Int8}.
      */
     public final static class Int8 extends FactoryArrayStorage<Int8Array> {
         /**
@@ -79,7 +71,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>VertexStorage</code> implementation using {@link Int16}.
+     * Specialised implementation using {@link Int16}.
      */
     public final static class Int16 extends FactoryArrayStorage<Int16Array> {
         /**
@@ -91,7 +83,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>VertexStorage</code> implementation using {@link Int32}.
+     * Specialised implementation using {@link Int32}.
      */
     public final static class Int32 extends FactoryArrayStorage<Int32Array> {
         /**
@@ -103,7 +95,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>VertexStorage</code> implementation using {@link Float16}.
+     * Specialised implementation using {@link Float16}.
      */
     public final static class Float16 extends FactoryArrayStorage<Float16Array> {
         /**
@@ -115,7 +107,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>VertexStorage</code> implementation using {@link Float32}.
+     * Specialised implementation using {@link Float32}.
      */
     public final static class Float32 extends FactoryArrayStorage<Float32Array> {
         /**

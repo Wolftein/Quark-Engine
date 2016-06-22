@@ -35,7 +35,7 @@ public final class Attribute {
     private final int mType;
 
     /**
-     * <code>Constructor</code>
+     * <p>Constructor</p>
      */
     public Attribute(int id, int type) {
         mID = id;

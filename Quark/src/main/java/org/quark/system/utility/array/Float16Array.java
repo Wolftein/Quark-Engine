@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for 16-bit float element(s).
+ * Specialised implementation of {@link Array} for 16-bit float element(s).
  */
 public interface Float16Array extends Array<Float16Array> {
     /**
@@ -67,7 +67,7 @@ public interface Float16Array extends Array<Float16Array> {
     }
 
     /**
-     * Transform 32-bit float to 16-bite float.
+     * <p>Convert a 16-bit float into a 16-bit integer</p>
      */
     static short toHalf(float value) {
         if (value == Float.POSITIVE_INFINITY) {
@@ -93,7 +93,7 @@ public interface Float16Array extends Array<Float16Array> {
     }
 
     /**
-     * Transform 16-bit float to 32-bite float.
+     * <p>Convert a 16-bit integer into a 16-bit float</p>
      */
     static float toFloat(int value) {
         switch (value) {

@@ -55,16 +55,12 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
      */
     public final static int ACCESS_UNSYNCHRONIZED = Render.GLES3.GL_ACCESS_UNSYNCHRONIZED;
 
+    private final Factory<A> mFactory;
     private final StorageType mType;
     private final StorageTarget mTarget;
     private final StorageMode mMode;
     private final VertexFormat mFormat;
     private final int mCapacity;
-
-    /**
-     * Hold the underlying factory of the storage, for transparency between client and server side storage(s).
-     */
-    private final Factory<A> mFactory;
 
     /**
      * <p>Constructor</p>
@@ -234,7 +230,7 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
     }
 
     /**
-     * <code>Factory</code> implementation for {@link StorageType#CLIENT}
+     * Specialised implementation for {@link StorageType#CLIENT}
      */
     private final class BufferClientFactory implements Factory<A> {
         private A mData;
@@ -272,6 +268,10 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
                 //! Emulate ACCESS_INVALIDATE_ALL
                 //!
                 mData.clear();
+            } else if ((access & ACCESS_INVALIDATE) != 0) {
+                //!
+                //! <TODO: Emulate ACCESS_INVALIDATE>
+                //!
             }
             mData.position(offset).limit(length);
 
@@ -298,7 +298,7 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
     }
 
     /**
-     * <code>Factory</code> implementation for {@link StorageType#SERVER}
+     * Specialised implementation for {@link StorageType#SERVER}
      */
     private final class BufferServerFactory implements Factory<A> {
         private A mData;
@@ -340,6 +340,10 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
                 //! Emulate ACCESS_INVALIDATE_ALL
                 //!
                 mData.clear();
+            } else if ((access & ACCESS_INVALIDATE) != 0) {
+                //!
+                //! <TODO: Emulate ACCESS_INVALIDATE>
+                //!
             }
             mData.position(offset).limit(length);
 
@@ -366,7 +370,7 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
     }
 
     /**
-     * <code>Factory</code> implementation for {@link StorageType#SERVER_MAPPED}
+     * Specialised implementation for {@link StorageType#SERVER_MAPPED}
      */
     private final class BufferServerMappedFactory implements Factory<A> {
         /**
@@ -410,9 +414,9 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
     }
 
     /**
-     * <p>Create a {@link Array} that matches the {@link VertexFormat}</p>
+     * <p>Create an {@link Array} that matches the given {@link VertexFormat}</p>
      */
-    public static <T extends Array> T create(int capacity, VertexFormat format) {
+    private static <T extends Array> T create(int capacity, VertexFormat format) {
         switch (format) {
             case BYTE:
                 return (T) ArrayFactory.allocateInt8Array(capacity / format.eLength);

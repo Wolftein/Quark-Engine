@@ -108,7 +108,7 @@ public final class Image {
     }
 
     /**
-     * <p>Layer</p> represent a layer within an {@link Image} which may contain another {@link Image}.
+     * <p>Layer</p> represent a layer within an {@link Image} which contains all information about pixel(s) and mipmap.
      */
     public final static class Layer {
         /**

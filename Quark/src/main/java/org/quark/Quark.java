@@ -39,7 +39,7 @@ public final class Quark {
      *
      * @see Display
      */
-    public static Display QKDisplay = null;
+    public static Display QKDisplay;
 
     /**
      * Hold the {@link InputManager} implementation.

@@ -22,7 +22,7 @@ import org.quark.render.texture.Image;
 import java.util.Collection;
 
 /**
- * <code>QKDisplay</code> encapsulate the display of the framework.
+ * <code>Display</code> encapsulate the display of the framework.
  */
 public interface Display {
     /**

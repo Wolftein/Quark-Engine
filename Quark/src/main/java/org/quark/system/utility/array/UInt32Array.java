@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for unsigned 32-bit integer element(s).
+ * Specialised implementation of {@link Array} for unsigned 32-bit integer element(s).
  */
 public interface UInt32Array extends Array<UInt32Array> {
     long SIGN_OFFSET = 0x100000000L;
@@ -28,8 +28,29 @@ public interface UInt32Array extends Array<UInt32Array> {
     /**
      * @see Array#writeInt32(int)
      */
+    default UInt32Array write(int value) {
+        return writeInt32(value);
+    }
+
+    /**
+     * @see Array#writeInt32(int)
+     */
     default UInt32Array write(long value) {
         return writeInt32((int) (value > MAX_POSITIVE & value <= MAX_POSITIVE ? (value - SIGN_OFFSET) : value));
+    }
+
+    /**
+     * @see Array#writeInt32(int[])
+     */
+    default UInt32Array write(int[] value) {
+        return write(value, 0, value.length);
+    }
+
+    /**
+     * @see Array#writeInt32(int[], int, int)
+     */
+    default UInt32Array write(int[] value, int offset, int count) {
+        return writeInt32(value, offset, count);
     }
 
     /**
@@ -49,6 +70,13 @@ public interface UInt32Array extends Array<UInt32Array> {
             writeInt32((int) (element > MAX_POSITIVE & element <= MAX_POSITIVE ? (element - SIGN_OFFSET) : element));
         }
         return this;
+    }
+
+    /**
+     * @see Array#writeInt32(int, int)
+     */
+    default UInt32Array write(int index, int value) {
+        return writeInt32(index * 0x04, value);
     }
 
     /**

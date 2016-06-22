@@ -26,23 +26,12 @@ import java.util.Collections;
  * <code>AssetKey</code> encapsulate a key that contain(s) all the information of an asset.
  */
 public final class AssetKey<A, B extends AssetDescriptor> {
-    /**
-     * Encapsulate the wrapped asset expressed as <code>A</code>.
-     */
     private final A mAsset;
-
-    /**
-     * Encapsulate the wrapped asset descriptor expressed as <code>B</code>.
-     */
     private final B mAssetDescriptor;
-
-    /**
-     * Encapsulate all dependencies of the asset.
-     */
     private final Collection<String> mDependencies;
 
     /**
-     * Encapsulate the reference(s) to the asset being tracked down to perform manually de-allocation.
+     * Hold the reference(s) to the asset being tracked down to perform manually de-allocation.
      */
     private int mReferences = 1;
 

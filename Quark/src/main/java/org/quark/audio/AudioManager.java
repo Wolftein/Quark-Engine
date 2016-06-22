@@ -57,99 +57,42 @@ public interface AudioManager {
         int AL_TRUE = 0x0001;
         int AL_VELOCITY = 0x1006;
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         boolean alcCreateContext();
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alcDestroyContext();
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         int alGenBuffers();
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         int alGenSources();
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alDeleteBuffers(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alDeleteSources(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourcePause(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourcePlay(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourceStop(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourcei(int name, int type, int value);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourcef(int name, int type, float value);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourcef(int name, int type, float value1, float value2, float value3);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alListenerf(int type, float value);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alListenerf(int type, float value1, float value2, float value3);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alListenerf(int type, Float32Array value);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         int alGetSourcei(int name, int type);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         int alSourceUnqueueBuffers(int name);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alSourceQueueBuffers(int name, int id);
 
-        /**
-         * @see <a href="https://www.openal.org/documentation/OpenAL_Programmers_Guide.pdf">Link</a>
-         */
         void alBufferData(int name, int format, Int8Array data, int rate);
     }
 

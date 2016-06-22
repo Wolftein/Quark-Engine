@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for unsigned 8-bit integer element(s).
+ * Specialised implementation of {@link Array} for unsigned 8-bit integer element(s).
  */
 public interface UInt8Array extends Array<UInt8Array> {
     int SIGN_OFFSET = 0x10000;
@@ -28,9 +28,30 @@ public interface UInt8Array extends Array<UInt8Array> {
     /**
      * @see Array#writeInt8(byte)
      */
+    default UInt8Array write(byte value) {
+        return writeInt8(value);
+    }
+
+    /**
+     * @see Array#writeInt8(byte)
+     */
     default UInt8Array write(int value) {
         return writeInt8(
                 (byte) (value > MAX_POSITIVE & value <= MAX_POSITIVE ? (value - SIGN_OFFSET) : value));
+    }
+
+    /**
+     * @see Array#writeInt8(byte[])
+     */
+    default UInt8Array write(byte[] value) {
+        return write(value, 0, value.length);
+    }
+
+    /**
+     * @see Array#writeInt8(byte[], int, int)
+     */
+    default UInt8Array write(byte[] value, int offset, int count) {
+        return writeInt8(value, offset, count);
     }
 
     /**
@@ -50,6 +71,13 @@ public interface UInt8Array extends Array<UInt8Array> {
             writeInt8((byte) (element > MAX_POSITIVE & element <= MAX_POSITIVE ? (element - SIGN_OFFSET) : element));
         }
         return this;
+    }
+
+    /**
+     * @see Array#writeInt8(int, byte)
+     */
+    default UInt8Array write(int index, byte value) {
+        return writeInt8(index, value);
     }
 
     /**

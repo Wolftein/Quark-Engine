@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for unsigned 16-bit integer element(s).
+ * Specialised implementation of {@link Array} for unsigned 16-bit integer element(s).
  */
 public interface UInt16Array extends Array<UInt16Array> {
     int SIGN_OFFSET = 0x10000;
@@ -28,9 +28,30 @@ public interface UInt16Array extends Array<UInt16Array> {
     /**
      * @see Array#writeInt16(short)
      */
+    default UInt16Array write(short value) {
+        return writeInt16(value);
+    }
+
+    /**
+     * @see Array#writeInt16(short)
+     */
     default UInt16Array write(int value) {
         return writeInt16(
                 (short) (value > MAX_POSITIVE & value <= MAX_POSITIVE ? (value - SIGN_OFFSET) : value));
+    }
+
+    /**
+     * @see Array#writeInt16(short[])
+     */
+    default UInt16Array write(short[] value) {
+        return write(value, 0, value.length);
+    }
+
+    /**
+     * @see Array#writeInt16(short[], int, int)
+     */
+    default UInt16Array write(short[] value, int offset, int count) {
+        return writeInt16(value, offset, count);
     }
 
     /**
@@ -50,6 +71,13 @@ public interface UInt16Array extends Array<UInt16Array> {
             writeInt16((short) (element > MAX_POSITIVE & element <= MAX_POSITIVE ? (element - SIGN_OFFSET) : element));
         }
         return this;
+    }
+
+    /**
+     * @see Array#writeInt16(int, short)
+     */
+    default UInt16Array write(int index, short value) {
+        return writeInt16(index * 0x02, value);
     }
 
     /**

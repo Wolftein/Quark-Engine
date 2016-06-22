@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for 32-bit float element(s).
+ * Specialised implementation of {@link Array} for 32-bit float element(s).
  */
 public interface Float32Array extends Array<Float32Array> {
     /**

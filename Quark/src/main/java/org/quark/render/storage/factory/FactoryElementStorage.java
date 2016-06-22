@@ -35,7 +35,7 @@ public class FactoryElementStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>ElementStorage</code> implementation using {@link UInt8Array}.
+     * Specialised implementation using {@link UInt8Array}.
      */
     public final static class UInt8 extends FactoryElementStorage<UInt8Array> {
         /**
@@ -47,7 +47,7 @@ public class FactoryElementStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>ElementStorage</code> implementation using {@link UInt16Array}.
+     * Specialised implementation using {@link UInt16Array}.
      */
     public final static class UInt16 extends FactoryElementStorage<UInt16Array> {
         /**
@@ -59,7 +59,7 @@ public class FactoryElementStorage<A extends Array<?>> extends Storage<A> {
     }
 
     /**
-     * <code>ElementStorage</code> implementation using {@link UInt32Array}.
+     * Specialised implementation using {@link UInt32Array}.
      */
     public final static class UInt32 extends FactoryElementStorage<UInt32Array> {
         /**

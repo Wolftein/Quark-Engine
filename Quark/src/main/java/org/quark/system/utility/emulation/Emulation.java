@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * <code>Emulation</code> encapsulate a helper to emulate multiple method(s) not being present on every platform.
@@ -56,5 +57,19 @@ public class Emulation {
         for (final Map.Entry<A, B> entry : map.entrySet()) {
             consumer.accept(entry.getKey(), entry.getValue());
         }
+    }
+
+    /**
+     * (NOT PRESENT IN TeaVM)
+     */
+    public static <A, B extends Function<A, Integer>> int forEachMapToInt(Iterable<A> iterator, B consumer) {
+        int value = 0;
+
+        final Iterator<A> it = iterator.iterator();
+
+        while (it.hasNext()) {
+            value = consumer.apply(it.next());
+        }
+        return value;
     }
 }

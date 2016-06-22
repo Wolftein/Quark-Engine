@@ -40,7 +40,7 @@ public interface InputKeyboard extends Input {
     int EVENT_KEY_TYPE = EVENT_KEY_DOWN + 0x01;
 
     /**
-     * <p>Queue a key_up event</p>
+     * <p>Queue a key up event</p>
      *
      * @see #EVENT_KEY_UP
      */
@@ -49,7 +49,7 @@ public interface InputKeyboard extends Input {
     }
 
     /**
-     * <p>Queue a key_down event</p>
+     * <p>Queue a key down event</p>
      *
      * @see #EVENT_KEY_DOWN
      */
@@ -58,7 +58,7 @@ public interface InputKeyboard extends Input {
     }
 
     /**
-     * <p>Queue a key_type event</p>
+     * <p>Queue a key type event</p>
      *
      * @see #EVENT_KEY_TYPE
      */

@@ -95,7 +95,8 @@ public interface AssetManager {
      *
      * @return a reference to the <code>InputStream</code> of the asset
      */
-    AssetLocator.AsynchronousInputStream findAsset(String filename, AssetCallback<AssetLocator.AsynchronousInputStream> callback);
+    AssetLocator.AsynchronousInputStream findAsset(
+            String filename, AssetCallback<AssetLocator.AsynchronousInputStream> callback);
 
     /**
      * <p>Request an asset that has been loaded</p>

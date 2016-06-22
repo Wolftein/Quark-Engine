@@ -18,7 +18,7 @@
 package org.quark.system;
 
 /**
- * Describe display properties for {@link Display}.
+ * <code>DisplayMode</code> describe display properties for {@link Display}.
  */
 public final class DisplayMode {
     private final int mWidth;

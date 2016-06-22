@@ -24,7 +24,7 @@ import org.quark.render.Render;
  */
 public enum FrameAttachment {
     /**
-     * Encapsulate all color attachment(s)
+     * Enumerates all color attachment(s)
      * <p>
      * NOTE: Not all attachment(s) may be supported by the underlying context.
      */
@@ -62,12 +62,12 @@ public enum FrameAttachment {
     COLOR31(Render.GLES2.GL_COLOR_ATTACHMENT0 + 31, true, false, false),
 
     /**
-     * Encapsulate the depth attachment (for depth buffer)
+     * Enumerates the depth attachment (for depth buffer)
      */
     DEPTH(Render.GLES2.GL_DEPTH_ATTACHMENT, false, true, false),
 
     /**
-     * Encapsulate the stencil attachment (for stencil buffer)
+     * Enumerates the stencil attachment (for stencil buffer)
      */
     STENCIL(Render.GLES2.GL_STENCIL_ATTACHMENT, false, false, true);
 

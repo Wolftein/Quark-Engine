@@ -22,7 +22,7 @@ import org.quark.system.utility.Disposable;
 import org.quark.system.utility.Manageable;
 
 /**
- * <code>QKAudio</code> encapsulate the data of a sound.
+ * <code>Audio</code> encapsulate the data of a sound.
  */
 public abstract class Audio extends Manageable implements Disposable {
     private final int mDuration;
@@ -101,7 +101,7 @@ public abstract class Audio extends Manageable implements Disposable {
      */
     public final static class Descriptor extends AssetDescriptor {
         /**
-         * <p>Default constructor</p>
+         * <p>Constructor</p>
          */
         public Descriptor(boolean streaming) {
             super(true, !streaming);

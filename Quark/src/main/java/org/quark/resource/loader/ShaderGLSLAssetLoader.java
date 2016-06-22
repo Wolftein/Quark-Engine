@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * <code>ShaderGLSLAssetLoader</code> encapsulate an {@linkplain AssetLoader} for loading GLSL shader(s).
  * <p>
- * NOTE: This class requires improvement.
+ * NOTE: !!! This class requires improvement and it will be heavy modified soon !!!
  */
 public final class ShaderGLSLAssetLoader implements AssetLoader<Shader, Shader.Descriptor> {
     private final PipelineParser mParser = new PipelineParser(SimpleEasyXmlParser.getElementFinderFactory());

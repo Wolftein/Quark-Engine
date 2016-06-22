@@ -18,7 +18,7 @@
 package org.quark.system.utility.array;
 
 /**
- * Implementation of {@link Array} for 8-bit integer element(s).
+ * Specialised implementation of {@link Array} for 8-bit integer element(s).
  */
 public interface Int8Array extends Array<Int8Array> {
     /**

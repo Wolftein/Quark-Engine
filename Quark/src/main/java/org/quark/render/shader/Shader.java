@@ -39,19 +39,8 @@ import static org.quark.Quark.QKRender;
  * (whether programmable or not).
  */
 public final class Shader extends Manageable implements Disposable {
-    /**
-     * Hold all stage(s) of the pipeline.
-     */
     private final List<Stage> mStages;
-
-    /**
-     * Hold all attribute(s) of the pipeline.
-     */
     private final Map<String, Attribute> mAttributes;
-
-    /**
-     * Hold all data(s) of the pipeline.
-     */
     private final Map<String, Uniform> mUniforms;
 
     /**

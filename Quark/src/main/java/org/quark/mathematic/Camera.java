@@ -26,32 +26,32 @@ public class Camera {
     private static final ImmutableVector3f UNIT_Z = ImmutableVector3f.unitNegativeZ();
 
     /**
-     * Encapsulate the projection of the camera.
+     * Hold the projection of the camera.
      */
     protected MutableMatrix4f mProjectionMatrix;
 
     /**
-     * Encapsulate the view of the camera.
+     * Hold the view of the camera.
      */
     protected MutableMatrix4f mViewMatrix = MutableMatrix4f.createIdentity();
 
     /**
-     * Encapsulate the projection-view of the camera.
+     * Hold the projection-view of the camera.
      */
     protected MutableMatrix4f mCombination = MutableMatrix4f.createIdentity();
 
     /**
-     * Encapsulate the position of the camera.
+     * Hold the position of the camera.
      */
     protected MutableVector3f mPosition = MutableVector3f.zero();
 
     /**
-     * Encapsulate the rotation of the camera.
+     * Hold the rotation of the camera.
      */
     protected MutableQuaternionf mRotation = MutableQuaternionf.unitW();
 
     /**
-     * Encapsulate the dirty flag of the camera, to prevent updating it all the time (saves CPU).
+     * Hold the dirty flag of the camera, to prevent updating it all the time (saves CPU).
      */
     protected boolean mDirty = true;
 
@@ -95,7 +95,7 @@ public class Camera {
             mViewMatrix = mTemp0.setRotation(mTemp3).mul(mTemp1.setTranslation(mTemp2));
 
             //!
-            //! Calculate the projection-view combination.
+            //! Calculate the projection-view.
             //!
             mCombination.set(mProjectionMatrix).mul(mViewMatrix);
 
@@ -111,9 +111,6 @@ public class Camera {
      */
     public Matrix4f getViewProjection() {
         if (mDirty) {
-            //!
-            //! Update the camera if required.
-            //!
             getView();
         }
         return mCombination;
