@@ -19,6 +19,7 @@ package org.quark.backend.teavm.opengl;
 
 import org.quark.render.Render;
 import org.quark.render.RenderCapabilities;
+import org.quark.system.utility.array.Array;
 import org.quark.system.utility.array.Int8Array;
 import org.quark.system.utility.array.UInt32Array;
 import org.teavm.jso.JSMethod;
@@ -136,7 +137,7 @@ public class WebOpenGLES30 extends WebOpenGLES20 implements Render.GLES3 {
      * {@inheritDoc}
      */
     @Override
-    public Int8Array glMapBufferRange(int target, int offset, int size, int access) {
+    public <T extends Array<?>> T glMapBufferRange(int target, int offset, int size, int access, int format) {
         //!
         //! NOTE: Javascript doesn't support access to raw memory.
         //!

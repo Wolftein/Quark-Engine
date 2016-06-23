@@ -236,7 +236,7 @@ public interface Render extends ManageableManager {
 
         void glUnmapBuffer(int target);
 
-        Int8Array glMapBuffer(int target, int access);
+        <T extends Array<?>> T glMapBuffer(int target, int access, int format);
 
         void glTexParameter(int target, int type, int value);
 
@@ -313,7 +313,7 @@ public interface Render extends ManageableManager {
         int GL_DEPTH_STENCIL = 0x84F9;
         int GL_DYNAMIC_COPY = 0x88EA;
         int GL_DYNAMIC_READ = 0x88E9;
-        int GL_HALF_FLOAT = 0x1406;
+        int GL_HALF_FLOAT = 0x140B;
         int GL_INT = 0x1404;
         int GL_MAX = 0x8008;
         int GL_MIN = 0x8007;
@@ -355,7 +355,7 @@ public interface Render extends ManageableManager {
 
         void glBindVertexArray(int name);
 
-        Int8Array glMapBufferRange(int target, int offset, int size, int access);
+        <T extends Array<?>> T glMapBufferRange(int target, int offset, int size, int access, int format);
 
         void glTexImage3D(int target, int level, int internal, int width, int height, int depth, int border,
                 int format, int type, Int8Array data);

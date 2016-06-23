@@ -22,6 +22,7 @@ import org.lwjgl.system.MemoryUtil;
 import org.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
 import org.quark.render.Render;
 import org.quark.system.utility.Manageable;
+import org.quark.system.utility.array.Array;
 import org.quark.system.utility.array.Int8Array;
 import org.quark.system.utility.array.UInt32Array;
 
@@ -109,9 +110,34 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
      * {@inheritDoc}
      */
     @Override
-    public Int8Array glMapBufferRange(int target, int offset, int size, int access) {
-        return new DesktopArrayFactory.DesktopInt8Array(
-                mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+    public <T extends Array<?>> T glMapBufferRange(int target, int offset, int size, int access, int format) {
+        switch (format) {
+            case GL_UNSIGNED_BYTE:
+                return (T) new DesktopArrayFactory.DesktopUInt8Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_UNSIGNED_SHORT:
+                return (T) new DesktopArrayFactory.DesktopUInt16Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_UNSIGNED_INT:
+                return (T) new DesktopArrayFactory.DesktopUInt32Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_BYTE:
+                return (T) new DesktopArrayFactory.DesktopInt8Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_SHORT:
+                return (T) new DesktopArrayFactory.DesktopInt16Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_INT:
+                return (T) new DesktopArrayFactory.DesktopInt32Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_HALF_FLOAT:
+                return (T) new DesktopArrayFactory.DesktopFloat16Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+            case GL_FLOAT:
+                return (T) new DesktopArrayFactory.DesktopFloat32Array(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+        }
+        throw new IllegalArgumentException("Format unsupported");
     }
 
     /**
@@ -261,7 +287,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         CORE;
 
         /**
-         * @see Render.GLES3#glMapBufferRange(int, int, int, int) ()
+         * @see Render.GLES3#glMapBufferRange(int, int, int, int, int) ()
          */
         public ByteBuffer glMapBufferRange(int target, int offset, int size, int access) {
             switch (this) {

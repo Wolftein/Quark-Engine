@@ -961,7 +961,7 @@ public final class DefaultRender implements Render {
     @Override
     public <T extends Array<?>> T map(Storage<T> storage) {
         final int flag = (storage.getMode().eReadable ? GLES2.GL_MAP_READ_BIT : GLES2.GL_MAP_WRITE_BIT);
-        return (T) mGL.glMapBuffer(storage.getTarget().eValue, flag);
+        return (T) mGL.glMapBuffer(storage.getTarget().eValue, flag, storage.getFormat().eValue);
     }
 
     /**
@@ -987,7 +987,7 @@ public final class DefaultRender implements Render {
     public <T extends Array<?>> T map(Storage<T> storage, int access, int offset, int length) {
         final int flag
                 = (storage.getMode().eReadable ? GLES2.GL_MAP_READ_BIT : GLES2.GL_MAP_WRITE_BIT) | access;
-        return (T) mGL.glMapBufferRange(storage.getTarget().eValue, offset, length, flag);
+        return (T) mGL.glMapBufferRange(storage.getTarget().eValue, offset, length, flag, storage.getFormat().eValue);
     }
 
     /**

@@ -29,6 +29,10 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.quark.render.Render.GLES3.GL_HALF_FLOAT;
+import static org.quark.render.Render.GLES3.GL_INT;
+import static org.quark.render.Render.GLES3.GL_UNSIGNED_INT;
+
 /**
  * Implementation for {@link Render.GLES2}.
  */
@@ -553,8 +557,26 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public Int8Array glMapBuffer(int target, int access) {
-        return new DesktopArrayFactory.DesktopInt8Array(GL15.glMapBuffer(target, access));
+    public <T extends Array<?>> T glMapBuffer(int target, int access, int format) {
+        switch (format) {
+            case GL_UNSIGNED_BYTE:
+                return (T) new DesktopArrayFactory.DesktopUInt8Array(GL15.glMapBuffer(target, access));
+            case GL_UNSIGNED_SHORT:
+                return (T) new DesktopArrayFactory.DesktopUInt16Array(GL15.glMapBuffer(target, access));
+            case GL_UNSIGNED_INT:
+                return (T) new DesktopArrayFactory.DesktopUInt32Array(GL15.glMapBuffer(target, access));
+            case GL_BYTE:
+                return (T) new DesktopArrayFactory.DesktopInt8Array(GL15.glMapBuffer(target, access));
+            case GL_SHORT:
+                return (T) new DesktopArrayFactory.DesktopInt16Array(GL15.glMapBuffer(target, access));
+            case GL_INT:
+                return (T) new DesktopArrayFactory.DesktopInt32Array(GL15.glMapBuffer(target, access));
+            case GL_HALF_FLOAT:
+                return (T) new DesktopArrayFactory.DesktopFloat16Array(GL15.glMapBuffer(target, access));
+            case GL_FLOAT:
+                return (T) new DesktopArrayFactory.DesktopFloat32Array(GL15.glMapBuffer(target, access));
+        }
+        throw new IllegalArgumentException("Format unsupported");
     }
 
     /**

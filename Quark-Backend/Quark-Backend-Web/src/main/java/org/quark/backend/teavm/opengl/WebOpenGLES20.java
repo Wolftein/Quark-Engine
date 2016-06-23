@@ -530,7 +530,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public Int8Array glMapBuffer(int target, int access) {
+    public <T extends Array<?>> T glMapBuffer(int target, int access, int format) {
         //!
         //! NOTE: Javascript doesn't support access to raw memory.
         //!
