@@ -969,7 +969,7 @@ public final class DefaultRender implements Render {
      */
     @Override
     public <T extends Array<?>> T map(Storage<T> storage, int access) {
-        return map(storage, access, 0, 0);
+        return map(storage, access, 0, storage.getCapacity());
     }
 
     /**
