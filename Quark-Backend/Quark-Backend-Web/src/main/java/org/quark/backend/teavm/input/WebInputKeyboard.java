@@ -54,9 +54,9 @@ public final class WebInputKeyboard implements InputKeyboard {
      */
     @Override
     public void create() {
-        mHandle.addEventListener("keyup", mRegistration1);
-        mHandle.addEventListener("keydown", mRegistration2);
-        mHandle.addEventListener("keypress", mRegistration3);
+        mHandle.listenKeyUp(mRegistration1);
+        mHandle.listenKeyDown(mRegistration2);
+        mHandle.listenKeyPress(mRegistration3);
     }
 
     /**
@@ -71,9 +71,9 @@ public final class WebInputKeyboard implements InputKeyboard {
      */
     @Override
     public void destroy() {
-        mHandle.removeEventListener("keyup", mRegistration1);
-        mHandle.removeEventListener("keydown", mRegistration2);
-        mHandle.removeEventListener("keypress", mRegistration3);
+        mHandle.neglectKeyUp(mRegistration1);
+        mHandle.neglectKeyDown(mRegistration2);
+        mHandle.neglectKeyPress(mRegistration3);
     }
 
     /**
