@@ -68,7 +68,7 @@ public class Emulation {
         final Iterator<A> it = iterator.iterator();
 
         while (it.hasNext()) {
-            value = consumer.apply(it.next());
+            value += consumer.apply(it.next());
         }
         return value;
     }
