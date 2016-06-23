@@ -155,7 +155,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      */
     @Override
     public A writeInt8(byte[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count);
+        copyWrapped(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count);
 
         mPosition += count;
 
@@ -450,7 +450,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst, offset, length);" +
-                     "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
+                    "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
     public static native void copy(JSObject dst, int offset, JSObject src, int from, int length);
 
     /**
@@ -458,7 +458,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst, offset, length);" +
-                     "var array2 = new Uint8Array(src.data.buffer, from, length); array1.set(array2);")
+                    "var array2 = new Uint8Array(src.data.buffer, from, length); array1.set(array2);")
     public static native void copyWrapped(JSObject dst, int offset, JSObject src, int from, int length);
 
     /**
@@ -466,7 +466,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
-                     "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
+                    "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
     public static native void read(JSObject dst, int offset, JSObject src, int from, int length);
 
     /**
@@ -475,8 +475,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
     public static <T extends Array<?>> int copy(T array, byte[] buffer, int offset, int length) {
         length = Math.min(length, array.remaining());
 
-        read(Platform.getPlatformObject(buffer),
-                offset, array.<DataView>data().getBuffer(), array.position(), length);
+        read(Platform.getPlatformObject(buffer), offset, array.<DataView>data().getBuffer(), array.position(), length);
 
         array.position(array.position() + length);
 

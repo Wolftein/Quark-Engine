@@ -25,152 +25,97 @@ import org.quark.system.utility.array.Int8Array;
  * Implementation for {@link AudioManager.ALES10}.
  */
 public final class WebOpenALES10 implements AudioManager.ALES10 {
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean alcCreateContext() {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alcDestroyContext() {
+
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int alGenBuffers() {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int alGenSources() {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alDeleteBuffers(int name) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alDeleteSources(int name) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourcePause(int name) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourcePlay(int name) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourceStop(int name) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourcei(int name, int type, int value) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourcef(int name, int type, float value) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourcef(int name, int type, float value1, float value2, float value3) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alListenerf(int type, float value) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alListenerf(int type, float value1, float value2, float value3) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alListenerf(int type, Float32Array value) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int alGetSourcei(int name, int type) {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int alSourceUnqueueBuffers(int name) {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alSourceQueueBuffers(int name, int id) {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void alBufferData(int name, int format, Int8Array data, int rate) {
 
