@@ -24,21 +24,23 @@ public final class Attribute {
     /**
      * Define an input <code>Attribute</code> which is being used as source.
      */
-    public final static int TYPE_INPUT = 0;
+    public final static int MODE_INPUT = 0;
 
     /**
      * Define an output <code>Attribute</code> which is being used as destination.
      */
-    public final static int TYPE_OUTPUT = 1;
+    public final static int MODE_OUTPUT = 1;
 
     private final int mID;
-    private final int mType;
+    private final int mMode;
+    private final AttributeType mType;
 
     /**
      * <p>Constructor</p>
      */
-    public Attribute(int id, int type) {
+    public Attribute(int id, int mode, AttributeType type) {
         mID = id;
+        mMode = mode;
         mType = type;
     }
 
@@ -52,12 +54,21 @@ public final class Attribute {
     }
 
     /**
+     * <p>Get the type of the attribute</p>
+     *
+     * @return the type of the attribute
+     */
+    public AttributeType getType() {
+        return mType;
+    }
+
+    /**
      * <p>Check if the given attribute is being used as input</p>
      *
      * @return <code>true</code> if the attribute is being used as input, <code>false</code> otherwise
      */
     public boolean isInput() {
-        return mType == TYPE_INPUT;
+        return mMode == MODE_INPUT;
     }
 
     /**
@@ -66,6 +77,6 @@ public final class Attribute {
      * @return <code>true</code> if the attribute is being used as output, <code>false</code> otherwise
      */
     public boolean isOutput() {
-        return mType == TYPE_OUTPUT;
+        return mMode == MODE_OUTPUT;
     }
 }

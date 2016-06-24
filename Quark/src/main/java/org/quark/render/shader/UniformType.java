@@ -26,117 +26,126 @@ public enum UniformType {
      *
      * @since GLSL 1.20
      */
-    Float,
+    Float("float"),
 
     /**
      * Represent two IEEE-754 single-precision floating point number.
      *
      * @since GLSL 1.20
      */
-    Float2,
+    Float2("vec2"),
 
     /**
      * Represent three IEEE-754 single-precision floating point number.
      *
      * @since GLSL 1.20
      */
-    Float3,
+    Float3("vec3"),
 
     /**
      * Represent four IEEE-754 single-precision floating point number.
      *
      * @since GLSL 1.20
      */
-    Float4,
+    Float4("vec4"),
 
     /**
      * Represent an array of {@linkplain #Float}
      *
      * @since GLSL 1.20
      */
-    FloatArray,
+    FloatArray("float[]"),
 
     /**
      * Represent a signed, two's complement, 32-bit integer.
      *
      * @since GLSL 1.20
      */
-    Int,
+    Int("int"),
 
     /**
      * Represent two signed, two's complement, 32-bit integer.
      *
      * @since GLSL 1.20
      */
-    Int2,
+    Int2("ivec2"),
 
     /**
      * Represent three signed, two's complement, 32-bit integer.
      *
      * @since GLSL 1.20
      */
-    Int3,
+    Int3("ivec3"),
 
     /**
      * Represent four signed, two's complement, 32-bit integer.
      *
      * @since GLSL 1.20
      */
-    Int4,
+    Int4("ivec4"),
 
     /**
      * Represent an array of {@linkplain #Int}
      *
      * @since GLSL 1.20
      */
-    IntArray,
+    IntArray("int[]"),
 
     /**
      * Represent a signed, two's complement, 32-bit unsigned integer.
      *
      * @since GLSL 1.30
      */
-    UInt,
+    UInt("uint"),
 
     /**
      * Represent two signed, two's complement, 32-bit unsigned integer.
      *
      * @since GLSL 1.30
      */
-    UInt2,
+    UInt2("uvec2"),
 
     /**
      * Represent three signed, two's complement, 32-bit unsigned integer.
      *
      * @since GLSL 1.30
      */
-    UInt3,
+    UInt3("uvec3"),
 
     /**
      * Represent four signed, two's complement, 32-bit unsigned integer.
      *
      * @since GLSL 1.30
      */
-    UInt4,
+    UInt4("uvec4"),
 
     /**
      * Represent an array of {@linkplain #UInt}
      *
      * @since GLSL 1.30
      */
-    UIntArray,
+    UIntArray("uint[]"),
 
     /**
      * Represent a matrix of 3x3 component(s).
      *
      * @since GLSL 1.20
      */
-    Matrix3x3,
+    Matrix3x3("mat3"),
 
     /**
      * Represent a matrix of 4x4 component(s).
      *
      * @since GLSL 1.20
      */
-    Matrix4x4
+    Matrix4x4("mat4");
+
+    public final String eName;
+
+    /**
+     * <p>Constructor</p>
+     */
+    UniformType(String name) {
+        eName = name;
+    }
 }
