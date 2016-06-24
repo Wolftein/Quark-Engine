@@ -34,6 +34,7 @@ import org.quark.system.utility.array.*;
 import org.quark.system.utility.emulation.Emulation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -1564,9 +1565,9 @@ public final class DefaultRender implements Render {
         private int mFactory = 0;
 
         /**
-         * Hold all attribute(s) being enabled or disabled (32 = MAX_ATTRIBUTE).
+         * Hold all attribute(s) being enabled or disabled.
          */
-        private final boolean mAttributes[], mAttributesTemp[];
+        private final boolean mAttributes[], mTemp[];
 
         /**
          * <p>Constructor</p>
@@ -1574,7 +1575,7 @@ public final class DefaultRender implements Render {
         public VertexArrayObjectExtensionEmulated() {
             mAttributes
                     = new boolean[mCapabilities.getInteger(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES)];
-            mAttributesTemp
+            mTemp
                     = new boolean[mCapabilities.getInteger(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES)];
         }
 
@@ -1627,8 +1628,13 @@ public final class DefaultRender implements Render {
          */
         @Override
         public void glUpdateVertexArrayAttributes(List<Vertex> vertex, int length) {
+            //!
+            //! Clear all previous values.
+            //!
+            Arrays.fill(mTemp, false);
+
             for (final Vertex attribute : vertex) {
-                mAttributesTemp[attribute.getID()] = true;
+                mTemp[attribute.getID()] = true;
 
                 mGL.glVertexAttribPointer(
                         attribute.getID(),
@@ -1643,13 +1649,13 @@ public final class DefaultRender implements Render {
                 //!
                 //! Update only if the attribute(s) are different
                 //!
-                if (mAttributes[i] != mAttributesTemp[i]) {
-                    if (mAttributesTemp[i]) {
+                if (mAttributes[i] != mTemp[i]) {
+                    if (mTemp[i]) {
                         mGL.glEnableVertexAttribArray(i);
                     } else {
                         mGL.glDisableVertexAttribArray(i);
                     }
-                    mAttributes[i] = mAttributesTemp[i];
+                    mAttributes[i] = mTemp[i];
                 }
             }
         }
