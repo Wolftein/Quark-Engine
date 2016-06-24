@@ -17,6 +17,8 @@
  */
 package org.quark.render;
 
+import org.quark.render.shader.Attribute;
+import org.quark.render.shader.Shader;
 import org.quark.render.storage.VertexDescriptor;
 import org.quark.render.texture.Texture;
 import org.quark.render.texture.frame.Frame;
@@ -120,6 +122,11 @@ public final class RenderCapabilities {
          * Indicates {@link Texture} maximum stage(s).
          */
         TEXTURE_STAGE,
+
+        /**
+         * Indicates {@link Shader} maximum {@link Attribute}(s).
+         */
+        GLSL_MAX_VERTEX_ATTRIBUTES
     }
 
     /**

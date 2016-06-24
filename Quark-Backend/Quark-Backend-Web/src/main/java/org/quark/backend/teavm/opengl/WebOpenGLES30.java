@@ -102,6 +102,9 @@ public class WebOpenGLES30 extends WebOpenGLES20 implements Render.GLES3 {
         limit.put(RenderCapabilities.Limit.TEXTURE_STAGE,
                 mGL.getParameterf(WebGLRenderingContext.MAX_TEXTURE_IMAGE_UNITS));
 
+        limit.put(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES,
+                mGL.getParameterf(WebGLRenderingContext.MAX_VERTEX_ATTRIBS));
+
         return new RenderCapabilities(RenderCapabilities.LanguageVersion.GLES20, extension, limit);
     }
 

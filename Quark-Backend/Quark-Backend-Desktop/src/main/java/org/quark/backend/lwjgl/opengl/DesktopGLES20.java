@@ -115,6 +115,9 @@ public class DesktopGLES20 implements Render.GLES2 {
         limit.put(RenderCapabilities.Limit.TEXTURE_STAGE,
                 GL11.glGetFloat(GL20.GL_MAX_TEXTURE_IMAGE_UNITS));
 
+        limit.put(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES,
+                GL11.glGetFloat(GL20.GL_MAX_VERTEX_ATTRIBS));
+
         //!
         //! Retrieves the extension from the context.
         //!

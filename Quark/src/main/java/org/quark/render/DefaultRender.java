@@ -1398,8 +1398,9 @@ public final class DefaultRender implements Render {
             //!
             vertices.acquire();
         }
-        Emulation.forEach(
-                vertices.getAttributes(), (attribute) -> onUpdateDescriptorVertex(vertices, attribute));
+        mVertexArrayObjectExtension.glUpdateVertexArrayAttributes(
+                vertices.getAttributes(),
+                vertices.getAttributesLength());
 
         //!
         //! Force an update on the storage.
@@ -1552,6 +1553,8 @@ public final class DefaultRender implements Render {
         void glUnbindVertexArray(VertexDescriptor name);
 
         void glUpdateVertexArray(VertexDescriptor name);
+
+        void glUpdateVertexArrayAttributes(List<Vertex> vertex, int length);
     }
 
     /**
@@ -1559,6 +1562,21 @@ public final class DefaultRender implements Render {
      */
     private final class VertexArrayObjectExtensionEmulated implements VertexArrayObjectExtension {
         private int mFactory = 0;
+
+        /**
+         * Hold all attribute(s) being enabled or disabled (32 = MAX_ATTRIBUTE).
+         */
+        private final boolean mAttributes[], mAttributesTemp[];
+
+        /**
+         * <p>Constructor</p>
+         */
+        public VertexArrayObjectExtensionEmulated() {
+            mAttributes
+                    = new boolean[mCapabilities.getInteger(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES)];
+            mAttributesTemp
+                    = new boolean[mCapabilities.getInteger(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES)];
+        }
 
         /**
          * {@inheritDoc}
@@ -1602,6 +1620,38 @@ public final class DefaultRender implements Render {
          */
         @Override
         public void glUpdateVertexArray(VertexDescriptor name) {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUpdateVertexArrayAttributes(List<Vertex> vertex, int length) {
+            for (final Vertex attribute : vertex) {
+                mAttributesTemp[attribute.getID()] = true;
+
+                mGL.glVertexAttribPointer(
+                        attribute.getID(),
+                        attribute.getComponent(),
+                        attribute.getType().eValue,
+                        attribute.isNormalised(),
+                        length,
+                        attribute.getOffset());
+            }
+
+            for (int i = 0; i < mAttributes.length; i++) {
+                //!
+                //! Update only if the attribute(s) are different
+                //!
+                if (mAttributes[i] != mAttributesTemp[i]) {
+                    if (mAttributesTemp[i]) {
+                        mGL.glEnableVertexAttribArray(i);
+                    } else {
+                        mGL.glDisableVertexAttribArray(i);
+                    }
+                    mAttributes[i] = mAttributesTemp[i];
+                }
+            }
         }
     }
 
@@ -1651,6 +1701,24 @@ public final class DefaultRender implements Render {
                 onUpdateDescriptor(name);
             }
             release(name);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void glUpdateVertexArrayAttributes(List<Vertex> vertex, int length) {
+            for (final Vertex attribute : vertex) {
+                mGL.glEnableVertexAttribArray(
+                        attribute.getID());
+                mGL.glVertexAttribPointer(
+                        attribute.getID(),
+                        attribute.getComponent(),
+                        attribute.getType().eValue,
+                        attribute.isNormalised(),
+                        length,
+                        attribute.getOffset());
+            }
         }
     }
 }
