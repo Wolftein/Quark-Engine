@@ -43,7 +43,7 @@ public final class WebInputMouse implements InputMouse {
      */
     private final EventListener<MouseEvent> mRegistration1 = this::onMouseButtonUp;
     private final EventListener<MouseEvent> mRegistration2 = this::onMouseButtonDown;
-    private final EventListener<MovementEvent> mRegistration3 = this::onMouseMove;
+    private final EventListener<MouseEvent> mRegistration3 = this::onMouseMove;
     private final EventListener<WheelEvent> mRegistration4 = this::onMouseWheel;
 
     /**
@@ -60,7 +60,7 @@ public final class WebInputMouse implements InputMouse {
     public void create() {
         mHandle.listenMouseUp(mRegistration1);
         mHandle.listenMouseDown(mRegistration2);
-        mHandle.addEventListener("mousemove", mRegistration3);
+        mHandle.listenMouseOver(mRegistration3);
         mHandle.addEventListener("wheel", mRegistration4);
     }
 
@@ -78,7 +78,7 @@ public final class WebInputMouse implements InputMouse {
     public void destroy() {
         mHandle.neglectMouseUp(mRegistration1);
         mHandle.neglectMouseDown(mRegistration2);
-        mHandle.removeEventListener("mousemove", mRegistration3);
+        mHandle.neglectMouseOver(mRegistration3);
         mHandle.removeEventListener("wheel", mRegistration4);
     }
 
@@ -126,11 +126,11 @@ public final class WebInputMouse implements InputMouse {
     /**
      * <p>Handle mouse-move event</p>
      */
-    private void onMouseMove(MovementEvent event) {
+    private void onMouseMove(MouseEvent event) {
         if (isPointerLocked(mHandle)) {
             QKInput.invokeMouseMove(
-                    QKInput.getCursorX() + event.getMovementX(),
-                    QKInput.getCursorY() + event.getMovementY());
+                    QKInput.getCursorX() + getMovementX(event),
+                    QKInput.getCursorY() + getMovementY(event));
         } else {
             QKInput.invokeMouseMove(event.getClientX(), event.getClientY());
         }
@@ -161,34 +161,39 @@ public final class WebInputMouse implements InputMouse {
     /**
      * @see <a href="https://w3c.github.io/pointerlock/">Pointer Lock</a>
      */
-    @JSBody(params = {"element"}, script = "element.requestPointerLock = element.requestPointerLock " +
-            "|| element.mozRequestPointerLock || element.webkitRequestPointerLock; element.requestPointerLock();")
+    @JSBody(params = {"element"},
+            script = "element.requestPointerLock = element.requestPointerLock " +
+                    "|| element.mozRequestPointerLock || element.webkitRequestPointerLock; element.requestPointerLock();")
     private static native void onPointerLock(HTMLElement element);
 
     /**
      * @see <a href="https://w3c.github.io/pointerlock/">Pointer Lock</a>
      */
-    @JSBody(params = {"element"}, script = "document.exitPointerLock = document.exitPointerLock " +
-            "|| document.mozExitPointerLock || document.webkitExitPointerLock; document.exitPointerLock();")
+    @JSBody(params = {"element"},
+            script = "document.exitPointerLock = document.exitPointerLock " +
+                    "|| document.mozExitPointerLock || document.webkitExitPointerLock; document.exitPointerLock();")
     private static native void onPointerUnlock(HTMLElement element);
 
     /**
      * @see <a href="https://w3c.github.io/pointerlock/">Pointer Lock</a>
      */
-    @JSBody(params = {"element"}, script =
-            "return (document.pointerLockElement == element || document.mozPointerLockElement  == element);")
+    @JSBody(params = {"element"},
+            script = "return (document.pointerLockElement == element || document.mozPointerLockElement  == element);")
     private static native boolean isPointerLocked(HTMLElement element);
 
     /**
-     * <code>MovementEvent</code> represent a extended {@link MouseEvent}.
+     * @see <a href="https://w3c.github.io/pointerlock/">Pointer Lock</a>
      */
-    private interface MovementEvent extends MouseEvent {
-        @JSProperty
-        int getMovementX();
+    @JSBody(params = {"event"},
+            script = "return event.movementX;")
+    private static native int getMovementX(MouseEvent event);
 
-        @JSProperty
-        int getMovementY();
-    }
+    /**
+     * @see <a href="https://w3c.github.io/pointerlock/">Pointer Lock</a>
+     */
+    @JSBody(params = {"event"},
+            script = "return event.movementY;")
+    private static native int getMovementY(MouseEvent event);
 
     /**
      * <code>WheelEvent</code> represent an event for wheel event.

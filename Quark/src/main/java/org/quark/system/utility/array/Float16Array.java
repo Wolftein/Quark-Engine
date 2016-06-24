@@ -22,7 +22,7 @@ package org.quark.system.utility.array;
  */
 public interface Float16Array extends Array<Float16Array> {
     /**
-     * @see Array#writeInt16(short)
+     * @see Array#writeInt16(int)
      */
     default Float16Array write(float value) {
         return writeInt16(toHalf(value));
@@ -46,7 +46,7 @@ public interface Float16Array extends Array<Float16Array> {
     }
 
     /**
-     * @see Array#writeInt16(int, short)
+     * @see Array#writeInt16(int, int)
      */
     default Float16Array write(int index, float value) {
         return writeInt16(index * 0x02, toHalf(value));

@@ -131,8 +131,8 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt8(byte value) {
-        mBuffer.put(value);
+    public A writeInt8(int value) {
+        mBuffer.put((byte) value);
         return (A) this;
     }
 
@@ -150,8 +150,8 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt8(int index, byte value) {
-        mBuffer.put(index, value);
+    public A writeInt8(int index, int value) {
+        mBuffer.put(index, (byte) value);
         return (A) this;
     }
 
@@ -159,8 +159,8 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt16(short value) {
-        mBuffer.putShort(value);
+    public A writeInt16(int value) {
+        mBuffer.putShort((short) value);
         return (A) this;
     }
 
@@ -178,8 +178,8 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt16(int index, short value) {
-        mBuffer.putShort(index, value);
+    public A writeInt16(int index, int value) {
+        mBuffer.putShort(index, (short) value);
         return (A) this;
     }
 
@@ -389,5 +389,17 @@ public class DesktopArray<A extends Array> implements Array<A> {
     @Override
     public double readFloat64(int index) {
         return mBuffer.getDouble(index);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read(byte[] value, int offset, int count) {
+        final int position = mBuffer.position();
+
+        mBuffer.get(value, offset, count);
+
+        return mBuffer.position() - position;
     }
 }

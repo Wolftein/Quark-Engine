@@ -26,14 +26,14 @@ public interface UInt16Array extends Array<UInt16Array> {
     int MAX_NEGATIVE = 0xFFFF;
 
     /**
-     * @see Array#writeInt16(short)
+     * @see Array#writeInt16(int)
      */
     default UInt16Array write(short value) {
         return writeInt16(value);
     }
 
     /**
-     * @see Array#writeInt16(short)
+     * @see Array#writeInt16(int)
      */
     default UInt16Array write(int value) {
         return writeInt16(
@@ -74,14 +74,14 @@ public interface UInt16Array extends Array<UInt16Array> {
     }
 
     /**
-     * @see Array#writeInt16(int, short)
+     * @see Array#writeInt16(int, int)
      */
     default UInt16Array write(int index, short value) {
         return writeInt16(index * 0x02, value);
     }
 
     /**
-     * @see Array#writeInt16(int, short)
+     * @see Array#writeInt16(int, int)
      */
     default UInt16Array write(int index, int value) {
         return writeInt16(index * 0x02,

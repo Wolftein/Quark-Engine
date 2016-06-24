@@ -82,7 +82,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.ByteBuffer#put(byte)
      */
-    A writeInt8(byte value);
+    A writeInt8(int value);
 
     /**
      * @see java.nio.ByteBuffer#put(byte[])
@@ -99,12 +99,12 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.ByteBuffer#put(int, byte)
      */
-    A writeInt8(int index, byte value);
+    A writeInt8(int index, int value);
 
     /**
      * @see java.nio.ByteBuffer#putShort(short)
      */
-    A writeInt16(short value);
+    A writeInt16(int value);
 
     /**
      * @see java.nio.ShortBuffer#put(short[])
@@ -121,7 +121,7 @@ public interface Array<A extends Array> {
     /**
      * @see java.nio.ByteBuffer#putShort(int, short)
      */
-    A writeInt16(int index, short value);
+    A writeInt16(int index, int value);
 
     /**
      * @see java.nio.ByteBuffer#putInt(int)
@@ -212,6 +212,14 @@ public interface Array<A extends Array> {
     A writeFloat64(int index, double value);
 
     /**
+     * @see java.nio.ByteBuffer#put(byte[])
+     */
+    default A writeString(String value) {
+        final byte[] bytes = value.getBytes();
+        return (A) writeInt16(bytes.length).writeInt8(bytes);
+    }
+
+    /**
      * @see ByteBuffer#get()
      */
     byte readInt8();
@@ -270,4 +278,26 @@ public interface Array<A extends Array> {
      * @see ByteBuffer#getDouble(int)
      */
     double readFloat64(int index);
+
+    /**
+     * @see ByteBuffer#get(byte[])
+     */
+    default String readString() {
+        final byte[] bytes = new byte[readInt16()];
+        read(bytes);
+
+        return new String(bytes);
+    }
+
+    /**
+     * @see java.nio.ByteBuffer#get(byte[])
+     */
+    default int read(byte[] value) {
+        return read(value, 0, value.length);
+    }
+
+    /**
+     * @see java.nio.ByteBuffer#get(byte[], int, int)
+     */
+    int read(byte[] value, int offset, int count);
 }

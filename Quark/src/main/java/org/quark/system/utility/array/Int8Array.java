@@ -22,7 +22,7 @@ package org.quark.system.utility.array;
  */
 public interface Int8Array extends Array<Int8Array> {
     /**
-     * @see Array#writeInt8(byte)
+     * @see Array#writeInt8(int)
      */
     default Int8Array write(byte value) {
         return writeInt8(value);
@@ -45,7 +45,7 @@ public interface Int8Array extends Array<Int8Array> {
     }
 
     /**
-     * @see Array#writeInt8(int, byte)
+     * @see Array#writeInt8(int, int)
      */
     default Int8Array write(int index, byte value) {
         return writeInt8(index, value);

@@ -22,7 +22,7 @@ package org.quark.system.utility.array;
  */
 public interface Int16Array extends Array<Int16Array> {
     /**
-     * @see Array#writeInt16(short)
+     * @see Array#writeInt16(int)
      */
     default Int16Array write(short value) {
         return writeInt16(value);
@@ -45,7 +45,7 @@ public interface Int16Array extends Array<Int16Array> {
     }
 
     /**
-     * @see Array#writeInt16(int, short)
+     * @see Array#writeInt16(int, int)
      */
     default Int16Array write(int index, short value) {
         return writeInt16(index * 0x02, value);

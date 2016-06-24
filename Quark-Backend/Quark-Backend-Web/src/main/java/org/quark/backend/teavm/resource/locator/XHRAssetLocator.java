@@ -17,15 +17,13 @@
  */
 package org.quark.backend.teavm.resource.locator;
 
-import org.quark.backend.teavm.utility.array.WebArray;
 import org.quark.backend.teavm.utility.array.WebArrayFactory;
 import org.quark.resource.AssetCallback;
 import org.quark.resource.AssetLocator;
-import org.quark.system.utility.array.Int8Array;
+import org.quark.system.utility.array.ArrayInputStream;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -65,7 +63,7 @@ public final class XHRAssetLocator implements AssetLocator {
         xhr.send();
 
         final InputStream stream = (xhr.getStatus() == 200 || xhr.getStatus() == 0
-                ? new XHRInputStream(new WebArrayFactory.TeaVMInt8Array((ArrayBuffer) xhr.getResponse()))
+                ? new ArrayInputStream(new WebArrayFactory.TeaVMInt8Array((ArrayBuffer) xhr.getResponse()))
                 : null);
         return new AsynchronousInputStream(stream, null);
     }
@@ -102,75 +100,11 @@ public final class XHRAssetLocator implements AssetLocator {
 
             final Thread thread = new Thread(() ->
                     stream.notify(
-                            new XHRInputStream(
+                            new ArrayInputStream(
                                     new WebArrayFactory.TeaVMInt8Array(response))));
             thread.start();
         } else {
             stream.notify(null);
-        }
-    }
-
-    /**
-     * Specialised {@link InputStream} for binary raw data.
-     */
-    private final static class XHRInputStream extends InputStream {
-        private final Int8Array mArray;
-
-        /**
-         * <p>Constructor</p>
-         */
-        public XHRInputStream(Int8Array array) {
-            mArray = array;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int read() throws IOException {
-            if (!mArray.hasRemaining()) {
-                return -1;
-            }
-            return mArray.read() & 0xFF;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int read(byte[] bytes) throws IOException {
-            return read(bytes, 0, bytes.length);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int read(byte[] bytes, int offset, int length) throws IOException {
-            if (!mArray.hasRemaining()) {
-                return -1;
-            }
-            return WebArray.copy(mArray, bytes, offset, length);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int available() throws IOException {
-            return mArray.remaining();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public long skip(long count) throws IOException {
-            final int skip = (int) (mArray.position() + count);
-
-            mArray.position(skip);
-
-            return skip;
         }
     }
 }

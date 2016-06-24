@@ -26,14 +26,14 @@ public interface UInt8Array extends Array<UInt8Array> {
     int MAX_NEGATIVE = 0xFFFF;
 
     /**
-     * @see Array#writeInt8(byte)
+     * @see Array#writeInt8(int)
      */
     default UInt8Array write(byte value) {
         return writeInt8(value);
     }
 
     /**
-     * @see Array#writeInt8(byte)
+     * @see Array#writeInt8(int)
      */
     default UInt8Array write(int value) {
         return writeInt8(
@@ -74,14 +74,14 @@ public interface UInt8Array extends Array<UInt8Array> {
     }
 
     /**
-     * @see Array#writeInt8(int, byte)
+     * @see Array#writeInt8(int, int)
      */
     default UInt8Array write(int index, byte value) {
         return writeInt8(index, value);
     }
 
     /**
-     * @see Array#writeInt8(int, byte)
+     * @see Array#writeInt8(int, int)
      */
     default UInt8Array write(int index, int value) {
         return writeInt8(index,

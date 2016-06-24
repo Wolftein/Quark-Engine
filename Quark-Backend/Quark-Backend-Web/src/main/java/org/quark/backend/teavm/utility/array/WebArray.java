@@ -28,7 +28,7 @@ import org.teavm.platform.Platform;
 /**
  * Implementation for {@link Array}.
  */
-public abstract class WebArray<A extends Array> implements Array<A> {
+public class WebArray<A extends Array> implements Array<A> {
     /**
      * Hold a reference to the typed-array.
      */
@@ -145,7 +145,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt8(byte value) {
+    public A writeInt8(int value) {
         mBuffer.setInt8(mPosition++, value);
         return (A) this;
     }
@@ -166,7 +166,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt8(int index, byte value) {
+    public A writeInt8(int index, int value) {
         mBuffer.setInt8(index, value);
         return (A) this;
     }
@@ -175,7 +175,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt16(short value) {
+    public A writeInt16(int value) {
         mBuffer.setInt16(mPosition, value, true);
 
         mPosition += 2;
@@ -199,7 +199,7 @@ public abstract class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt16(int index, short value) {
+    public A writeInt16(int index, int value) {
         mBuffer.setInt16(index, value, true);
         return (A) this;
     }
@@ -440,6 +440,20 @@ public abstract class WebArray<A extends Array> implements Array<A> {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read(byte[] value, int offset, int count) {
+        count = Math.min(count, remaining());
+
+        read(Platform.getPlatformObject(value), offset, mBuffer.getBuffer(), mPosition, count);
+
+        mPosition += count;
+
+        return count;
+    }
+
+    /**
      * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
      */
     @JSBody(params = {"buffer"}, script = "return new DataView(buffer)")
@@ -460,19 +474,6 @@ public abstract class WebArray<A extends Array> implements Array<A> {
             script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
                     "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
     public static native void read(JSObject dst, int offset, JSObject src, int from, int length);
-
-    /**
-     * <p>Perform a memory-copy operation</p>
-     */
-    public static <T extends Array<?>> int copy(T array, byte[] buffer, int offset, int length) {
-        length = Math.min(length, array.remaining());
-
-        read(Platform.getPlatformObject(buffer), offset, array.<DataView>data().getBuffer(), array.position(), length);
-
-        array.position(array.position() + length);
-
-        return length;
-    }
 
     /**
      * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
