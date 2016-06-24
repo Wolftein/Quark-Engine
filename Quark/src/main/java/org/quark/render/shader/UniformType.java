@@ -17,6 +17,11 @@
  */
 package org.quark.render.shader;
 
+import org.quark.render.texture.Texture;
+import org.quark.render.texture.Texture2D;
+import org.quark.render.texture.Texture2DCube;
+import org.quark.render.texture.Texture3D;
+
 /**
  * <code>UniformType</code> enumerate {@link Uniform} type(s).
  */
@@ -138,7 +143,231 @@ public enum UniformType {
      *
      * @since GLSL 1.20
      */
-    Matrix4x4("mat4");
+    Matrix4x4("mat4"),
+
+    /**
+     * Represent a 1D {@link Texture}.
+     *
+     * @since GLSL 1.20
+     */
+    Sampler1D("sampler1D"),
+
+    /**
+     * Represent an array of 1D {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    Sampler1DArray("sampler1DArray"),
+
+    /**
+     * Represent a 1D shadow {@link Texture}.
+     *
+     * @since GLSL 1.20
+     */
+    Sampler1DShadow("sampler1DShadow"),
+
+    /**
+     * Represent an array of 1D shadow {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    Sampler1DShadowArray("sampler1DArrayShadow"),
+
+    /**
+     * Represent a {@link Texture2D}.
+     *
+     * @since GLSL 1.20
+     */
+    Sampler2D("sampler2D"),
+
+    /**
+     * Represent an array of {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    Sampler2DArray("sampler2DArray"),
+
+    /**
+     * Represent a shadow {@link Texture2D}.
+     *
+     * @since GLSL 1.20
+     */
+    Sampler2DShadow("sampler2DShadow"),
+
+    /**
+     * Represent an array of shadow {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    sampler2DShadowArray("sampler2DArrayShadow"),
+
+    /**
+     * Represent a multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    Sampler2DMultisample("sampler2DMS"),
+
+    /**
+     * Represent an array of multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    Sampler2DMultisampleArray("sampler2DMSArray"),
+
+    /**
+     * Represent a {@link Texture3D}.
+     *
+     * @since GLSL 1.20
+     */
+    Sampler3D("sampler3D"),
+
+    /**
+     * Represent a {@link Texture2DCube}.
+     *
+     * @since GLSL 1.20
+     */
+    SamplerCube("samplerCube"),
+
+    /**
+     * Represent a shadow {@link Texture2DCube}.
+     *
+     * @since GLSL 1.20
+     */
+    SamplerCubeShadow("samplerCubeShadow"),
+
+    /**
+     * Represent a 1D integer {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerInt1D("isampler1D"),
+
+    /**
+     * Represent an array of 1D integer {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerInt1DArray("isampler1DArray"),
+
+    /**
+     * Represent an integer {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerInt2D("isampler2D"),
+
+    /**
+     * Represent an array of integer {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerInt2DArray("isampler2DArray"),
+
+    /**
+     * Represent an integer multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    SamplerInt2DMultisample("isampler2DMS"),
+
+    /**
+     * Represent an array of integer multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    SamplerInt2DMultisampleArray("isampler2DMSArray"),
+
+    /**
+     * Represent an integer {@link Texture3D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerInt3D("isampler3D"),
+
+    /**
+     * Represent an integer {@link Texture2DCube}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerIntCube("isamplerCube"),
+
+    /**
+     * Represent a 1D unsigned integer {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUInt1D("usampler1D"),
+
+    /**
+     * Represent an array of 1D unsigned integer {@link Texture}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUInt1DArray("usampler1DArray"),
+
+    /**
+     * Represent an unsigned integer {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUInt2D("usampler2D"),
+
+    /**
+     * Represent an array of unsigned integer {@link Texture2D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUInt2DArray("usampler2DArray"),
+
+    /**
+     * Represent an unsigned integer multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    SamplerUInt2DMultisample("usampler2DMS"),
+
+    /**
+     * Represent an array of unsigned integer multi-sampled {@link Texture2D}.
+     *
+     * @since GLSL 1.50
+     */
+    SamplerUInt2DMultisampleArray("usampler2DMSArray"),
+
+    /**
+     * Represent an unsigned integer {@link Texture3D}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUInt3D("usampler3D"),
+
+    /**
+     * Represent an unsigned integer {@link Texture2DCube}.
+     *
+     * @since GLSL 1.30
+     */
+    SamplerUIntCube("usamplerCube"),
+
+    /**
+     * Represent a {@link Texture} buffer.
+     *
+     * @since GLSL 1.40
+     */
+    SamplerBuffer("samplerBuffer"),
+
+    /**
+     * Represent an integer {@link Texture} buffer.
+     *
+     * @since GLSL 1.40
+     */
+    SamplerIntBuffer("isamplerBuffer"),
+
+    /**
+     * Represent an unsigned integer {@link Texture} buffer.
+     *
+     * @since GLSL 1.40
+     */
+    SamplerUIntBuffer("usamplerBuffer");
 
     public final String eName;
 

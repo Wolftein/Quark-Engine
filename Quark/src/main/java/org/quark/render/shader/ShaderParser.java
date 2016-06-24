@@ -17,7 +17,9 @@
  */
 package org.quark.render.shader;
 
+import org.quark.mathematic.*;
 import org.quark.render.RenderCapabilities;
+import org.quark.render.shader.data.*;
 import org.quark.system.utility.array.ArrayFactory;
 import org.quark.system.utility.array.Int8Array;
 
@@ -196,6 +198,29 @@ public final class ShaderParser {
             mArray.writeString(id);
             mArray.writeInt8(type.ordinal());
             mArray.writeInt8(precision.ordinal());
+
+            return (A) this;
+        }
+
+        public A uniform(int index, String id, UniformType type) {
+            return uniform(index, id, type, mPrecision, 1);
+        }
+
+        public A uniform(int index, String id, UniformType type, int length) {
+            return uniform(index, id, type, mPrecision, length);
+        }
+
+        public A uniform(int index, String id, UniformType type, Precision precision) {
+            return uniform(index, id, type, precision, 1);
+        }
+
+        public A uniform(int index, String id, UniformType type, Precision precision, int length) {
+            mArray.writeInt8(OP_UNIFORM);
+            mArray.writeInt8(index);
+            mArray.writeString(id);
+            mArray.writeInt8(type.ordinal());
+            mArray.writeInt8(precision.ordinal());
+            mArray.writeInt8(length);
 
             return (A) this;
         }
@@ -429,12 +454,133 @@ public final class ShaderParser {
      * <code>OnUniformGenerator</code> encapsulate a {@link Generator} for {@link Uniform}(s).
      */
     private final static class OnUniformGenerator implements Generator {
+        private final static String UNIFORM_CORE = "uniform";
+        private final static String UNIFORM_LAYOUT_BEGIN = "layout(location = ";
+        private final static String UNIFORM_LAYOUT_END = ")";
+
         /**
          * {@inheritDoc}
          */
         @Override
         public void generate(Process process, Int8Array input, StringBuffer output) {
+            final int index
+                    = input.readInt8();
+            final String name
+                    = input.readString();
+            final UniformType uniform
+                    = UniformType.values()[input.readInt8()];
+            final Precision precision
+                    = Precision.values()[input.readInt8()];
+            final int length
+                    = input.readInt8();
 
+            switch (uniform) {
+                case Float:
+                    if (length == 1) {
+                        process.uniforms.put(name, new UniformFloat(0.0f));
+                    } else {
+                        process.uniforms.put(name, new UniformFloatArray(length));
+                    }
+                    break;
+                case Float2:
+                    process.uniforms.put(name, new UniformFloat2(MutableVector2f.zero()));
+                    break;
+                case Float3:
+                    process.uniforms.put(name, new UniformFloat3(MutableVector3f.zero()));
+                    break;
+                case Float4:
+                    process.uniforms.put(name, new UniformFloat4(MutableVector4f.zero()));
+                    break;
+                case Int:
+                    if (length == 1) {
+                        process.uniforms.put(name, new UniformInt(0));
+                    } else {
+                        process.uniforms.put(name, new UniformIntArray(length));
+                    }
+                    break;
+                case Int2:
+                    process.uniforms.put(name, new UniformInt2(MutableVector2i.zero()));
+                    break;
+                case Int3:
+                    process.uniforms.put(name, new UniformInt3(MutableVector3i.zero()));
+                    break;
+                case Int4:
+                    process.uniforms.put(name, new UniformInt4(MutableVector4i.zero()));
+                    break;
+                case UInt:
+                    if (length == 1) {
+                        process.uniforms.put(name, new UniformUnsignedInt(0));
+                    } else {
+                        process.uniforms.put(name, new UniformUnsignedIntArray(length));
+                    }
+                    break;
+                case UInt2:
+                    process.uniforms.put(name, new UniformUnsignedInt2(MutableVector2i.zero()));
+                    break;
+                case UInt3:
+                    process.uniforms.put(name, new UniformUnsignedInt3(MutableVector3i.zero()));
+                    break;
+                case UInt4:
+                    process.uniforms.put(name, new UniformUnsignedInt4(MutableVector4i.zero()));
+                    break;
+                case Matrix3x3:
+                    process.uniforms.put(name, new UniformMatrix3());
+                    break;
+                case Matrix4x4:
+                    process.uniforms.put(name, new UniformMatrix4());
+                    break;
+                case Sampler1D:
+                case Sampler1DArray:
+                case Sampler1DShadow:
+                case Sampler1DShadowArray:
+                case Sampler2D:
+                case Sampler2DArray:
+                case Sampler2DShadow:
+                case sampler2DShadowArray:
+                case Sampler2DMultisample:
+                case Sampler2DMultisampleArray:
+                case Sampler3D:
+                case SamplerCube:
+                case SamplerCubeShadow:
+                case SamplerInt1D:
+                case SamplerInt1DArray:
+                case SamplerInt2D:
+                case SamplerInt2DArray:
+                case SamplerInt2DMultisample:
+                case SamplerInt2DMultisampleArray:
+                case SamplerInt3D:
+                case SamplerIntCube:
+                case SamplerUInt1D:
+                case SamplerUInt1DArray:
+                case SamplerUInt2D:
+                case SamplerUInt2DArray:
+                case SamplerUInt2DMultisample:
+                case SamplerUInt2DMultisampleArray:
+                case SamplerUInt3D:
+                case SamplerUIntCube:
+                case SamplerBuffer:
+                case SamplerIntBuffer:
+                case SamplerUIntBuffer:
+                    process.uniforms.put(name, new UniformInt(0));
+                    break;
+            }
+
+            if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM)) {
+                //!
+                //! Support for GLSL_EXPLICIT_UNIFORM extension.
+                //!
+                output.append(UNIFORM_LAYOUT_BEGIN).append(index).append(UNIFORM_LAYOUT_END).append(" ");
+            }
+
+            output.append(UNIFORM_CORE).append(" ");
+
+            if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_PRECISION)) {
+                //!
+                //! Support for GLSL_PRECISION extension.
+                //!
+                output.append(precision.eName).append(" ");
+            }
+            output.append(uniform.eName).append(" ").append(name).append(";");
         }
     }
 
