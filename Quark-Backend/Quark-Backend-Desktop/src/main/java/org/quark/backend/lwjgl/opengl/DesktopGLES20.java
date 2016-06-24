@@ -139,6 +139,8 @@ public class DesktopGLES20 implements Render.GLES2 {
         extension.put(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
                 capabilities.GL_EXT_texture_filter_anisotropic);
 
+        extension.put(RenderCapabilities.Extension.GLSL_PRECISION,
+                capabilities.GL_ARB_shader_precision);
         extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE,
                 capabilities.GL_ARB_explicit_attrib_location);
         extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM,

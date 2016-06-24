@@ -85,7 +85,12 @@ public final class RenderCapabilities {
         /**
          * Indicates if explicit data location is supported by GLSL.
          */
-        GLSL_EXPLICIT_UNIFORM
+        GLSL_EXPLICIT_UNIFORM,
+
+        /**
+         * Indicates if explicit precision is supported by GLSL.
+         */
+        GLSL_PRECISION
     }
 
     /**
@@ -177,6 +182,14 @@ public final class RenderCapabilities {
          */
         GL33;
 
+        /**
+         * <p>Check if the version is legacy and doesn't support core extension(s)</p>
+         *
+         * @return <code>true</code> if the version is legacy, <code>false</code> otherwise
+         */
+        public boolean isLegacy() {
+            return this == GLES20 || this == GL21;
+        }
 
         /**
          * <p>Get the {@link ShaderLanguageVersion}</p>
@@ -290,7 +303,7 @@ public final class RenderCapabilities {
      * @return <code>true</code> if the extension is supported, <code>false</code> otherwise
      */
     public boolean hasExtension(Extension extension) {
-        return mExtensions.get(extension);
+        return mExtensions.containsKey(extension) && mExtensions.get(extension);
     }
 
     /**

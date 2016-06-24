@@ -90,7 +90,7 @@ public enum AttributeType {
      * @since GLSL 1.20
      */
     Matrix4x4("mat4");
-    
+
     public final String eName;
 
     /**

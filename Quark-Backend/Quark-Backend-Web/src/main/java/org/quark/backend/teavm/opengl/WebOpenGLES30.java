@@ -82,6 +82,7 @@ public class WebOpenGLES30 extends WebOpenGLES20 implements Render.GLES3 {
         extension.put(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
                 isExtension(OES_texture_filter_anisotropic.NAMES));
 
+        extension.put(RenderCapabilities.Extension.GLSL_PRECISION, true);
         extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE, false);
         extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM, false);
         extension.put(RenderCapabilities.Extension.GLSL_GEOMETRY, false);

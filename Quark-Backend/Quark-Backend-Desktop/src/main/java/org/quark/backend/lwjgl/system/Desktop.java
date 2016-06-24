@@ -174,7 +174,6 @@ public final class Desktop {
 
         mResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
-        mResources.registerAssetLoader(new ShaderGLSLAssetLoader(mRender.getCapabilities()), "pipeline");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
 
