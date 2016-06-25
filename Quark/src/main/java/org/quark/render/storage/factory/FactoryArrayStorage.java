@@ -37,7 +37,7 @@ public class FactoryArrayStorage<A extends Array<?>> extends Storage<A> {
         super(type, StorageTarget.ARRAY, mode, format, capacity);
 
         mAttributes = vertex;
-        mAttributesLength = Emulation.forEachMapToInt(vertex, Vertex::getLength);
+        mAttributesLength = Emulation.forEachMapToInt(vertex, (attribute) -> attribute.getLength());
     }
 
     /***

@@ -92,6 +92,7 @@ public final class ShaderParser {
 
         mArray.flip();
 
+
         while (mArray.hasRemaining()) {
             final StringBuffer output = new StringBuffer(64);
 
@@ -357,24 +358,32 @@ public final class ShaderParser {
             final boolean isLegacy = process.capabilities.getVersion().isLegacy();
 
             if (process.stage == StageType.VERTEX) {
+
                 //!
                 //! Support for GLSL_EXPLICIT_ATTRIBUTE extension.
                 //!
                 if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
                     output.append(INPUT_LAYOUT_BEGIN).append(index).append(INPUT_LAYOUT_END).append(" ");
                 }
-
                 //!
                 //! NOTE: Legacy use 'attribute' for input while core use 'in'.
                 //!
-                output.append((isLegacy ? INPUT_LEGACY : INPUT_CORE)).append(" ");
+                if (isLegacy) {
+                    output.append(INPUT_LEGACY).append(" ");
+                } else {
+                    output.append(INPUT_CORE).append(" ");
+                }
 
                 process.attributes.put(name, new Attribute(index, Attribute.MODE_INPUT, attribute));
             } else if (process.stage == StageType.FRAGMENT) {
                 //!
                 //! NOTE: Legacy use 'varying' for inout while core use 'in'.
                 //!
-                output.append((isLegacy ? INPUT_LEGACY_VARYING : INPUT_CORE)).append(" ");
+                if (isLegacy) {
+                    output.append(INPUT_LEGACY_VARYING).append(" ");
+                } else {
+                    output.append(INPUT_CORE).append(" ");
+                }
             }
 
             if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_PRECISION)) {
@@ -416,37 +425,42 @@ public final class ShaderParser {
             final boolean isLegacy = process.capabilities.getVersion().isLegacy();
 
             if (process.stage == StageType.FRAGMENT) {
+                process.attributes.put(name, new Attribute(index, Attribute.MODE_INPUT, attribute));
 
                 if (isLegacy) {
                     //!
                     //! NOTE: Legacy doesn't support custom MRT
                     //!
                     output.append("#define ").append(name).append(" ").append("gl_FragData[").append(index).append("]");
-                } else {
 
+                    return;
+                } else {
                     if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE)) {
+                        //!
+                        //! Support for GLSL_EXPLICIT_ATTRIBUTE extension.
+                        //!
                         output.append(OUTPUT_LAYOUT_BEGIN).append(index).append(OUTPUT_LAYOUT_END).append(" ");
                     }
                     output.append(OUTPUT_CORE).append(" ");
                 }
-
-                process.attributes.put(name, new Attribute(index, Attribute.MODE_INPUT, attribute));
             } else if (process.stage == StageType.VERTEX) {
                 //!
                 //! NOTE: Legacy use 'varying' for inout while core use 'out'.
                 //!
-                output.append((isLegacy ? OUTPUT_LEGACY_VARYING : OUTPUT_CORE)).append(" ");
+                if (isLegacy) {
+                    output.append(OUTPUT_LEGACY_VARYING).append(" ");
+                } else {
+                    output.append(OUTPUT_CORE).append(" ");
+                }
             }
 
-            if (!isLegacy) {
-                if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_PRECISION)) {
-                    //!
-                    //! Support for GLSL_PRECISION extension.
-                    //!
-                    output.append(precision.eName).append(" ");
-                }
-                output.append(attribute.eName).append(" ").append(name).append(";");
+            if (process.capabilities.hasExtension(RenderCapabilities.Extension.GLSL_PRECISION)) {
+                //!
+                //! Support for GLSL_PRECISION extension.
+                //!
+                output.append(precision.eName).append(" ");
             }
+            output.append(attribute.eName).append(" ").append(name).append(";");
         }
     }
 

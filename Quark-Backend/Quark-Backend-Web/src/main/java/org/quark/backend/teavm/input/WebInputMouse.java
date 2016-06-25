@@ -60,7 +60,7 @@ public final class WebInputMouse implements InputMouse {
     public void create() {
         mHandle.listenMouseUp(mRegistration1);
         mHandle.listenMouseDown(mRegistration2);
-        mHandle.listenMouseOver(mRegistration3);
+        mHandle.addEventListener("mousemove", mRegistration3);
         mHandle.addEventListener("wheel", mRegistration4);
     }
 
@@ -78,7 +78,7 @@ public final class WebInputMouse implements InputMouse {
     public void destroy() {
         mHandle.neglectMouseUp(mRegistration1);
         mHandle.neglectMouseDown(mRegistration2);
-        mHandle.neglectMouseOver(mRegistration3);
+        mHandle.removeEventListener("mousemove", mRegistration3);
         mHandle.removeEventListener("wheel", mRegistration4);
     }
 

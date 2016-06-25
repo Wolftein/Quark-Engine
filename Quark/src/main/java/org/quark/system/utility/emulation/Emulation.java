@@ -62,7 +62,7 @@ public class Emulation {
     /**
      * (NOT PRESENT IN TeaVM)
      */
-    public static <A, B extends Function<A, Integer>> int forEachMapToInt(Iterable<A> iterator, B consumer) {
+    public static <A> int forEachMapToInt(Iterable<A> iterator, Function<A, Integer> consumer) {
         int value = 0;
 
         final Iterator<A> it = iterator.iterator();

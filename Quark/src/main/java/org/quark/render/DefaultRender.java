@@ -1410,21 +1410,6 @@ public final class DefaultRender implements Render {
     }
 
     /**
-     * <p>Update {@link Vertex} in {@link VertexDescriptor}</p>
-     */
-    private void onUpdateDescriptorVertex(FactoryArrayStorage<?> vertices, Vertex vertex) {
-        mGL.glEnableVertexAttribArray(vertex.getID());
-
-        mGL.glVertexAttribPointer(vertex.getID(),
-                vertex.getComponent(),
-                vertex.getType().eValue,
-                vertex.isNormalised(),
-                vertices.getAttributesLength(),
-                vertex.getOffset());
-    }
-
-
-    /**
      * <p>Update {@link Frame}</p>
      */
     private void onUpdateFrame(Frame frame) {
