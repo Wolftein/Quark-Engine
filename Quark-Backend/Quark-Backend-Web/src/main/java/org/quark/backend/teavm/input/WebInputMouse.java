@@ -21,10 +21,9 @@ import org.quark.input.device.InputMouse;
 import org.quark.input.device.InputMouseButton;
 import org.quark.system.utility.array.Int32Array;
 import org.teavm.jso.JSBody;
-import org.teavm.jso.JSProperty;
-import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MouseEvent;
+import org.teavm.jso.dom.events.WheelEvent;
 import org.teavm.jso.dom.html.HTMLElement;
 
 import static org.quark.Quark.QKInput;
@@ -110,6 +109,11 @@ public final class WebInputMouse implements InputMouse {
         if (input != null) {
             QKInput.invokeMouseButtonUp(input);
         }
+
+        //!
+        //! Prevent the execution of default propagation.
+        //!
+        event.preventDefault();
     }
 
     /**
@@ -121,6 +125,11 @@ public final class WebInputMouse implements InputMouse {
         if (input != null) {
             QKInput.invokeMouseButtonDown(input);
         }
+
+        //!
+        //! Prevent the execution of default propagation.
+        //!
+        event.preventDefault();
     }
 
     /**
@@ -134,6 +143,11 @@ public final class WebInputMouse implements InputMouse {
         } else {
             QKInput.invokeMouseMove(event.getClientX(), event.getClientY());
         }
+
+        //!
+        //! Prevent the execution of default propagation.
+        //!
+        event.preventDefault();
     }
 
     /**
@@ -141,6 +155,11 @@ public final class WebInputMouse implements InputMouse {
      */
     private void onMouseWheel(WheelEvent event) {
         QKInput.invokeMouseWheel(Math.min(-1, Math.max(1, (int) event.getDeltaY())));
+
+        //!
+        //! Prevent the execution of default propagation.
+        //!
+        event.preventDefault();
     }
 
     /**
@@ -194,21 +213,4 @@ public final class WebInputMouse implements InputMouse {
     @JSBody(params = {"event"},
             script = "return event.movementY;")
     private static native int getMovementY(MouseEvent event);
-
-    /**
-     * <code>WheelEvent</code> represent an event for wheel event.
-     */
-    private interface WheelEvent extends Event {
-        @JSProperty
-        double getDeltaX();
-
-        @JSProperty
-        double getDeltaY();
-
-        @JSProperty
-        double getDeltaZ();
-
-        @JSProperty
-        long getDeltaMode();
-    }
 }

@@ -5,6 +5,9 @@ allprojects {
     repositories {
         jcenter()
         maven {
+            url "https://jitpack.io"
+        }
+        maven {
             url "http://oss.sonatype.org/content/groups/public/"
         }
         maven {
@@ -22,4 +25,5 @@ allprojects {
     //                                            [JAVA-COMPATIBILITY]
     // #################################################################################################################
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }

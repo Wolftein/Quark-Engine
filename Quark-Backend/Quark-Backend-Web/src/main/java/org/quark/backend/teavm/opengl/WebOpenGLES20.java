@@ -17,7 +17,6 @@
  */
 package org.quark.backend.teavm.opengl;
 
-import org.quark.backend.teavm.utility.array.WebArray;
 import org.quark.render.Render;
 import org.quark.render.RenderCapabilities;
 import org.quark.system.utility.array.*;
@@ -563,16 +562,16 @@ public class WebOpenGLES20 implements Render.GLES2 {
 
         switch (format) {
             case WebGLRenderingContext.UNSIGNED_BYTE:
-                view = Uint8Array.create(data.<WebArray.DataView>data().getBuffer());
+                view = Uint8Array.create(data.<DataView>data().getBuffer());
                 break;
             case WebGLRenderingContext.UNSIGNED_SHORT:
-                view = Uint16Array.create(data.<WebArray.DataView>data().getBuffer());
+                view = Uint16Array.create(data.<DataView>data().getBuffer());
                 break;
             case WebGLRenderingContext.FLOAT:
-                view = org.teavm.jso.typedarrays.Float32Array.create(data.<WebArray.DataView>data().getBuffer());
+                view = org.teavm.jso.typedarrays.Float32Array.create(data.<DataView>data().getBuffer());
                 break;
             default:
-                view = Uint8Array.create(data.<WebArray.DataView>data().getBuffer());
+                view = Uint8Array.create(data.<DataView>data().getBuffer());
                 break;
         }
         mGL.texImage2D(target, level, format /* WebGL 1.0 */, width, height, border, format, type, view);
@@ -761,7 +760,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
     @Override
     public void glUniform1fv(int name, Float32Array buffer) {
         mGL.uniform1fv(mUniformFactory.get(name),
-                org.teavm.jso.typedarrays.Float32Array.create(buffer.<WebArray.DataView>data().getBuffer()));
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<DataView>data().getBuffer()));
     }
 
     /**
@@ -802,7 +801,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
     @Override
     public void glUniform1iv(int name, Int32Array buffer) {
         mGL.uniform1iv(mUniformFactory.get(name),
-                org.teavm.jso.typedarrays.Int32Array.create(buffer.<WebArray.DataView>data().getBuffer()));
+                org.teavm.jso.typedarrays.Int32Array.create(buffer.<DataView>data().getBuffer()));
     }
 
     /**
@@ -811,7 +810,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
     @Override
     public void glUniformMatrix3fv(int name, boolean transpose, Float32Array buffer) {
         mGL.uniformMatrix3fv(mUniformFactory.get(name), transpose,
-                org.teavm.jso.typedarrays.Float32Array.create(buffer.<WebArray.DataView>data().getBuffer()));
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<DataView>data().getBuffer()));
     }
 
     /**
@@ -820,7 +819,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
     @Override
     public void glUniformMatrix4fv(int name, boolean transpose, Float32Array buffer) {
         mGL.uniformMatrix4fv(mUniformFactory.get(name), transpose,
-                org.teavm.jso.typedarrays.Float32Array.create(buffer.<WebArray.DataView>data().getBuffer()));
+                org.teavm.jso.typedarrays.Float32Array.create(buffer.<DataView>data().getBuffer()));
     }
 
     /**

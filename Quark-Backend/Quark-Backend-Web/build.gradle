@@ -10,6 +10,6 @@ dependencies {
     // #################################################################################################################
     //                                                [TeaVM]
     // #################################################################################################################
-    compile group: 'org.teavm',     name: 'teavm-classlib',     version: '0.4.3'
-    compile group: 'org.teavm',     name: 'teavm-extras-slf4j', version: '0.4.3'
+    compile 'com.github.konsoletyper.teavm:teavm-classlib:-SNAPSHOT'
+    compile 'com.github.konsoletyper.teavm:teavm-extras-slf4j:-SNAPSHOT'
 }

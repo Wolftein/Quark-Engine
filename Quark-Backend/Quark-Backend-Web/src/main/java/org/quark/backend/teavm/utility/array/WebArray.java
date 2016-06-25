@@ -19,10 +19,9 @@ package org.quark.backend.teavm.utility.array;
 
 import org.quark.system.utility.array.Array;
 import org.teavm.jso.JSBody;
-import org.teavm.jso.JSMethod;
 import org.teavm.jso.JSObject;
-import org.teavm.jso.JSProperty;
 import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.DataView;
 import org.teavm.platform.Platform;
 
 /**
@@ -41,7 +40,7 @@ public class WebArray<A extends Array> implements Array<A> {
      * <p>Constructor</p>
      */
     public WebArray(ArrayBuffer array) {
-        mBuffer = allocate(array);
+        mBuffer = DataView.create(array);
 
         mLimit = capacity();
     }
@@ -454,86 +453,18 @@ public class WebArray<A extends Array> implements Array<A> {
     }
 
     /**
-     * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
-     */
-    @JSBody(params = {"buffer"}, script = "return new DataView(buffer)")
-    private static native DataView allocate(ArrayBuffer buffer);
-
-    /**
      * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst, offset, length);" +
-                    "var array2 = new Uint8Array(src.data, from, length); array1.set(array2);")
-    public static native void copy(JSObject dst, int offset, JSObject src, int from, int length);
+                     "var array2 = new Uint8Array(src.data.buffer, from, length); array1.set(array2);")
+    public static native void copy(ArrayBuffer dst, int offset, JSObject src, int from, int length);
 
     /**
      * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
      */
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
-                    "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
-    public static native void read(JSObject dst, int offset, JSObject src, int from, int length);
-
-    /**
-     * @see <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView">Reference</a>
-     */
-    public interface DataView extends JSObject {
-        @JSProperty
-        ArrayBuffer getBuffer();
-
-        @JSProperty
-        int getByteLength();
-
-        @JSProperty
-        int getByteOffset();
-
-        @JSMethod
-        byte getInt8(int index);
-
-        @JSMethod
-        short getUInt8(int index);
-
-        @JSMethod
-        short getInt16(int index, boolean isLittleEndian);
-
-        @JSMethod
-        int getUInt16(int index, boolean isLittleEndian);
-
-        @JSMethod
-        int getInt32(int index, boolean isLittleEndian);
-
-        @JSMethod
-        long getUInt32(int index, boolean isLittleEndian);
-
-        @JSMethod
-        float getFloat32(int index, boolean isLittleEndian);
-
-        @JSMethod
-        double getFloat64(int index, boolean isLittleEndian);
-
-        @JSMethod
-        void setInt8(int index, int value);
-
-        @JSMethod
-        void setUInt8(int index, int value);
-
-        @JSMethod
-        void setInt16(int index, int value, boolean isLittleEndian);
-
-        @JSMethod
-        void setUInt16(int index, int value, boolean isLittleEndian);
-
-        @JSMethod
-        void setInt32(int index, int value, boolean isLittleEndian);
-
-        @JSMethod
-        void setUInt32(int index, long value, boolean isLittleEndian);
-
-        @JSMethod
-        void setFloat32(int index, float value, boolean isLittleEndian);
-
-        @JSMethod
-        void setFloat64(int index, double value, boolean isLittleEndian);
-    }
+                     "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
+    public static native void read(JSObject dst, int offset, ArrayBuffer src, int from, int length);
 }
