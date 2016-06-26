@@ -482,7 +482,7 @@ public final class DefaultAudioManager implements AudioManager {
             //!
             //! Once uploaded, we don't need to upload it anymore.
             //!
-            audio.getData().clear();
+            ArrayFactory.free(audio.getData());
         }
         mAL.alSourcei(source.getHandle(), ALES10.AL_BUFFER, audio.getHandle());
     }

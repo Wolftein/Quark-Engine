@@ -24,22 +24,32 @@ public enum AudioFormat {
     /**
      * Represent 8-Bit mono audio.
      */
-    MONO_8(AudioManager.ALES10.AL_MONO_8, 0x01, 0x08),
+    MONO_8(AudioManager.ALES10.AL_FORMAT_MONO8, 0x01, 0x08),
 
     /**
      * Represent 16-Bit mono audio.
      */
-    MONO_16(AudioManager.ALES10.AL_MONO_16, 0x01, 0x10),
+    MONO_16(AudioManager.ALES10.AL_FORMAT_MONO16, 0x01, 0x10),
+
+    /**
+     * Represent 32-Bit float mono audio.
+     */
+    MONO_32F(AudioManager.ALESExtension.AL_FORMAT_MONO_FLOAT32, 0x01, 0x20),
 
     /**
      * Represent 8-Bit stereo audio.
      */
-    STEREO_8(AudioManager.ALES10.AL_STEREO_8, 0x02, 0x08),
+    STEREO_8(AudioManager.ALES10.AL_FORMAT_STEREO8, 0x02, 0x08),
 
     /**
      * Represent 16-Bit stereo audio.
      */
-    STEREO_16(AudioManager.ALES10.AL_STEREO_16, 0x02, 0x10);
+    STEREO_16(AudioManager.ALES10.AL_FORMAT_STEREO16, 0x02, 0x10),
+
+    /**
+     * Represent 32-Bit float stereo audio.
+     */
+    STEREO_32F(AudioManager.ALESExtension.AL_FORMAT_STEREO_FLOAT32, 0x02, 0x20);
 
     public final int eType;
     public final int eChannel;

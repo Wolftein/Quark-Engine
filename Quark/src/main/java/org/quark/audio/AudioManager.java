@@ -40,8 +40,8 @@ public interface AudioManager {
         int AL_GAIN = 0x100A;
         int AL_LOOPING = 0x1007;
         int AL_MAX_DISTANCE = 0x1023;
-        int AL_MONO_16 = 0x1101;
-        int AL_MONO_8 = 0x1100;
+        int AL_FORMAT_MONO8 = 0x1100;
+        int AL_FORMAT_MONO16 = 0x1101;
         int AL_NONE = 0x0000;
         int AL_ORIENTATION = 0x100F;
         int AL_PAUSED = 0x1013;
@@ -51,8 +51,8 @@ public interface AudioManager {
         int AL_REFERENCE_DISTANCE = 0x1020;
         int AL_SOURCE_RELATIVE = 0x0202;
         int AL_SOURCE_STATE = 0x1010;
-        int AL_STEREO_16 = 0x1103;
-        int AL_STEREO_8 = 0x1102;
+        int AL_FORMAT_STEREO16 = 0x1103;
+        int AL_FORMAT_STEREO8 = 0x1102;
         int AL_STOPPED = 0x1014;
         int AL_TRUE = 0x0001;
         int AL_VELOCITY = 0x1006;
@@ -94,6 +94,14 @@ public interface AudioManager {
         void alSourceQueueBuffers(int name, int id);
 
         void alBufferData(int name, int format, Int8Array data, int rate);
+    }
+
+    /**
+     * <code>ALESExtension</code> encapsulate all extension(s) supported.
+     */
+    interface ALESExtension {
+        int AL_FORMAT_MONO_FLOAT32 = 0x10010;
+        int AL_FORMAT_STEREO_FLOAT32 = 0x10011;
     }
 
     /**

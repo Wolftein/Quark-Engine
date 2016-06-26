@@ -73,7 +73,7 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
         //!
         //! Skip the size of the audio.
         //!
-        input.skipBytes(4);
+        input.skipBytes(0x04);
 
         if (readIntLittleEndian(input) != 0x45564157) {
             throw new IOException("Trying to read an empty <WAV> sound.");
