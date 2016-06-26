@@ -30,6 +30,7 @@ import org.quark.input.InputManager;
 import org.quark.render.DefaultRender;
 import org.quark.render.Render;
 import org.quark.resource.DefaultAssetManager;
+import org.quark.resource.loader.AudioOGGAssetLoader;
 import org.quark.resource.loader.AudioWAVAssetLoader;
 import org.quark.resource.loader.TextureDDSAssetLoader;
 import org.quark.resource.loader.TexturePNGAssetLoader;
@@ -166,6 +167,7 @@ public final class Web {
         mResources.registerAssetLoader(new TexturePNGAssetLoader(), "png");
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
+        mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
 
         //!
         //! Handle the create notification.
