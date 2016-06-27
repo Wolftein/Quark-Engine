@@ -27,6 +27,11 @@ public final class ArrayInputStream extends InputStream {
     private final Int8Array mArray;
 
     /**
+     * Hold the mark position that the stream will be reset to.
+     */
+    private int mMark;
+
+    /**
      * <p>Constructor</p>
      */
     public ArrayInputStream(Int8Array array) {
@@ -81,5 +86,29 @@ public final class ArrayInputStream extends InputStream {
         mArray.position(skip);
 
         return skip;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mark(int limit) {
+        mMark = mArray.position();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() throws IOException {
+        mArray.position(mMark);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean markSupported() {
+        return true;
     }
 }

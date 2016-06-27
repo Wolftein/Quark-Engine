@@ -145,8 +145,8 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
                 source.mRelative = value;
                 break;
             case WebOpenALES10.AL_LOOPING:
-                for (final AudioBufferSourceNode node : source.mAudio) {
-                    node.setLoop(value == AudioManager.ALES10.AL_TRUE);
+                for (final WebALSourceNode node : source.mAudio) {
+                    node.mNode.setLoop(value == AudioManager.ALES10.AL_TRUE);
                 }
                 source.mLooping = value;
                 break;
@@ -177,8 +177,8 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
                 source.mPanner.setConeOuterGain(value);
                 break;
             case WebOpenALES10.AL_PITCH:
-                for (final AudioBufferSourceNode node : source.mAudio) {
-                    node.getPlaybackRate().setValue(value);
+                for (final WebALSourceNode node : source.mAudio) {
+                    node.mNode.getPlaybackRate().setValue(value);
                 }
                 source.mPitch = value;
                 break;
@@ -395,6 +395,13 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
         }
     }
 
+    private final class WebALSourceNode {
+        public AudioBufferSourceNode mNode;
+
+        public double mTime;
+        public double mDuration;
+    }
+
     /**
      * <code>WebALSource</code> represent an <b>OpenAL</b> source.
      */
@@ -412,7 +419,7 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
         /**
          * Hold the {@link AudioBufferSourceNode} of the source.
          */
-        public final Deque<AudioBufferSourceNode> mAudio = new LinkedList<>();
+        public final Deque<WebALSourceNode> mAudio = new LinkedList<>();
 
         /**
          * Hold the unique identifier of the attached buffer.
@@ -442,17 +449,17 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
         /**
          * Hold the timing of the source.
          */
-        public double mStartTime = 0.0D, mLastTime = 0.0D, mBufferTime = 0.0D;
+        public double mStartTime = 0.0D, mBufferTime = 0.0D;
 
         /**
          * Hold all {@link WebALBuffer} enqueue for processing.
          */
-        public final Queue<Integer> mBufferEnqueue = new LinkedList<>();
+        public final Deque<Integer> mBufferEnqueue = new LinkedList<>();
 
         /**
          * Hold all {@link WebALBuffer} processed.
          */
-        public final Queue<Integer> mBufferProcessed = new LinkedList<>();
+        public final Deque<Integer> mBufferProcessed = new LinkedList<>();
 
         /**
          * Hold a flag that indicates whenever the source is being streaming or not.
@@ -481,16 +488,16 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
             //!
             //! Set the time when the source has been pause.
             //!
-            mBufferTime = mDevice.getCurrentTime() - mStartTime;
+            mBufferTime = mDevice.getCurrentTime();
 
             //!
             //! Stop the node and remove it.
             //!
-            for (final AudioBufferSourceNode node : mAudio) {
-                node.stop();
-                node.disconnect();
+            for (final WebALSourceNode node : mAudio) {
+                node.mNode.stop();
+                node.mNode.disconnect();
+                node.mNode = null;
             }
-            mAudio.clear();
 
             //!
             //! Update the new state of the source.
@@ -502,18 +509,12 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
          * <p>Change the source state to {@link WebOpenALES10#AL_PLAYING}</p>
          */
         public void play() {
-            if (mState == AL_PLAYING) {
-                pause();
-            }
-
             if (mStreaming) {
-                //!
-                //! NOTE: Consume all buffer(s).
-                //!
-                while (mBufferEnqueue.size() > 0)
-                    push(mDevice.createBufferSource());
+                while (mBufferEnqueue.size() > 0) {
+                    queue(mDevice.createBufferSource());
+                }
             } else {
-                push(mDevice.createBufferSource());
+                queue(mDevice.createBufferSource());
             }
         }
 
@@ -524,22 +525,20 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
             //!
             //! Stop the node and remove it.
             //!
-            for (final AudioBufferSourceNode node : mAudio) {
-                node.stop();
-                node.disconnect();
+            for (final WebALSourceNode node : mAudio) {
+                node.mNode.stop();
+                node.mNode.disconnect();
+                node.mNode = null;
             }
             mAudio.clear();
 
             //!
             //! Mark every buffer as processed.
             //!
-            if (mBuffer != AudioManager.ALES10.AL_NONE) {
-                mBufferProcessed.add(mBuffer);
-            }
             while (!mBufferEnqueue.isEmpty()) {
                 mBufferProcessed.add(mBufferEnqueue.poll());
             }
-            mBufferTime = mLastTime = 0.0D;
+            mBufferTime = mStartTime = 0.0D;
 
             //!
             //! Update the new state of the source.
@@ -548,31 +547,30 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
         }
 
         /**
-         * <p>Push a new buffer into the ring-buffer</p>
+         * <p>Queue a new buffer into the ring-buffer</p>
          */
-        private void push(AudioBufferSourceNode node) {
-            mAudio.push(node);
-
-            node.setOnEnded(event -> {
+        private void queue(AudioBufferSourceNode node) {
+            node.setOnEnded(event ->
+            {
                 if (mStreaming) {
                     //!
-                    //! NOTE: If everything is OK, then it will match the queue.
+                    //! NOTE: The nodes are being added in sequence.
                     //!
-                    final AudioBufferSourceNode source = mAudio.pollFirst();
-                    source.stop();
-                    source.disconnect();
+                    final WebALSourceNode source = mAudio.pollFirst();
+                    node.stop();
+                    node.disconnect();
 
                     //!
                     //! Check if we can still stream.
                     //!
                     if (!mBufferEnqueue.isEmpty()) {
-                        push(mDevice.createBufferSource());
-                    } else {
-                        mBuffer = AudioManager.ALES10.AL_NONE;
-
-                        push(mDevice.createBufferSource());
+                        queue(mDevice.createBufferSource());
+                    } else if (mAudio.isEmpty()) {
+                        stop();
                     }
-                } else if (mLooping == AudioManager.ALES10.AL_FALSE) {
+                } else {
+                    mBuffer = AudioManager.ALES10.AL_NONE;
+
                     stop();
                 }
             });
@@ -587,42 +585,50 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
             //!
             //! Check if the source is streaming data.
             //!
+            final WebALBuffer buffer;
             if (mStreaming) {
-                mBuffer = mBufferEnqueue.poll();
+                mBufferProcessed.add(mBufferEnqueue.poll());
 
-                //!
-                //! Add the buffer to the processed queue.
-                //!
-                mBufferProcessed.add(mBuffer);
+                buffer = mBufferFactory.get(mBufferProcessed.getLast());
+            } else {
+                buffer = mBufferFactory.get(mBuffer);
             }
 
-            //!
-            //! Grab the current buffer and attach it to the node.
-            //!
-            final WebALBuffer buffer = mBufferFactory.get(mBuffer);
-            if (buffer != null && buffer.isValid()) {
-                node.setBuffer(buffer.mBuffer);
-
-                //!
-                //! Check if it should resume or play.
-                //!
-                mStartTime = mDevice.getCurrentTime();
-
-                if (mState == AL_PAUSED) {
-                    node.start(mLastTime, mBufferTime % (mBuffer == AL_NONE ? 0 : buffer.mBuffer.getDuration()));
-                } else {
-                    node.start(mLastTime);
-                }
-
-                if (mStreaming) {
-                    mLastTime = (mLastTime == 0.0D ? mStartTime : mLastTime + buffer.mBuffer.getDuration());
-                }
-
-                //!
-                //! Update the new state of the source.
-                //!
-                mState = AudioManager.ALES10.AL_PLAYING;
+            if (buffer == null || !buffer.isValid()) {
+                node.disconnect();
+                return;
             }
+
+            node.setBuffer(buffer.mBuffer);
+
+            //!
+            //! Wrap the source node into a sophisticate structure to handle timing.
+            //!
+            final WebALSourceNode sound = new WebALSourceNode();
+            sound.mNode = node;
+            if (mAudio.isEmpty()) {
+                sound.mTime = mDevice.getCurrentTime();
+            } else {
+                final WebALSourceNode last = mAudio.getLast();
+
+                sound.mTime = last.mTime + last.mDuration;
+            }
+            sound.mDuration = buffer.mBuffer.getDuration();
+
+            if (mState == AL_PAUSED) {
+                // <TODO: Fix streaming>
+                if (!mStreaming) {
+                    node.start(0, mBufferTime % (mBuffer == AL_NONE ? 0 : buffer.mBuffer.getDuration()));
+                }
+            } else {
+                node.start(sound.mTime, 0, sound.mDuration);
+            }
+            mAudio.add(sound);
+
+            //!
+            //! Update the new state of the source.
+            //!
+            mState = AudioManager.ALES10.AL_PLAYING;
         }
     }
 
