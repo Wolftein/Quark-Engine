@@ -12,5 +12,4 @@ include ':Quark-Backend:Quark-Backend-Web'
 // #####################################################################################################################
 //                                                [EXTENSION]
 // #####################################################################################################################
-include ':Quark-Extension:Quark-Extension-2D'
-include ':Quark-Extension:Quark-Extension-3D'
+include ':Quark-Extension:Quark-Extension-NiftyUI'

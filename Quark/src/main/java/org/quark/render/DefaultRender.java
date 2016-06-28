@@ -1386,7 +1386,6 @@ public final class DefaultRender implements Render {
     private void onUpdateDescriptorVertices(FactoryArrayStorage<?> vertices) {
         vertices.create();
 
-
         if (mCapabilities.hasExtension(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT)) {
             //!
             //! NOTE: This is required since the renderer will not bind it inside VAO if already bind it outside.
