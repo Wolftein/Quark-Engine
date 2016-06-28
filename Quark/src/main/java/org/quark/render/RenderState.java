@@ -62,57 +62,41 @@ public final class RenderState {
 
         /**
          * Result = source_colour + destination_colour.
-         *
-         * @since OpenGL ES 2.0
          */
         ADD(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour * destination_colour.
-         *
-         * @since OpenGL ES 2.0
          */
         MULTIPLY(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_ZERO),
 
         /**
          * Result = source_colour * destination_colour * 2.
-         *
-         * @since OpenGL ES 2.0
          */
         MULTIPLY_TWICE(Render.GLES2.GL_DST_COLOR, Render.GLES2.GL_SRC_COLOR),
 
         /**
          * Result = source_alpha * source_colour + (1 - source_alpha) * destination_colour.
-         *
-         * @since OpenGL ES 2.0
          */
         ALPHA(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE_MINUS_SRC_ALPHA),
 
         /**
          * Result = (source_alpha * source_colour) + destination_colour.
-         *
-         * @since OpenGL ES 2.0
          */
         ALPHA_ADD(Render.GLES2.GL_SRC_ALPHA, Render.GLES2.GL_ONE),
 
         /**
          * Result = source_colour + (destination_colour * 1 - source_alpha).
-         *
-         * @since OpenGL ES 2.0
          */
         ALPHA_PRE_MULTIPLY(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_ALPHA),
 
         /**
          * Result = source_colour + (1 - source_colour) * destination_colour.
-         *
-         * @since OpenGL ES 2.0
          */
         COLOR(Render.GLES2.GL_ONE, Render.GLES2.GL_ONE_MINUS_SRC_COLOR),
 
         /**
          * Result = (source_colour * (1 - destination_colour)) + (destination_colour * (1 - source_colour)).
-         *
-         * @since OpenGL ES 2.0
          */
         COLOR_EXCLUSION(Render.GLES2.GL_ONE_MINUS_DST_COLOR, Render.GLES2.GL_ONE_MINUS_SRC_COLOR);
 
@@ -134,36 +118,26 @@ public final class RenderState {
     public enum BlendEquation {
         /**
          * Result = source_rgba + destination_rgba.
-         *
-         * @since OpenGL ES 2.0
          */
         ADD(Render.GLES2.GL_FUNC_ADD),
 
         /**
          * Result = source_rgba - destination_rgba.
-         *
-         * @since OpenGL ES 2.0
          */
         SUBTRACT(Render.GLES2.GL_FUNC_SUBTRACT),
 
         /**
          * Result = destination_rgba - source_rgba.
-         *
-         * @since OpenGL ES 2.0
          */
         SUBTRACT_REVERSE(Render.GLES2.GL_FUNC_REVERSE_SUBTRACT),
 
         /**
          * Result = min(source_rgba, destination_rgba).
-         *
-         * @since OpenGL ES 3.0
          */
         MIN(Render.GLES3.GL_MIN),
 
         /**
          * Result = max(source_rgba, destination_rgba).
-         *
-         * @since OpenGL ES 3.0
          */
         MAX(Render.GLES3.GL_MAX);
 
@@ -192,23 +166,17 @@ public final class RenderState {
         INHERIT(Render.GLES2.GL_NONE),
 
         /**
-         * Cull only front-face
-         *
-         * @since OpenGL ES 2.0
+         * Cull only front-face.
          */
         FRONT(Render.GLES2.GL_FRONT),
 
         /**
-         * Cull front- and back- face
-         *
-         * @since OpenGL ES 2.0
+         * Cull front- and back- face.
          */
         FRONT_BACK(Render.GLES2.GL_FRONT_BACK),
 
         /**
-         * Cull only back-face
-         *
-         * @since OpenGL ES 2.0
+         * Cull only back-face.
          */
         BACK(Render.GLES2.GL_BACK);
 
@@ -228,59 +196,43 @@ public final class RenderState {
     public enum StencilOp {
         /**
          * Keeps the current value.
-         *
-         * @since OpenGL ES 2.0
          */
         KEEP(Render.GLES2.GL_KEEP),
 
         /**
          * Sets the stencil buffer value to 0.
-         *
-         * @since OpenGL ES 2.0
          */
         ZERO(Render.GLES2.GL_ZERO),
 
         /**
          * Replace the stencil buffer value.
-         *
-         * @since OpenGL ES 2.0
          */
         REPLACE(Render.GLES2.GL_REPLACE),
 
         /**
          * Increments the current stencil buffer value. Clamps to the maximum representable unsigned value.
-         *
-         * @since OpenGL ES 2.0
          */
         INCREMENT(Render.GLES2.GL_INCREMENT),
 
         /**
          * Increments the current stencil buffer value. Wraps stencil buffer value to zero when incrementing
          * the maximum representable unsigned value.
-         *
-         * @since OpenGL ES 2.0
          */
         INCREMENT_WRAP(Render.GLES2.GL_INCREMENT_WRAP),
 
         /**
          * Decrements the current stencil buffer value. Clamps to 0.
-         *
-         * @since OpenGL ES 2.0
          */
         DECREASE(Render.GLES2.GL_DECREASE),
 
         /**
          * Decrements the current stencil buffer value. Wraps stencil buffer value to the maximum representable
          * unsigned value when decrementing a stencil buffer value of zero.
-         *
-         * @since OpenGL ES 2.0
          */
         DECREASE_WRAP(Render.GLES2.GL_DECREASE_WRAP),
 
         /**
          * Bitwise inverts the current stencil buffer value.
-         *
-         * @since OpenGL ES 2.0
          */
         INVERT(Render.GLES2.GL_INVERT);
 
@@ -300,57 +252,41 @@ public final class RenderState {
     public enum TestOp {
         /**
          * Always fails.
-         *
-         * @since OpenGL ES 2.0
          */
         NEVER(Render.GLES2.GL_NEVER),
 
         /**
          * Always passes.
-         *
-         * @since OpenGL ES 2.0
          */
         ALWAYS(Render.GLES2.GL_ALWAYS),
 
         /**
          * Passes if reference is less than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         LESS(Render.GLES2.GL_LESS),
 
         /**
          * Passes if reference is less or equal than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         LESS_EQUAL(Render.GLES2.GL_LESS_EQUAL),
 
         /**
          * Passes if reference is greater than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         GREATER(Render.GLES2.GL_GREATER),
 
         /**
          * Passes iif reference is greater or equal than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         GREATER_EQUAL(Render.GLES2.GL_GREATER_EQUAL),
 
         /**
          * Passes if reference is equal than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         EQUAL(Render.GLES2.GL_EQUAL),
 
         /**
          * Passes if reference is not equal than mask.
-         *
-         * @since OpenGL ES 2.0
          */
         NOT_EQUAL(Render.GLES2.GL_NOT_EQUAL);
 

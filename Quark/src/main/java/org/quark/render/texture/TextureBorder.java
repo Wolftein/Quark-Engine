@@ -25,35 +25,23 @@ import org.quark.render.Render;
 public enum TextureBorder {
     /**
      * Causes the integer part of the s coordinate to be ignored, creating a repeating pattern.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     REPEAT(Render.GLES2.GL_REPEAT),
 
     /**
      * Causes coordinates to be clamped to the range (1/2n. 1 - 1/2n) where N is the size of the texture
      * in the direction of clamping.
-     *
-     * @since OpenGL    1.2
-     * @since OpenGL ES 2.0
      */
     CLAMP_TO_EDGE(Render.GLES2.GL_CLAMP_TO_EDGE),
 
     /**
      * Evaluates coordinates in a similar manner to {@link #CLAMP_TO_EDGE}, the fetched texel data
      * is substituted with the values specified by the border color of the texture.
-     *
-     * @since OpenGL    1.3
-     * @since OpenGL ES 2.0
      */
     CLAMP_TO_BORDER(Render.GLES2.GL_CLAMP_TO_BORDER),
 
     /**
      * The texture will also be repeated, but it will be mirrored when the integer part of the coordinate is odd.
-     *
-     * @since OpenGL    1.4
-     * @since OpenGL ES 2.0
      */
     MIRRORED_REPEAT(Render.GLES2.GL_MIRRORED_REPEAT);
 

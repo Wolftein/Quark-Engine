@@ -92,7 +92,6 @@ public final class ShaderParser {
 
         mArray.flip();
 
-
         while (mArray.hasRemaining()) {
             final StringBuffer output = new StringBuffer(64);
 

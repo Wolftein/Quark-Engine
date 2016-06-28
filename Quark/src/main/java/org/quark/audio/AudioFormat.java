@@ -32,7 +32,7 @@ public enum AudioFormat {
     MONO_16(AudioManager.ALES10.AL_FORMAT_MONO16, 0x01, 0x10),
 
     /**
-     * Represent 32-Bit float mono audio.
+     * Represent single-precision mono audio.
      */
     MONO_32F(AudioManager.ALESExtension.AL_FORMAT_MONO_FLOAT32, 0x01, 0x20),
 
@@ -47,7 +47,7 @@ public enum AudioFormat {
     STEREO_16(AudioManager.ALES10.AL_FORMAT_STEREO16, 0x02, 0x10),
 
     /**
-     * Represent 32-Bit float stereo audio.
+     * Represent single-precision stereo audio.
      */
     STEREO_32F(AudioManager.ALESExtension.AL_FORMAT_STEREO_FLOAT32, 0x02, 0x20);
 

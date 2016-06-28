@@ -74,7 +74,7 @@ public final class AudioSource extends Manageable {
     private float mInnerAngle = 360.0f;
     private float mOuterAngle = 360.0f;
     private float mDistance = 1.0f;
-    private float mMaxDistance = Float.MAX_VALUE;
+    private float mMaxDistance = 1000.0f;
     private boolean mPositional = false;
     private boolean mLooping = false;
     private boolean mDirectional = false;

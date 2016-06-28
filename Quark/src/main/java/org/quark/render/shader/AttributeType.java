@@ -23,71 +23,51 @@ package org.quark.render.shader;
 public enum AttributeType {
     /**
      * Represent a floating point number.
-     *
-     * @since GLSL 1.20
      */
     Float("float"),
 
     /**
      * Represent two floating point number.
-     *
-     * @since GLSL 1.20
      */
     Float2("vec2"),
 
     /**
      * Represent three floating point number.
-     *
-     * @since GLSL 1.20
      */
     Float3("vec3"),
 
     /**
      * Represent four floating point number.
-     *
-     * @since GLSL 1.20
      */
     Float4("vec4"),
 
     /**
      * Represent an integer number.
-     *
-     * @since GLSL 1.30
      */
     Int("int"),
 
     /**
      * Represent two integer number.
-     *
-     * @since GLSL 1.30
      */
     Int2("ivec2"),
 
     /**
      * Represent three integer number.
-     *
-     * @since GLSL 1.30
      */
     Int3("ivec3"),
 
     /**
      * Represent four integer number.
-     *
-     * @since GLSL 1.30
      */
     Int4("ivec4"),
 
     /**
      * Represent a matrix of 3x3 component(s).
-     *
-     * @since GLSL 1.20
      */
     Matrix3x3("mat3"),
 
     /**
      * Represent a matrix of 4x4 component(s).
-     *
-     * @since GLSL 1.20
      */
     Matrix4x4("mat4");
 

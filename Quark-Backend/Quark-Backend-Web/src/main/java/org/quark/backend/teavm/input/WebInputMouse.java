@@ -109,11 +109,6 @@ public final class WebInputMouse implements InputMouse {
         if (input != null) {
             QKInput.invokeMouseButtonUp(input);
         }
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
-        event.preventDefault();
     }
 
     /**
@@ -125,11 +120,6 @@ public final class WebInputMouse implements InputMouse {
         if (input != null) {
             QKInput.invokeMouseButtonDown(input);
         }
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
-        event.preventDefault();
     }
 
     /**
@@ -143,11 +133,6 @@ public final class WebInputMouse implements InputMouse {
         } else {
             QKInput.invokeMouseMove(event.getClientX(), event.getClientY());
         }
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
-        event.preventDefault();
     }
 
     /**
@@ -155,11 +140,6 @@ public final class WebInputMouse implements InputMouse {
      */
     private void onMouseWheel(WheelEvent event) {
         QKInput.invokeMouseWheel(Math.min(-1, Math.max(1, (int) event.getDeltaY())));
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
-        event.preventDefault();
     }
 
     /**

@@ -36,22 +36,16 @@ public class Storage<A extends Array<?>> extends Manageable implements Disposabl
 
     /**
      * Indicates that the previous contents of the specified range may be discarded.
-     *
-     * @since OpenGL 3.0
      */
     public final static int ACCESS_INVALIDATE = Render.GLES3.GL_ACCESS_INVALIDATE;
 
     /**
      * Indicates that the previous contents of the entire storage may be discarded.
-     *
-     * @since OpenGL 3.0
      */
     public final static int ACCESS_INVALIDATE_ALL = Render.GLES3.GL_ACCESS_INVALIDATE_ALL;
 
     /**
      * Indicates that the server should not attempt to synchronize pending operations.
-     *
-     * @since OpenGL 3.0
      */
     public final static int ACCESS_UNSYNCHRONIZED = Render.GLES3.GL_ACCESS_UNSYNCHRONIZED;
 

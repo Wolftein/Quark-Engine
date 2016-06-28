@@ -29,7 +29,7 @@ import org.teavm.platform.Platform;
  */
 public class WebArray<A extends Array> implements Array<A> {
     /**
-     * Hold a reference to the typed-array.
+     * Hold a reference to {@link DataView} of the {@link ArrayBuffer}.
      */
     private final DataView mBuffer;
 
@@ -109,7 +109,7 @@ public class WebArray<A extends Array> implements Array<A> {
     @Override
     public A clear() {
         mPosition = 0;
-        mLimit = mBuffer.getByteLength();
+        mLimit = capacity();
         return (A) this;
     }
 
@@ -189,7 +189,7 @@ public class WebArray<A extends Array> implements Array<A> {
     public A writeInt16(short[] value, int offset, int count) {
         copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 2);
 
-        mPosition += count;
+        mPosition += (count * 0x02);
 
         return (A) this;
     }
@@ -222,7 +222,7 @@ public class WebArray<A extends Array> implements Array<A> {
     public A writeInt32(int[] value, int offset, int count) {
         copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
 
-        mPosition += count;
+        mPosition += (count * 0x04);
 
         return (A) this;
     }
@@ -279,7 +279,7 @@ public class WebArray<A extends Array> implements Array<A> {
     public A writeFloat32(float[] value, int offset, int count) {
         copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 4);
 
-        mPosition += count;
+        mPosition += (count * 0x04);
 
         return (A) this;
     }
@@ -312,7 +312,7 @@ public class WebArray<A extends Array> implements Array<A> {
     public A writeFloat64(double[] value, int offset, int count) {
         copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 8);
 
-        mPosition += count;
+        mPosition += (count * 0x08);
 
         return (A) this;
     }
@@ -458,7 +458,7 @@ public class WebArray<A extends Array> implements Array<A> {
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst, offset, length);" +
                      "var array2 = new Uint8Array(src.data.buffer, from, length); array1.set(array2);")
-    public static native void copy(ArrayBuffer dst, int offset, JSObject src, int from, int length);
+    private static native void copy(ArrayBuffer dst, int offset, JSObject src, int from, int length);
 
     /**
      * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
@@ -466,5 +466,5 @@ public class WebArray<A extends Array> implements Array<A> {
     @JSBody(params = {"dst", "offset", "src", "from", "length"},
             script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
                      "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
-    public static native void read(JSObject dst, int offset, ArrayBuffer src, int from, int length);
+    private static native void read(JSObject dst, int offset, ArrayBuffer src, int from, int length);
 }

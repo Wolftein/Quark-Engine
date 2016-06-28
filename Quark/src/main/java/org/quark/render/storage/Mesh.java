@@ -29,8 +29,7 @@ import static org.quark.Quark.QKRender;
  * A <code>Mesh</code> consists of vertices and optionally indices which specify which
  * vertices define a primitive.
  * <p>
- * Each vertex is composed of attribute(s) such as position, normal, color or texture coordinate (all attribute(s)
- * may not be present, except for position).
+ * Each vertex is composed of attribute(s) such as position, normal, color or texture coordinate.
  */
 public class Mesh {
     protected final VertexDescriptor mDescriptor;

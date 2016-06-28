@@ -89,7 +89,7 @@ public final class XHRAssetLocator implements AssetLocator {
     }
 
     /**
-     * <p>Handle when a request changed the state</p>
+     * <p>Handle when a request changed its state</p>
      */
     private void onAssetReadStateChange(XMLHttpRequest request, AsynchronousInputStream stream) {
         if (request.getStatus() == 200 || request.getStatus() == 0) {

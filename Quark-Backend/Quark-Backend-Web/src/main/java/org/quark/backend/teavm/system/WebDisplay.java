@@ -38,6 +38,8 @@ public final class WebDisplay implements Display {
      */
     public void onModuleCreate(HTMLCanvasElement handle, Display.Preference preference) {
         mHandle = handle;
+
+        setTitle(preference.getTitle());
     }
 
     /**
@@ -66,6 +68,7 @@ public final class WebDisplay implements Display {
      */
     @Override
     public void setTitle(String title) {
+        onTitle(title);
     }
 
     /**
@@ -196,7 +199,7 @@ public final class WebDisplay implements Display {
             "document.webkitFullscreenElement ||" +
             "document.mozFullScreenElement || " +
             "document.msFullscreenElement")
-    public static native boolean isFullscreen(HTMLElement element);
+    private static native boolean isFullscreen(HTMLElement element);
 
     /**
      * @see <a href="https://robertnyman.com/2012/03/08/using-the-fullscreen-api-in-web-browsers/">Fullscreen</a>
@@ -205,7 +208,7 @@ public final class WebDisplay implements Display {
             "else if (document.webkitExitFullscreen) document.webkitExitFullscreen();" +
             "else if (document.mozCancelFullScreen) document.mozCancelFullScreen();" +
             "else if (document.msExitFullscreen) document.msExitFullscreen();")
-    public static native void onExitFullscreen(HTMLElement element);
+    private static native void onExitFullscreen(HTMLElement element);
 
     /**
      * @see <a href="https://robertnyman.com/2012/03/08/using-the-fullscreen-api-in-web-browsers/">Fullscreen</a>
@@ -214,5 +217,11 @@ public final class WebDisplay implements Display {
             "else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);" +
             "else if (element.mozRequestFullScreen) element.mozRequestFullScreen();" +
             "else if (element.msRequestFullscreen) element.msRequestFullscreen();")
-    public static native void onEnterFullscreen(HTMLElement element);
+    private static native void onEnterFullscreen(HTMLElement element);
+
+    /**
+     * @see <a href="http://www.w3schools.com/jsref/prop_doc_title.asp">DOM</a>
+     */
+    @JSBody(params = {"title"}, script = "document.title = title;")
+    private static native void onTitle(String title);
 }

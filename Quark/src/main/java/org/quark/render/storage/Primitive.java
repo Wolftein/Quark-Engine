@@ -18,6 +18,7 @@
 package org.quark.render.storage;
 
 import org.quark.render.Render;
+import org.quark.render.shader.StageType;
 
 /**
  * <code>Primitive</code> enumerate all primitive(s).
@@ -25,95 +26,58 @@ import org.quark.render.Render;
 public enum Primitive {
     /**
      * Treats each vertex as a single point. VertexAttribute n defines point n. N points are drawn.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     POINTS(Render.GLES2.GL_POINTS),
 
     /**
      * Treats each pair of vertices as an independent line segment.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     LINES(Render.GLES2.GL_LINES),
 
     /**
      * Draws a connected group of line segments from the first vertex to the last, then back to the first.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     LINE_LOOP(Render.GLES2.GL_LINE_LOOP),
 
     /**
      * Draws a connected group of line segments from the first vertex to the last.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     LINE_STRIP(Render.GLES2.GL_LINE_STRIP),
 
     /**
      * Treats each triplet of vertices as an independent triangle.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     TRIANGLES(Render.GLES2.GL_TRIANGLES),
 
     /**
      * Draws a connected group of triangles. One triangle is defined for each vertex presented
      * after the first two vertices.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     TRIANGLE_FAN(Render.GLES2.GL_TRIANGLE_FAN),
 
     /**
      * Draws a connected group of triangles. One triangle is defined for each vertex presented
      * after the first two vertices.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     TRIANGLE_STRIP(Render.GLES2.GL_TRIANGLE_STRIP),
 
     /**
-     * Expected to be used specifically with Geometry ShaderSource (GS).
-     *
-     * @since OpenGL    3.2
-     * @since OpenGL ES 3.2
-     * @since GL_EXT_geometry_shader4
+     * Expected to be used specifically with {@link StageType#GEOMETRY}.
      */
     LINES_ADJACENCY(Render.GLES32.GL_LINES_ADJACENCY),
 
     /**
-     * Expected to be used specifically with Geometry ShaderSource (GS).
-     *
-     * @since OpenGL    3.2
-     * @since OpenGL ES 3.2
-     * @since GL_EXT_geometry_shader4
+     * Expected to be used specifically with {@link StageType#GEOMETRY}.
      */
     LINE_STRIP_ADJACENCY(Render.GLES32.GL_LINE_STRIP_ADJACENCY),
 
     /**
-     * Expected to be used specifically with Geometry ShaderSource (GS).
-     *
-     * @since OpenGL    3.2
-     * @since OpenGL ES 3.2
-     * @since GL_EXT_geometry_shader4
+     * Expected to be used specifically with {@link StageType#GEOMETRY}.
      */
     TRIANGLES_ADJACENCY(Render.GLES32.GL_TRIANGLES_ADJACENCY),
 
     /**
-     * Expected to be used specifically with Geometry ShaderSource (GS).
-     *
-     * @since OpenGL    3.2
-     * @since OpenGL ES 3.2
-     * @since GL_EXT_geometry_shader4
+     * Expected to be used specifically with {@link StageType#GEOMETRY}.
      */
     TRIANGLE_STRIP_ADJACENCY(Render.GLES32.GL_TRIANGLE_STRIP_ADJACENCY);
 

@@ -84,10 +84,6 @@ public final class WebInputKeyboard implements InputKeyboard {
         if (input != null) {
             QKInput.invokeKeyUp(input);
         }
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
         event.preventDefault();
     }
 
@@ -99,10 +95,6 @@ public final class WebInputKeyboard implements InputKeyboard {
         if (input != null) {
             QKInput.invokeKeyDown(input);
         }
-
-        //!
-        //! Prevent the execution of default propagation.
-        //!
         event.preventDefault();
     }
 
@@ -112,9 +104,6 @@ public final class WebInputKeyboard implements InputKeyboard {
     private void onKeyPress(KeyboardEvent event) {
         QKInput.invokeKeyType((char) event.getCharCode());
 
-        //!
-        //! Prevent the execution of default propagation.
-        //!
         event.preventDefault();
     }
 

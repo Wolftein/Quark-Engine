@@ -80,34 +80,35 @@ public interface Array<A extends Array> {
     <B> B data();
 
     /**
-     * @see java.nio.ByteBuffer#put(byte)
+     * @see ByteBuffer#put(byte)
      */
     A writeInt8(int value);
 
     /**
-     * @see java.nio.ByteBuffer#put(byte[])
+     * @see ByteBuffer#put(byte[])
      */
     default A writeInt8(byte[] value) {
         return writeInt8(value, 0, value.length);
     }
 
     /**
-     * @see java.nio.ByteBuffer#put(byte[], int, int)
+     * @see ByteBuffer#put(byte[], int, int)
      */
     A writeInt8(byte[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#put(int, byte)
+     * @see ByteBuffer#put(int, byte)
      */
     A writeInt8(int index, int value);
 
     /**
-     * @see java.nio.ByteBuffer#putShort(short)
+     * @see ByteBuffer#putShort(short)
      */
     A writeInt16(int value);
 
     /**
      * @see java.nio.ShortBuffer#put(short[])
+     *
      */
     default A writeInt16(short[] value) {
         return writeInt16(value, 0, value.length);
@@ -119,12 +120,12 @@ public interface Array<A extends Array> {
     A writeInt16(short[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#putShort(int, short)
+     * @see ByteBuffer#putShort(int, short)
      */
     A writeInt16(int index, int value);
 
     /**
-     * @see java.nio.ByteBuffer#putInt(int)
+     * @see ByteBuffer#putInt(int)
      */
     A writeInt32(int value);
 
@@ -141,12 +142,12 @@ public interface Array<A extends Array> {
     A writeInt32(int[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#putInt(int, int)
+     * @see ByteBuffer#putInt(int, int)
      */
     A writeInt32(int index, int value);
 
     /**
-     * @see java.nio.ByteBuffer#putLong(long)
+     * @see ByteBuffer#putLong(long)
      */
     A writeInt64(long value);
 
@@ -163,12 +164,12 @@ public interface Array<A extends Array> {
     A writeInt64(long[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#putLong(int, long)
+     * @see ByteBuffer#putLong(int, long)
      */
     A writeInt64(int index, long value);
 
     /**
-     * @see java.nio.ByteBuffer#putFloat(float)
+     * @see ByteBuffer#putFloat(float)
      */
     A writeFloat32(float value);
 
@@ -185,12 +186,12 @@ public interface Array<A extends Array> {
     A writeFloat32(float[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#putFloat(int, float)
+     * @see ByteBuffer#putFloat(int, float)
      */
     A writeFloat32(int index, float value);
 
     /**
-     * @see java.nio.ByteBuffer#putDouble(double)
+     * @see ByteBuffer#putDouble(double)
      */
     A writeFloat64(double value);
 
@@ -207,12 +208,12 @@ public interface Array<A extends Array> {
     A writeFloat64(double[] value, int offset, int count);
 
     /**
-     * @see java.nio.ByteBuffer#putDouble(int, double)
+     * @see ByteBuffer#putDouble(int, double)
      */
     A writeFloat64(int index, double value);
 
     /**
-     * @see java.nio.ByteBuffer#put(byte[])
+     * @see ByteBuffer#put(byte[])
      */
     default A writeString(String value) {
         final byte[] bytes = value.getBytes();
@@ -290,14 +291,14 @@ public interface Array<A extends Array> {
     }
 
     /**
-     * @see java.nio.ByteBuffer#get(byte[])
+     * @see ByteBuffer#get(byte[])
      */
     default int read(byte[] value) {
         return read(value, 0, value.length);
     }
 
     /**
-     * @see java.nio.ByteBuffer#get(byte[], int, int)
+     * @see ByteBuffer#get(byte[], int, int)
      */
     int read(byte[] value, int offset, int count);
 }

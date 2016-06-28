@@ -25,73 +25,46 @@ import org.quark.render.Render;
 public enum StorageMode {
     /**
      * The data store contents are modified repeatedly.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 2.0
      */
     DYNAMIC_DRAW(Render.GLES2.GL_DYNAMIC_DRAW, false, true),
 
     /**
      * The data store contents are queried repeatedly.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     DYNAMIC_READ(Render.GLES3.GL_DYNAMIC_READ, true, false),
 
     /**
      * The data store contents are copy between storage repeatedly.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     DYNAMIC_COPY(Render.GLES3.GL_DYNAMIC_COPY, false, false),
 
     /**
      * The data store contents is modified once.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 2.0
      */
     STATIC_DRAW(Render.GLES2.GL_STATIC_DRAW, false, true),
 
     /**
      * The data store contents is queried once.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     STATIC_READ(Render.GLES3.GL_STATIC_READ, true, false),
 
     /**
      * The data store contents are copy between storage once.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     STATIC_COPY(Render.GLES3.GL_STATIC_COPY, false, false),
 
     /**
      * The data store contents are modified frequently.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 2.0
      */
     STREAM_DRAW(Render.GLES2.GL_STREAM_DRAW, false, true),
 
     /**
      * The data store contents are queried frequently.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     STREAM_READ(Render.GLES3.GL_STREAM_READ, true, false),
 
     /**
      * The data store contents are copy between storage frequently.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 3.0
      */
     STREAM_COPY(Render.GLES3.GL_STREAM_COPY, false, false);
 

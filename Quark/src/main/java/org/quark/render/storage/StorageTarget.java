@@ -25,73 +25,46 @@ import org.quark.render.Render;
 public enum StorageTarget {
     /**
      * Represent a storage for vertices.
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 2.0
      */
     ARRAY(Render.GLES2.GL_ARRAY_BUFFER),
 
     /**
-     * Represent a storage for indices..
-     *
-     * @since OpenGL    1.5
-     * @since OpenGL ES 2.0
+     * Represent a storage for indices.
      */
     ELEMENT(Render.GLES2.GL_ELEMENT_ARRAY_BUFFER),
 
     /**
      * Represent a storage for pixel data being sent to the GPU.
-     *
-     * @since OpenGL    2.1
-     * @since OpenGL ES 3.0
      */
     PIXEL_PACK(Render.GLES3.GL_PIXEL_PACK_BUFFER),
 
     /**
      * Represent a storage for pixel data being read to the GPU.
-     *
-     * @since OpenGL    2.1
-     * @since OpenGL ES 3.0
      */
     PIXEL_UNPACK(Render.GLES3.GL_PIXEL_UNPACK_BUFFER),
 
     /**
      * Represent a storage for results from executing a transform feedback shader.
-     *
-     * @since OpenGL    3.0
-     * @since OpenGL ES 3.0
      */
     TRANSFORM_FEEDBACK(Render.GLES3.GL_TRANSFORM_FEEDBACK_BUFFER),
 
     /**
      * Represent a storage for data copied between storage.
-     *
-     * @since OpenGL    3.1
-     * @since OpenGL ES 3.0
      */
     COPY_READ(Render.GLES3.GL_COPY_READ_BUFFER),
 
     /**
      * Represent a storage for data copied between storage.
-     *
-     * @since OpenGL    3.1
-     * @since OpenGL ES 3.0
      */
     COPY_WRITE(Render.GLES3.GL_COPY_WRITE_BUFFER),
 
     /**
      * Represent a storage for data(s).
-     *
-     * @since OpenGL    3.1
-     * @since OpenGL ES 3.0
      */
     UNIFORM(Render.GLES3.GL_UNIFORM_BUFFER),
 
     /**
      * Represent a storage for texture(s).
-     *
-     * @since OpenGL    3.1
-     * @since OpenGL ES 3.2
      */
     TEXTURE(Render.GLES32.GL_TEXTURE_BUFFER);
 

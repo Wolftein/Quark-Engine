@@ -225,50 +225,36 @@ public final class RenderCapabilities {
     public enum ShaderLanguageVersion {
         /**
          * Represent OpenGL ES Pipeline Language 2 (March 2007).
-         *
-         * @since OpenGL ES 2.0
          */
         GLSLES2("100"),
 
         /**
          * Represent OpenGL ES Pipeline Language 3 (August 2012).
-         *
-         * @since OpenGL ES 3.0
          */
         GLSLES3("300"),
 
         /**
          * Represent OpenGL Pipeline Language 1.20 (2006).
-         *
-         * @since OpenGL 2.1
          */
         GLSL210("120"),
 
         /**
          * Represent OpenGL Pipeline Language 1.30 (August 2008).
-         *
-         * @since OpenGL 3.0
          */
         GLSL300("130"),
 
         /**
          * Represent OpenGL Pipeline Language 1.40 (March 2009).
-         *
-         * @since OpenGL 3.1
          */
         GLSL310("140"),
 
         /**
          * Represent OpenGL Pipeline Language 1.50 (August 2009).
-         *
-         * @since OpenGL 3.2
          */
         GLSL320("150"),
 
         /**
          * Represent OpenGL Pipeline Language 3.30 (February 2010).
-         *
-         * @since OpenGL 3.3
          */
         GLSL330("330");
 

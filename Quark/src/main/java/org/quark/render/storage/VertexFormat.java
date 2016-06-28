@@ -24,66 +24,42 @@ import org.quark.render.Render;
  */
 public enum VertexFormat {
     /**
-     * Represent a signed byte.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
+     * Represent a signed 8-bit integer.
      */
     BYTE(Render.GLES2.GL_BYTE, 0x01),
 
     /**
-     * Represent an unsigned byte.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
+     * Represent an unsigned 8-bit integer.
      */
     UNSIGNED_BYTE(Render.GLES2.GL_UNSIGNED_BYTE, 0x01),
 
     /**
-     * Represent a signed short.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
+     * Represent a signed 16-bit integer.
      */
     SHORT(Render.GLES2.GL_SHORT, 0x02),
 
     /**
-     * Represent an unsigned short.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
+     * Represent an unsigned 16-bit integer.
      */
     UNSIGNED_SHORT(Render.GLES2.GL_UNSIGNED_SHORT, 0x02),
 
     /**
-     * Represent a signed integer.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 3.0
+     * Represent a signed 32-bit integer.
      */
     INT(Render.GLES3.GL_INT, 0x04),
 
     /**
-     * Represent an unsigned integer.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 3.0
+     * Represent an unsigned 32-bit integer.
      */
     UNSIGNED_INT(Render.GLES3.GL_UNSIGNED_INT, 0x04),
 
     /**
-     * Represent a float.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
+     * Represent a IEEE-754 single-precision floating point number.
      */
     FLOAT(Render.GLES2.GL_FLOAT, 0x04),
 
     /**
-     * Represent a half float.
-     *
-     * @since OpenGL    3.0
-     * @since OpenGL ES 3.0
+     * Represent a IEEE-754 half-precision floating point number.
      */
     HALF_FLOAT(Render.GLES3.GL_HALF_FLOAT, 0x02);
 

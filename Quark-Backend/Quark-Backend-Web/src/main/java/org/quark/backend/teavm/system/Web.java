@@ -268,7 +268,7 @@ public final class Web {
     }
 
     /**
-     * <p>Initialise <code>TeaVM</code></p>
+     * <p>Initialise <code>Web</code></p>
      */
     public static void create(String element, DisplayLifecycle lifecycle, Display.Preference preference) {
         final HTMLCanvasElement canvas = (HTMLCanvasElement) Window.current().getDocument().getElementById(element);

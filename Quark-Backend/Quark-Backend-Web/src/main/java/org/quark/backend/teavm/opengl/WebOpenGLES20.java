@@ -90,7 +90,7 @@ public class WebOpenGLES20 implements Render.GLES2 {
     @Override
     public RenderCapabilities glCapabilities() {
         //!
-        //! Deferred to the GLES30 extension.
+        //! Deferred to #WebOpenGLES30
         //!
         return null;
     }

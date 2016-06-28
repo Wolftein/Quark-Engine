@@ -25,25 +25,16 @@ import org.quark.render.Render;
 public enum TextureType {
     /**
      * Images in this texture all are 2-dimensional. They have width and height, but no depth.
-     *
-     * @since OpenGL    1.1
-     * @since OpenGL ES 2.0
      */
     TEXTURE_2D(Render.GLES2.GL_TEXTURE_2D),
 
     /**
      * Images in this texture all are 3-dimensional. They have width, height, and depth.
-     *
-     * @since OpenGL    1.2
-     * @since OpenGL ES 3.0
      */
     TEXTURE_3D(Render.GLES3.GL_TEXTURE_3D),
 
     /**
      * Images in this texture consists of six 2D images. The images are arranged in a cube-shape.
-     *
-     * @since OpenGL    1.3
-     * @since OpenGL ES 2.0
      */
     TEXTURE_CUBE(Render.GLES2.GL_TEXTURE_CUBE_MAP);
 
