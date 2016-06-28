@@ -95,6 +95,7 @@ public interface Render extends ManageableManager {
         int GL_ONE_MINUS_SRC_ALPHA = 0x0303;
         int GL_ONE_MINUS_SRC_COLOR = 0x0301;
         int GL_POINTS = 0x00;
+        int GL_READ_WRITE = 0x88BA;
         int GL_RENDERBUFFER = 0x8D41;
         int GL_REPEAT = 0x2901;
         int GL_REPLACE = 0x1E01;
@@ -126,6 +127,7 @@ public interface Render extends ManageableManager {
         int GL_UNSIGNED_BYTE = 0x1401;
         int GL_UNSIGNED_SHORT = 0x1403;
         int GL_VERTEX_SHADER = 0x8B31;
+        int GL_WRITE_ONLY = 0x88B9;
         int GL_ZERO = 0x0000;
 
         RenderCapabilities glCapabilities();

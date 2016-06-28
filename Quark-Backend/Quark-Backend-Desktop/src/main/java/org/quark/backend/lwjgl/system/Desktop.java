@@ -143,7 +143,7 @@ public final class Desktop {
         //! Create audio module.
         //!
         mAudio.onModuleCreate(new DesktopALES10());
-        mAudioThread.scheduleAtFixedRate(new TimerTask() {
+        mAudioThread.schedule(new TimerTask() {
             @Override
             public void run() {
                 mAudio.onModuleUpdate();
@@ -154,7 +154,7 @@ public final class Desktop {
         //! Create input module.
         //!
         mInput.onModuleCreate(new DesktopInputKeyboard(mDisplay.getHandle()), new DesktopInputMouse(mDisplay.getHandle()));
-        mInputThread.scheduleAtFixedRate(new TimerTask() {
+        mInputThread.schedule(new TimerTask() {
             @Override
             public void run() {
                 mInput.onModuleUpdate();

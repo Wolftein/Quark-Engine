@@ -181,7 +181,7 @@ public final class DesktopALES10 implements AudioManager.ALES10 {
      */
     @Override
     public int alGetSourcei(int name, int type) {
-        return AL10.alGetSourcei(type, type);
+        return AL10.alGetSourcei(name, type);
     }
 
     /**

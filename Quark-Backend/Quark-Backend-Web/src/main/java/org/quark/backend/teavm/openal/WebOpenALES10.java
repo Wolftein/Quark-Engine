@@ -30,7 +30,7 @@ import java.util.*;
  * Implementation for {@link AudioManager.ALES10}.
  */
 public final class WebOpenALES10 implements AudioManager.ALES10 {
-    public static AudioContext mDevice;
+    private AudioContext mDevice;
 
     /**
      * Hold all factories for all WebAL component(s).
