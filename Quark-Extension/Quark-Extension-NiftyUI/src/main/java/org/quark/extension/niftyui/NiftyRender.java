@@ -209,11 +209,11 @@ public final class NiftyRender extends Mesh {
             //!
             //! NOTE: Some texture(s) may be loaded asynchronous and requires to update.
             //!
+            flush(true);
+
             texture.create();
             texture.acquire();
             texture.update();
-
-            flush(true);
         } else if (!QKRender.isActive(texture)) {
             //!
             //! NOTE: Handle when the texture doesn't match.
