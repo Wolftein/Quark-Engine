@@ -17,6 +17,8 @@
  */
 package org.quark.resource;
 
+import java.io.InputStream;
+
 /**
  * <code>AssetManager</code> encapsulate an interface that holds every resource.
  * <p>
@@ -85,7 +87,7 @@ public interface AssetManager {
      *
      * @return a reference to the <code>InputStream</code> of the asset
      */
-    AssetLocator.AsynchronousInputStream findAsset(String filename);
+    InputStream findAsset(String filename);
 
     /**
      * <p>Tries to find an asset from any of the {@link AssetLocator} registered</p>
@@ -93,10 +95,9 @@ public interface AssetManager {
      * @param filename the filename (as unique identifier) of the asset
      * @param callback the callback
      *
-     * @return a reference to the <code>InputStream</code> of the asset
+     * @return <code>null</code>
      */
-    AssetLocator.AsynchronousInputStream findAsset(
-            String filename, AssetCallback<AssetLocator.AsynchronousInputStream> callback);
+    InputStream findAsset(String filename, AssetCallback<InputStream> callback);
 
     /**
      * <p>Request an asset that has been loaded</p>

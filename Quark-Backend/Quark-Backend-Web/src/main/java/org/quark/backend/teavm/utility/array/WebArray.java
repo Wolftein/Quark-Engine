@@ -467,4 +467,11 @@ public class WebArray<A extends Array> implements Array<A> {
             script = "var array1 = new Uint8Array(dst.data.buffer, offset, length);" +
                      "var array2 = new Uint8Array(src, from, length); array1.set(array2);")
     private static native void read(JSObject dst, int offset, ArrayBuffer src, int from, int length);
+
+    /**
+     * @see <a href="https://groups.google.com/forum/#!topic/teavm/NswjUF1DFlo">Unsafe</a>
+     */
+    @JSBody(params = {"source", "offset", "length", "destination"},
+            script = "destination.set(source.subarray(offset, offset + length));")
+    public static native void copy(JSObject source, int offset, int length, JSObject destination);
 }

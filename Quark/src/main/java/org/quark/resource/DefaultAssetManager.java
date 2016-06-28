@@ -119,8 +119,8 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public AssetLocator.AsynchronousInputStream findAsset(String filename) {
-        AssetLocator.AsynchronousInputStream input = null;
+    public InputStream findAsset(String filename) {
+        InputStream input = null;
 
         for (final AssetLocator locator : mLocators.values()) {
             //!
@@ -129,7 +129,7 @@ public final class DefaultAssetManager implements AssetManager {
             if (locator.isSynchronousSupported()) {
                 input = locator.locate(filename);
 
-                if (input.isLoaded()) {
+                if (input != null) {
                     break;
                 }
             }
@@ -141,8 +141,7 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public AssetLocator.AsynchronousInputStream findAsset(
-            String filename, AssetCallback<AssetLocator.AsynchronousInputStream> callback) {
+    public InputStream findAsset(String filename, AssetCallback<InputStream> callback) {
         //!
         //! Hold all locator(s) being used.
         //!
@@ -151,7 +150,7 @@ public final class DefaultAssetManager implements AssetManager {
         //!
         //! An internal callback to do async-re-entry execution.
         //!
-        final AssetCallback entry = new AssetCallback<AssetLocator.AsynchronousInputStream>() {
+        final AssetCallback entry = new AssetCallback<InputStream>() {
             @Override
             public void onFail() {
                 if (locators.hasNext()) {
@@ -162,7 +161,7 @@ public final class DefaultAssetManager implements AssetManager {
             }
 
             @Override
-            public void onSuccess(AssetLocator.AsynchronousInputStream asset) {
+            public void onSuccess(InputStream asset) {
                 callback.onSuccess(asset);
             }
         };
@@ -209,9 +208,9 @@ public final class DefaultAssetManager implements AssetManager {
         AssetKey<A, B> key = loadAssetFromCache(filename, descriptor);
 
         if (key == null) {
-            final AssetLocator.AsynchronousInputStream input = findAsset(filename);
+            final InputStream input = findAsset(filename);
 
-            if (input != null && input.isLoaded()) {
+            if (input != null) {
                 key = loadAssetFrom(filename, descriptor, input);
 
             } else {
@@ -233,7 +232,7 @@ public final class DefaultAssetManager implements AssetManager {
 
         if (key == null) {
             mService.execute(() ->
-                    findAsset(filename, new AssetCallback<AssetLocator.AsynchronousInputStream>() {
+                    findAsset(filename, new AssetCallback<InputStream>() {
                         @Override
                         public void onFail() {
                             LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
@@ -243,7 +242,7 @@ public final class DefaultAssetManager implements AssetManager {
                         }
 
                         @Override
-                        public void onSuccess(AssetLocator.AsynchronousInputStream asset) {
+                        public void onSuccess(InputStream asset) {
                             final AssetKey<A, B> asyncKey = loadAssetFrom(filename, descriptor, asset);
 
                             if (asyncKey != null) {

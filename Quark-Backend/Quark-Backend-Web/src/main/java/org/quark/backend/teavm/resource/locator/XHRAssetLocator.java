@@ -52,7 +52,7 @@ public final class XHRAssetLocator implements AssetLocator {
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename) {
+    public InputStream locate(String filename) {
         //!
         //! Build the request.
         //!
@@ -62,19 +62,16 @@ public final class XHRAssetLocator implements AssetLocator {
         xhr.setResponseType(BINARY_REQUEST);
         xhr.send();
 
-        final InputStream stream = (xhr.getStatus() == 200 || xhr.getStatus() == 0
+        return (xhr.getStatus() == 200 || xhr.getStatus() == 0
                 ? new ArrayInputStream(new WebArrayFactory.TeaVMInt8Array((ArrayBuffer) xhr.getResponse()))
                 : null);
-        return new AsynchronousInputStream(stream, null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename, AssetCallback<AsynchronousInputStream> callback) {
-        final AsynchronousInputStream input = new AsynchronousInputStream(callback);
-
+    public InputStream locate(String filename, AssetCallback<InputStream> callback) {
         //!
         //! Build the request.
         //!
@@ -82,16 +79,16 @@ public final class XHRAssetLocator implements AssetLocator {
 
         xhr.open("GET", filename, true);
         xhr.setResponseType(BINARY_REQUEST);
-        xhr.onComplete(() -> onAssetReadStateChange(xhr, input));
+        xhr.onComplete(() -> onAssetReadStateChange(xhr, callback));
         xhr.send();
 
-        return input;
+        return null;
     }
 
     /**
      * <p>Handle when a request changed its state</p>
      */
-    private void onAssetReadStateChange(XMLHttpRequest request, AsynchronousInputStream stream) {
+    private void onAssetReadStateChange(XMLHttpRequest request, AssetCallback<InputStream> callback) {
         if (request.getStatus() == 200 || request.getStatus() == 0) {
             //!
             //! Get the content of the request.
@@ -99,12 +96,12 @@ public final class XHRAssetLocator implements AssetLocator {
             final ArrayBuffer response = (ArrayBuffer) request.getResponse();
 
             final Thread thread = new Thread(() ->
-                    stream.notify(
+                    callback.onSuccess(
                             new ArrayInputStream(
                                     new WebArrayFactory.TeaVMInt8Array(response))));
             thread.start();
         } else {
-            stream.notify(null);
+            callback.onFail();
         }
     }
 }

@@ -21,6 +21,7 @@ import org.quark.resource.AssetCallback;
 import org.quark.resource.AssetLocator;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
 
 /**
@@ -67,7 +68,7 @@ public final class FilesAssetLocator implements AssetLocator {
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename) {
+    public InputStream locate(String filename) {
         return locate(filename, null);
     }
 
@@ -75,15 +76,15 @@ public final class FilesAssetLocator implements AssetLocator {
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename, AssetCallback<AsynchronousInputStream> callback) {
+    public InputStream locate(String filename, AssetCallback<InputStream> callback) {
         final Path child = mFilesystem.getPath(filename);
 
         if (Files.exists(child) && Files.isReadable(child)) {
             try {
-                return new AsynchronousInputStream(Files.newInputStream(child, StandardOpenOption.READ), callback);
+                return Files.newInputStream(child, StandardOpenOption.READ);
             } catch (IOException ignored) {
             }
         }
-        return new AsynchronousInputStream(null, callback);
+        return null;
     }
 }

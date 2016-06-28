@@ -18,6 +18,7 @@
 package org.quark.backend.teavm.openal;
 
 import org.quark.audio.AudioManager;
+import org.quark.backend.teavm.utility.array.WebArray;
 import org.quark.system.utility.array.Float32Array;
 import org.quark.system.utility.array.Int8Array;
 import org.teavm.jso.JSBody;
@@ -567,8 +568,7 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
                 //! Grab a new buffer from the queue.
                 //!
                 mBuffer = mBufferEnqueue.isEmpty()
-                        ? AudioManager.ALES10.AL_NONE
-                        : mStreaming ? mBufferEnqueue.poll() : mBufferEnqueue.peek();
+                        ? AudioManager.ALES10.AL_NONE : mStreaming ? mBufferEnqueue.poll() : mBufferEnqueue.peek();
             }
 
             //!
@@ -597,7 +597,7 @@ public final class WebOpenALES10 implements AudioManager.ALES10 {
             //! Copy all data from the selected buffer into the output buffer.
             //!
             for (int i = 0, j = Math.min(input.getNumberOfChannels(), output.getNumberOfChannels()); i < j; i++) {
-                input.copyFromChannel(output.getChannelData(i), i, mBufferOffset);
+                WebArray.copy(input.getChannelData(i), mBufferOffset, count, output.getChannelData(i));
             }
 
             mBufferOffset += count;

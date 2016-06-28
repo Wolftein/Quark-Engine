@@ -20,6 +20,8 @@ package org.quark.resource.locator;
 import org.quark.resource.AssetCallback;
 import org.quark.resource.AssetLocator;
 
+import java.io.InputStream;
+
 /**
  * Encapsulate an {@link AssetLocator} that search asset(s) using {@link ClassLoader}.
  */
@@ -46,7 +48,7 @@ public final class ClassAssetLocator implements AssetLocator {
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename) {
+    public InputStream locate(String filename) {
         return locate(filename, null);
     }
 
@@ -54,7 +56,7 @@ public final class ClassAssetLocator implements AssetLocator {
      * {@inheritDoc}
      */
     @Override
-    public AsynchronousInputStream locate(String filename, AssetCallback<AsynchronousInputStream> callback) {
-        return new AsynchronousInputStream(mLoader.getResourceAsStream(filename), callback);
+    public InputStream locate(String filename, AssetCallback<InputStream> callback) {
+        return mLoader.getResourceAsStream(filename);
     }
 }
