@@ -119,7 +119,7 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public InputStream findAsset(String filename) {
+    public InputStream find(String filename) {
         InputStream input = null;
 
         for (final AssetLocator locator : mLocators.values()) {
@@ -141,7 +141,7 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public InputStream findAsset(String filename, AssetCallback<InputStream> callback) {
+    public InputStream find(String filename, AssetCallback<InputStream> callback) {
         //!
         //! Hold all locator(s) being used.
         //!
@@ -179,7 +179,7 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public <A> A getAsset(String filename) {
+    public <A> A get(String filename) {
         final AssetKey<A, ?> key = (AssetKey<A, ?>) mCache.get(filename);
         return key != null ? key.getAsset() : null;
     }
@@ -188,27 +188,27 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public <A> A loadAsset(String filename) {
-        return loadAsset(filename, DEFAULT_DESCRIPTOR);
+    public <A> A load(String filename) {
+        return load(filename, DEFAULT_DESCRIPTOR);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <A> void loadAssetAsynchronous(String filename, AssetCallback<A> callback) {
-        loadAssetAsynchronous(filename, DEFAULT_DESCRIPTOR, callback);
+    public <A> void loadAsynchronous(String filename, AssetCallback<A> callback) {
+        loadAsynchronous(filename, DEFAULT_DESCRIPTOR, callback);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public synchronized <A, B extends AssetDescriptor> A loadAsset(String filename, B descriptor) {
+    public synchronized <A, B extends AssetDescriptor> A load(String filename, B descriptor) {
         AssetKey<A, B> key = loadAssetFromCache(filename, descriptor);
 
         if (key == null) {
-            final InputStream input = findAsset(filename);
+            final InputStream input = find(filename);
 
             if (input != null) {
                 key = loadAssetFrom(filename, descriptor, input);
@@ -227,12 +227,12 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public <A, B extends AssetDescriptor> A loadAssetAsynchronous(String filename, B descriptor, AssetCallback<A> callback) {
+    public <A, B extends AssetDescriptor> A loadAsynchronous(String filename, B descriptor, AssetCallback<A> callback) {
         AssetKey<A, B> key = loadAssetFromCache(filename, descriptor);
 
         if (key == null) {
             mService.execute(() ->
-                    findAsset(filename, new AssetCallback<InputStream>() {
+                    find(filename, new AssetCallback<InputStream>() {
                         @Override
                         public void onFail() {
                             LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
@@ -258,15 +258,15 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public <A> void unloadAsset(A asset) {
-        unloadAsset(mCacheNames.get(asset));
+    public <A> void unload(A asset) {
+        unload(mCacheNames.get(asset));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public synchronized void unloadAsset(String filename) {
+    public synchronized void unload(String filename) {
         final AssetKey<?, ?> key = mCache.get(filename);
 
         if (key != null && key.release()) {
@@ -276,7 +276,7 @@ public final class DefaultAssetManager implements AssetManager {
             //!
             //! Dispose and remove a reference to each dependency of the asset.
             //!
-            key.getDependencies().forEach(this::unloadAsset);
+            key.getDependencies().forEach(this::unload);
 
             //!
             //! Notify the asset has been disposed.
@@ -289,7 +289,7 @@ public final class DefaultAssetManager implements AssetManager {
      * {@inheritDoc}
      */
     @Override
-    public void unloadAllAssets() {
+    public void unloadAll() {
         mCache.values().forEach(AssetKey::dispose);
         mCache.clear();
         mCacheNames.clear();
@@ -315,7 +315,8 @@ public final class DefaultAssetManager implements AssetManager {
             try {
                 LOGGER.info("Loading asset '{}'", filename); /* INFO */
 
-                key = loader.load(DefaultAssetManager.this, input, descriptor);
+                loader.load(DefaultAssetManager.this,
+                        key = new AssetKey<A, B>(filename, descriptor), input);
 
                 //!
                 //! Check if we should close the descriptor or not.
@@ -352,7 +353,7 @@ public final class DefaultAssetManager implements AssetManager {
      * <p>Request an asset from the cache</p>
      */
     private <A, B extends AssetDescriptor> AssetKey<A, B> loadAssetFromCache(String filename, B descriptor) {
-        AssetKey<A, B> key = descriptor.isCacheable() ? (AssetKey<A, B>) mCache.get(filename) : null;
+        final AssetKey<A, B> key = descriptor.isCacheable() ? (AssetKey<A, B>) mCache.get(filename) : null;
 
         if (key != null) {
             key.acquire();

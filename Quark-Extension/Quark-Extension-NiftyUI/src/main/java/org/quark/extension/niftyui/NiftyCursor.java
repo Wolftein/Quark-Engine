@@ -74,6 +74,6 @@ public final class NiftyCursor implements MouseCursor {
      */
     @Override
     public void dispose() {
-        QKResources.unloadAsset(mTexture);
+        QKResources.unload(mTexture);
     }
 }

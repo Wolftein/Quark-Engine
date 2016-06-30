@@ -189,7 +189,7 @@ public final class Web {
         //!
         mResources.onModuleDestroy();
 
-        mResources.unloadAllAssets();
+        mResources.unloadAll();
 
         //!
         //! Unload input module.

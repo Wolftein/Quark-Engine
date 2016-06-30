@@ -20,15 +20,14 @@ package org.quark.resource;
 import org.quark.system.utility.Disposable;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * <code>AssetKey</code> encapsulate a key that contain(s) all the information of an asset.
  */
 public final class AssetKey<A, B extends AssetDescriptor> {
-    private final A mAsset;
-    private final B mAssetDescriptor;
-    private final Collection<String> mDependencies;
+    private final String mFilename;
+    private final String mFolder;
 
     /**
      * Hold the reference(s) to the asset being tracked down to perform manually de-allocation.
@@ -36,49 +35,48 @@ public final class AssetKey<A, B extends AssetDescriptor> {
     private int mReferences = 1;
 
     /**
-     * <p>Constructor</p>
+     * Hold the reference(s) to the asset.
      */
-    public AssetKey(A asset, B assetDescriptor, Collection<String> dependencies) {
-        mAsset = asset;
-        mAssetDescriptor = assetDescriptor;
-        mDependencies = dependencies;
-    }
+    private A mAsset;
+
+    /**
+     * Hold the {@link AssetDescriptor} that contain(s) all parameter(s).
+     */
+    private final B mDescriptor;
+
+    /**
+     * Hold all dependencies of the key.
+     * <p>
+     * NOTE: This property is optional.
+     */
+    private final Collection<String> mDependencies = new LinkedList<>();
 
     /**
      * <p>Constructor</p>
      */
-    public AssetKey(A asset, B assetDescriptor) {
-        this(asset, assetDescriptor, Collections.emptyList());
+    public AssetKey(String filename, B descriptor) {
+        mFilename = getAbsoluteFilename(filename);
+        mFolder = getAbsoluteFolder(filename);
+
+        mDescriptor = descriptor;
     }
 
     /**
-     * <p>Acquire the key</p>
-     */
-    public void acquire() {
-        mReferences++;
-    }
-
-    /**
-     * <p>Dispose the key</p>
-     */
-    public void dispose() {
-        if (mAsset instanceof Disposable) {
-            Disposable.class.cast(mAsset).dispose();
-        }
-    }
-
-    /**
-     * <p>Release the key and if the reference reach zero it will dispose it</p>
+     * <p>Get the filename of the key</p>
      *
-     * @return true if the asset has no more reference, false otherwise
+     * @return the filename of the key
      */
-    public boolean release() {
-        final boolean isDisposed = mReferences-- <= 0;
+    public String getFilename() {
+        return mFilename;
+    }
 
-        if (isDisposed) {
-            dispose();
-        }
-        return isDisposed;
+    /**
+     * <p>Get the folder of the key</p>
+     *
+     * @return the folder of the key
+     */
+    public String getFolder() {
+        return mFolder;
     }
 
     /**
@@ -96,15 +94,87 @@ public final class AssetKey<A, B extends AssetDescriptor> {
      * @return the descriptor of the key
      */
     public B getDescriptor() {
-        return mAssetDescriptor;
+        return mDescriptor;
     }
 
     /**
      * <p>Get the dependencies of the key</p>
      *
-     * @return a collection that contain(s) each dependency of the asset
+     * @return a collection that contain(s) all dependencies of the key
      */
     public Collection<String> getDependencies() {
         return mDependencies;
+    }
+
+    /**
+     * <p>Acquire the key</p>
+     * <p>
+     * NOTE: This method is for key management.
+     */
+    public void acquire() {
+        mReferences++;
+    }
+
+    /**
+     * <p>Dispose the key</p>
+     * <p>
+     * NOTE: This method is for key management.
+     */
+    public void dispose() {
+        if (mAsset instanceof Disposable) {
+            ((Disposable) mAsset).dispose();
+        }
+    }
+
+    /**
+     * <p>Release the key and if the reference reach zero it will dispose it</p>
+     * <p>
+     * NOTE: This method is for key management.
+     *
+     * @return true if the asset has no more reference, false otherwise
+     */
+    public boolean release() {
+        final boolean isDisposed = mReferences-- <= 0;
+
+        if (isDisposed) {
+            dispose();
+        }
+        return isDisposed;
+    }
+
+    /**
+     * <p>Set the asset reference of the key</p>
+     *
+     * @param asset the asset reference of the key
+     */
+    public void setAsset(A asset) {
+        mAsset = asset;
+    }
+
+    /**
+     * <p>Add a dependency into the collection</p>
+     *
+     * @param dependency the dependency
+     */
+    public void setDependency(String dependency) {
+        mDependencies.add(dependency);
+    }
+
+    /**
+     * <p>Helper method to obtain the filename of an absolute path</p>
+     */
+    private static String getAbsoluteFilename(String name) {
+        final int index = name.lastIndexOf('/');
+
+        return (index <= 0 || index == name.length() - 1 ? name : name.substring(index + 1));
+    }
+
+    /**
+     * <p>Helper method to obtain the folder of an absolute path</p>
+     */
+    private static String getAbsoluteFolder(String name) {
+        final int index = name.lastIndexOf('/');
+
+        return (index <= 0 || index == name.length() - 1 ? "" : name.substring(0, index + 1));
     }
 }

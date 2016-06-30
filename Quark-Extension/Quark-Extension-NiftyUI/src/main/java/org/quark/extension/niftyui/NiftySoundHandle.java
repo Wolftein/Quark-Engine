@@ -93,6 +93,6 @@ public final class NiftySoundHandle implements SoundHandle {
      */
     @Override
     public void dispose() {
-        QKResources.unloadAsset(mAudio);
+        QKResources.unload(mAudio);
     }
 }

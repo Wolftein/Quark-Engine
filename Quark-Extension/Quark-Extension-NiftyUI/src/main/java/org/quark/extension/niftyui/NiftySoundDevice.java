@@ -44,7 +44,7 @@ public final class NiftySoundDevice implements SoundDevice {
      */
     @Override
     public SoundHandle loadSound(SoundSystem soundSystem, String filename) {
-        return new NiftySoundHandle(QKResources.loadAsset(filename, new Audio.Descriptor(false)));
+        return new NiftySoundHandle(QKResources.load(filename, new Audio.Descriptor(false)));
     }
 
     /**
@@ -52,7 +52,7 @@ public final class NiftySoundDevice implements SoundDevice {
      */
     @Override
     public SoundHandle loadMusic(SoundSystem soundSystem, String filename) {
-        return new NiftySoundHandle(QKResources.loadAsset(filename, new Audio.Descriptor(true)));
+        return new NiftySoundHandle(QKResources.load(filename, new Audio.Descriptor(true)));
     }
 
     /**

@@ -27,13 +27,11 @@ public interface AssetLoader<A, B extends AssetDescriptor> {
     /**
      * <p>Load an asset</p>
      *
-     * @param manager    the <b>asset</b> manager
-     * @param input      the <b>asset</b> stream
-     * @param descriptor the <b>asset</b> parameter
-     *
-     * @return an <code>AssetKey</code> which encapsulate the asset
+     * @param manager the <b>asset</b> manager
+     * @param key     the <b>asset</b> key
+     * @param input   the <b>asset</b> stream
      *
      * @throws IOException indicates failure loading the asset
      */
-    AssetKey<A, B> load(AssetManager manager, InputStream input, B descriptor) throws IOException;
+    void load(AssetManager manager, AssetKey<A, B> key, InputStream input) throws IOException;
 }

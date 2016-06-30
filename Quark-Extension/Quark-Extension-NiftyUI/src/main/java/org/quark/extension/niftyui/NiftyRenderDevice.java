@@ -95,7 +95,7 @@ public final class NiftyRenderDevice implements RenderDevice {
         //!
         //! Load the texture for rendering geometry (without texture).
         //!
-        mEmptyTexture = QKResources.loadAsset("Data/NiftyUI/Texture/Empty.png",
+        mEmptyTexture = QKResources.load("Data/NiftyUI/Texture/Empty.png",
                 new Texture.Descriptor(TextureFormat.RGBA8, TextureFilter.POINT));
     }
 
@@ -122,7 +122,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderImage createImage(String filename, boolean filter) {
-        return new NiftyRenderImage(QKResources.loadAsset(filename,
+        return new NiftyRenderImage(QKResources.load(filename,
                 new Texture.Descriptor(TextureFormat.RGBA8, filter ? TextureFilter.BILINEAR : TextureFilter.POINT)));
     }
 
@@ -131,7 +131,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderFont createFont(String filename) {
-        return new NiftyRenderFont(QKResources.loadAsset(filename, AssetManager.DEFAULT_CACHEABLE_DESCRIPTOR));
+        return new NiftyRenderFont(QKResources.load(filename, AssetManager.DEFAULT_CACHEABLE_DESCRIPTOR));
     }
 
     /**
@@ -286,7 +286,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public MouseCursor createMouseCursor(String filename, int hotspotX, int hotspotY) throws IOException {
-        return new NiftyCursor(QKResources.loadAsset(filename,
+        return new NiftyCursor(QKResources.load(filename,
                 new Texture.Descriptor(TextureFormat.RGBA8, TextureFilter.BILINEAR)), hotspotX, hotspotY);
     }
 

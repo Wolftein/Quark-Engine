@@ -199,7 +199,7 @@ public final class Desktop {
         //! Unload resource module.
         //!
         mResources.onModuleDestroy();
-        mResources.unloadAllAssets();
+        mResources.unloadAll();
 
         //!
         //! Unload input module.

@@ -33,7 +33,7 @@ public final class NiftyResourceLocation implements ResourceLocation {
      */
     @Override
     public InputStream getResourceAsStream(String ref) {
-        return QKResources.findAsset(ref);
+        return QKResources.find(ref);
     }
 
     /**

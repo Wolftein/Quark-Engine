@@ -52,7 +52,7 @@ public interface AssetLocator {
      * @param filename the filename of the asset
      * @param callback the callback
      *
-     * @return a {@link InputStream} to handle both synchronous and asynchronous requests.
+     * @return an {@link InputStream} to handle both synchronous and asynchronous requests.
      */
     InputStream locate(String filename, AssetCallback<InputStream> callback);
 }

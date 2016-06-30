@@ -72,9 +72,9 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
      * {@inheritDoc}
      */
     @Override
-    public AssetKey<Texture, Texture.Descriptor> load(AssetManager manager, InputStream input,
-            Texture.Descriptor descriptor) throws IOException {
-        return new AssetKey<>(readTexture(descriptor, new DataInputStream(input)), descriptor);
+    public void load(
+            AssetManager manager, AssetKey<Texture, Texture.Descriptor> key, InputStream input) throws IOException {
+        key.setAsset(readTexture(key.getDescriptor(), new DataInputStream(input)));
     }
 
     /**

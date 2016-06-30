@@ -67,7 +67,7 @@ public final class NiftyRender extends Mesh implements FontRenderer {
      */
     public NiftyRender(int count) {
         super(
-                new FactoryArrayStorage.Float32(StorageType.CLIENT, StorageMode.STREAM_DRAW, 4 * 4 * count,
+                new FactoryArrayStorage.Float32(StorageType.CLIENT, StorageMode.STREAM_DRAW, 5 * 4 * count,
                         new Vertex.Builder()
                                 .add(0, 2, VertexFormat.FLOAT)
                                 .add(1, 4, VertexFormat.UNSIGNED_BYTE, true)

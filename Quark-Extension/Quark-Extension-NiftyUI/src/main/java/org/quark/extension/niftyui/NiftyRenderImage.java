@@ -65,6 +65,6 @@ public final class NiftyRenderImage implements RenderImage {
      */
     @Override
     public void dispose() {
-        QKResources.unloadAsset(mTexture);
+        QKResources.unload(mTexture);
     }
 }

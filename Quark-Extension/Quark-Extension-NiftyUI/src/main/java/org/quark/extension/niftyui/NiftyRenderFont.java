@@ -81,6 +81,6 @@ public final class NiftyRenderFont implements RenderFont {
      */
     @Override
     public void dispose() {
-        QKResources.unloadAsset(mFont);
+        QKResources.unload(mFont);
     }
 }

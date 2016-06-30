@@ -53,8 +53,8 @@ public final class FontBinaryAssetLoader implements AssetLoader<Font, Font.Descr
      * {@inheritDoc}
      */
     @Override
-    public AssetKey<Font, Font.Descriptor> load(
-            AssetManager manager, InputStream input, Font.Descriptor descriptor) throws IOException {
+    public void load(
+            AssetManager manager, AssetKey<Font, Font.Descriptor> key, InputStream input) throws IOException {
         final DataInputStream in = new DataInputStream(input);
 
         if (in.readByte() != 0x42 || in.readByte() != 0x4D || in.readByte() != 0x46) {
@@ -74,8 +74,12 @@ public final class FontBinaryAssetLoader implements AssetLoader<Font, Font.Descr
         final List<Texture> textures = new ArrayList<>(dependencies.size());
 
         for (final String dependency : dependencies) {
-            textures.add(manager.loadAsset(dependency,
-                    new Texture.Descriptor(TextureFormat.RGBA8, descriptor.getFilter())));
+            final String absolute = key.getFolder() + dependency;
+
+            key.setDependency(absolute);
+
+            textures.add(manager.load(absolute,
+                    new Texture.Descriptor(TextureFormat.RGBA8, key.getDescriptor().getFilter())));
         }
 
         //!
@@ -93,7 +97,8 @@ public final class FontBinaryAssetLoader implements AssetLoader<Font, Font.Descr
         while (input.available() > 0) {
             glyphs.get(readIntLittleEndian(in)).addKerning(readIntLittleEndian(in), readShortLittleEndian(in));
         }
-        return new AssetKey<>(new Font(textures, glyphs, header.mFontLineHeight), descriptor, dependencies);
+
+        key.setAsset(new Font(textures, glyphs, header.mFontLineHeight));
     }
 
     /**

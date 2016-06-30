@@ -87,7 +87,7 @@ public interface AssetManager {
      *
      * @return a reference to the <code>InputStream</code> of the asset
      */
-    InputStream findAsset(String filename);
+    InputStream find(String filename);
 
     /**
      * <p>Tries to find an asset from any of the {@link AssetLocator} registered</p>
@@ -97,7 +97,7 @@ public interface AssetManager {
      *
      * @return <code>null</code>
      */
-    InputStream findAsset(String filename, AssetCallback<InputStream> callback);
+    InputStream find(String filename, AssetCallback<InputStream> callback);
 
     /**
      * <p>Request an asset that has been loaded</p>
@@ -106,7 +106,7 @@ public interface AssetManager {
      *
      * @return a reference to the asset requested or <code>null</code> if doesn't exist
      */
-    <A> A getAsset(String filename);
+    <A> A get(String filename);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
@@ -116,7 +116,7 @@ public interface AssetManager {
      *
      * @return a reference to the asset requested or <code>null</code> if doesn't exist
      */
-    <A> A loadAsset(String filename);
+    <A> A load(String filename);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
@@ -127,7 +127,7 @@ public interface AssetManager {
      * @param filename the name (as unique identifier) of the asset
      * @param callback the callback
      */
-    <A> void loadAssetAsynchronous(String filename, AssetCallback<A> callback);
+    <A> void loadAsynchronous(String filename, AssetCallback<A> callback);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
@@ -138,7 +138,7 @@ public interface AssetManager {
      *
      * @return a reference to the asset requested or <code>null</code> if doesn't exist
      */
-    <A, B extends AssetDescriptor> A loadAsset(String filename, B descriptor);
+    <A, B extends AssetDescriptor> A load(String filename, B descriptor);
 
     /**
      * <p>Tries to load an asset from any of the {@link AssetLoader} registered using any of the
@@ -152,24 +152,24 @@ public interface AssetManager {
      *
      * @return a reference to the asset requested (if was in cache) or <code>null</code> if not
      */
-    <A, B extends AssetDescriptor> A loadAssetAsynchronous(String filename, B descriptor, AssetCallback<A> callback);
+    <A, B extends AssetDescriptor> A loadAsynchronous(String filename, B descriptor, AssetCallback<A> callback);
 
     /**
      * <p>Unload an asset</p>
      *
      * @param asset the asset to dispose.
      */
-    <A> void unloadAsset(A asset);
+    <A> void unload(A asset);
 
     /**
      * <p>Unload an asset</p>
      *
      * @param filename the name (as unique identifier) of the asset
      */
-    void unloadAsset(String filename);
+    void unload(String filename);
 
     /**
      * <p>Unload all asset(s)</p>
      */
-    void unloadAllAssets();
+    void unloadAll();
 }
