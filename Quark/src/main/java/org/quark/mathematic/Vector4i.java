@@ -69,7 +69,7 @@ public abstract class Vector4i {
      * @return the w component of the vector
      */
     public final int getW() {
-        return mZ;
+        return mW;
     }
 
     /**

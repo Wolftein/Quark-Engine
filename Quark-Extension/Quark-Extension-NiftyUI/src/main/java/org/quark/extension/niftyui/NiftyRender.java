@@ -17,7 +17,10 @@
  */
 package org.quark.extension.niftyui;
 
+import de.lessvoid.nifty.spi.render.RenderDevice;
 import de.lessvoid.nifty.tools.Color;
+import org.quark.mathematic.Colour;
+import org.quark.render.font.FontRenderer;
 import org.quark.render.storage.*;
 import org.quark.render.storage.factory.FactoryArrayStorage;
 import org.quark.render.storage.factory.FactoryElementStorage;
@@ -31,7 +34,7 @@ import static org.quark.Quark.QKRender;
 /**
  * <code>NiftyRender</code> encapsulate the batch renderer for {@link NiftyRenderDevice}.
  */
-public final class NiftyRender extends Mesh {
+public final class NiftyRender extends Mesh implements FontRenderer {
     /**
      * Hold the storage that contains the {@linkplain #mVertices}.
      */
@@ -46,6 +49,16 @@ public final class NiftyRender extends Mesh {
      * Hold the current number of primitives in the batch.
      */
     private int mCount = 0;
+
+    /**
+     * Hold the clipping of the renderer.
+     */
+    private boolean mClip;
+
+    /**
+     * Hold the clipping of the renderer.
+     */
+    private int mClipX1, mClipY1, mClipX2, mClipY2;
 
     /**
      * <p>Constructor</p>
@@ -88,6 +101,24 @@ public final class NiftyRender extends Mesh {
     }
 
     /**
+     * @see RenderDevice#enableClip(int, int, int, int)
+     */
+    public void enableClipping(int x1, int y1, int x2, int y2) {
+        mClip = true;
+        mClipX1 = x1;
+        mClipX2 = x2;
+        mClipY1 = y1;
+        mClipY2 = y2;
+    }
+
+    /**
+     * @see RenderDevice#disableClip()
+     */
+    public void disableClipping(int x2, int y2) {
+        mClip = false;
+    }
+
+    /**
      * <p>Draw a texture</p>
      */
     public void draw(Texture texture,
@@ -95,7 +126,12 @@ public final class NiftyRender extends Mesh {
             float x2, float y2,
             float tx1, float ty1,
             float tx2, float ty2, Color color) {
-        draw(texture, x1, y1, x2, y2, tx1, ty1, tx2, ty2, color, color, color, color);
+        final float c0 = Float.intBitsToFloat((int) (color.getAlpha() * 255) << 24
+                | (int) (color.getBlue() * 255) << 16
+                | (int) (color.getGreen() * 255) << 8
+                | (int) (color.getRed() * 255));
+
+        draw(texture, x1, y1, x2, y2, tx1, ty1, tx2, ty2, c0, c0, c0, c0);
     }
 
     /**
@@ -106,14 +142,6 @@ public final class NiftyRender extends Mesh {
             float x2, float y2,
             float tx1, float ty1,
             float tx2, float ty2, Color color0, Color color1, Color color2, Color color3) {
-        //!
-        //! Check whenever the batch need to change context.
-        //!
-        flushIfRequired(texture);
-
-        final float x3 = x1 + x2;
-        final float y3 = y1 + y2;
-
         final float c0 = Float.intBitsToFloat((int) (color0.getAlpha() * 255) << 24
                 | (int) (color0.getBlue() * 255) << 16
                 | (int) (color0.getGreen() * 255) << 8
@@ -131,11 +159,96 @@ public final class NiftyRender extends Mesh {
                 | (int) (color3.getGreen() * 255) << 8
                 | (int) (color3.getRed() * 255));
 
-        mVertices.write(x1).write(y1).write(c0).write(tx1).write(ty1);
-        mVertices.write(x1).write(y3).write(c1).write(tx1).write(ty2);
-        mVertices.write(x3).write(y3).write(c2).write(tx2).write(ty2);
-        mVertices.write(x3).write(y1).write(c3).write(tx2).write(ty1);
+        draw(texture, x1, y1, x2, y2, tx1, ty1, tx2, ty2, c0, c1, c2, c3);
+    }
+
+    /**
+     * <p>Draw a texture</p>
+     */
+    public void draw(Texture texture, float x1, float y1, float x2, float y2,
+            float tx1, float ty1,
+            float tx2, float ty2,
+            float c1, float c2,
+            float c3, float c4) {
+        final float x3 = x1 + x2;
+        final float y3 = y1 + y2;
+
+        //!
+        //! Handle clipping of the geometry.
+        //!
+        final float cX1, cY1, cX2, cY2;
+        final float cTX1, cTY1, cTX2, cTY2;
+
+        if (!mClip) {
+            //!
+            //! The geometry is not clipped.
+            //!
+            cX1 = x1;
+            cY1 = y1;
+            cX2 = x3;
+            cY2 = y3;
+            cTX1 = tx1;
+            cTY1 = ty1;
+            cTX2 = tx2;
+            cTY2 = ty2;
+        } else if ((x1 > mClipX2) || (x3 < mClipX1) || (y1 > mClipY2) || (y3 < mClipY1)) {
+            //!
+            //! The geometry is completely outside the clipping range.
+            //!
+            return;
+        } else if (x1 >= mClipX1 && x1 <= mClipX2 &&
+                x3 >= mClipX1 && x3 <= mClipX2 &&
+                y1 >= mClipY1 && y1 <= mClipY2 &&
+                y3 >= mClipY1 && y3 <= mClipY2) {
+            //!
+            //! The geometry is completely inside the clipping range.
+            //!
+            cX1 = x1;
+            cY1 = y1;
+            cX2 = x3;
+            cY2 = y3;
+            cTX1 = tx1;
+            cTY1 = ty1;
+            cTX2 = tx2;
+            cTY2 = ty2;
+        } else {
+            //!
+            //! The geometry is partially inside the clipping range.
+            //!
+            cX1 = (x1 >= mClipX1 ? x1 : mClipX1);
+            cY1 = (y1 >= mClipY1 ? y1 : mClipY1);
+            cX2 = (x3 <= mClipX2 ? x3 : mClipX2);
+            cY2 = (y3 <= mClipY2 ? y3 : mClipY2);
+            cTX1 = (cX1 == x1 ? tx1 : ((cX1 * tx1) / x1));
+            cTY1 = (cY1 == y1 ? ty1 : ((cY1 * ty1) / y1));
+            cTX2 = (cX2 == x3 ? tx2 : ((cX2 * tx2) / x3));
+            cTY2 = (cY2 == y3 ? ty2 : ((cY2 * ty2) / y3));
+        }
+
+        //!
+        //! Check whenever the batch need to change context.
+        //!
+        flushIfRequired(texture);
+
+        mVertices.write(cX1).write(cY1).write(c1).write(cTX1).write(cTY1);
+        mVertices.write(cX1).write(cY2).write(c2).write(cTX1).write(cTY2);
+        mVertices.write(cX2).write(cY2).write(c3).write(cTX2).write(cTY2);
+        mVertices.write(cX2).write(cY1).write(c4).write(cTX2).write(cTY1);
         mCount++;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void drawFontGlyph(Texture texture,
+            float x1, float y1,
+            float x2, float y2,
+            float tx1, float ty1,
+            float tx2, float ty2, Colour colour) {
+        final float c0 = colour.toPackedFloat32FormatABGR();
+
+        draw(texture, x1, y1, x2, y2, tx1, ty1, tx2, ty2, c0, c0, c0, c0);
     }
 
     /**
@@ -173,7 +286,7 @@ public final class NiftyRender extends Mesh {
      *
      * @param restore <code>true</code> if the render should be restore after, <code>false</code> otherwise
      */
-    private void flush(boolean restore) {
+    public void flush(boolean restore) {
         if (mCount > 0) {
             //!
             //! We need to stop using the storage before rendering.

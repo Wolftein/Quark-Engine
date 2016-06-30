@@ -69,7 +69,7 @@ public abstract class Vector4f {
      * @return the w component of the vector
      */
     public final float getW() {
-        return mZ;
+        return mW;
     }
 
     /**

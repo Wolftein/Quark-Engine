@@ -270,7 +270,7 @@ public final class DefaultRender implements Render {
         if (RenderState.isFlagDirty(states.getScissor(), mStates.getScissor())) {
             onUpdateState(states.getScissor(), GLES2.GL_SCISSOR_TEST);
 
-            mStates.setStencil(states.getScissor());
+            mStates.setScissor(states.getScissor());
         }
 
         //!

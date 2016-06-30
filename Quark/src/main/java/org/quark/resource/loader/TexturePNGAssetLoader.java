@@ -205,7 +205,7 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
                 = getUncompressedFormat(header);
         final Int8Array imageBuffer
                 = ArrayFactory.allocateInt8Array(header.mImageWidth * header.mImageHeight * imageFormat.eComponent);
-
+        
         final int imageLineLength = getUncompressedFormatLength(header);
         final int imageLineSize = ((header.mImageWidth * header.mImageDepth + 7) / 8) * imageLineLength;
 
@@ -213,7 +213,6 @@ public final class TexturePNGAssetLoader implements AssetLoader<Texture, Texture
         final byte[] zipBuffer1 = new byte[imageLineSize];
         final byte[] zipBuffer2 = new byte[imageLineSize];
         final byte[] indexedBuffer = new byte[header.mImageWidth];
-
 
         //!
         //! Decompress the data of the image (using z-lib)

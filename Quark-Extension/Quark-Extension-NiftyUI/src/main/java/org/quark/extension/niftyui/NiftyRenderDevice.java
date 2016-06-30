@@ -24,8 +24,10 @@ import de.lessvoid.nifty.spi.render.RenderFont;
 import de.lessvoid.nifty.spi.render.RenderImage;
 import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.NiftyResourceLoader;
+import org.quark.mathematic.Colour;
 import org.quark.mathematic.ImmutableMatrix4f;
 import org.quark.render.RenderState;
+import org.quark.render.font.Font;
 import org.quark.render.shader.AttributeType;
 import org.quark.render.shader.Shader;
 import org.quark.render.shader.ShaderParser;
@@ -35,6 +37,7 @@ import org.quark.render.texture.Image;
 import org.quark.render.texture.Texture;
 import org.quark.render.texture.TextureFilter;
 import org.quark.render.texture.TextureFormat;
+import org.quark.resource.AssetManager;
 
 import java.io.IOException;
 
@@ -63,6 +66,11 @@ public final class NiftyRenderDevice implements RenderDevice {
      * Hold the {@link Texture} for primitive(s).
      */
     private final Texture mEmptyTexture;
+
+    /**
+     * Hold the {@link Colour} for font(s).
+     */
+    private final Colour mColour = new Colour(0.0F, 0.0F, 0.0F, 0.0F);
 
     /**
      * Hold the current cursor of the device.
@@ -123,7 +131,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderFont createFont(String filename) {
-        return null;   // NOT_IMPLEMENTED_YET
+        return new NiftyRenderFont(QKResources.loadAsset(filename, AssetManager.DEFAULT_CACHEABLE_DESCRIPTOR));
     }
 
     /**
@@ -204,10 +212,8 @@ public final class NiftyRenderDevice implements RenderDevice {
      * {@inheritDoc}
      */
     @Override
-    public void renderQuad(int x, int y, int width, int height, Color topLeft, Color topRight, Color bottomRight,
-            Color bottomLeft) {
-        mRender.draw(mEmptyTexture, x, y, width, height, 0.0f, 0.0f, 0.0f, 0.0f,
-                topLeft, topRight, bottomRight, bottomLeft);
+    public void renderQuad(int x, int y, int width, int height, Color c0, Color c1, Color c2, Color c3) {
+        mRender.draw(mEmptyTexture, x, y, width, height, 0.0f, 0.0f, 0.0f, 0.0f, c0, c1, c2, c3);
     }
 
     /**
@@ -229,12 +235,12 @@ public final class NiftyRenderDevice implements RenderDevice {
     @Override
     public void renderImage(RenderImage image, int x, int y, int w, int h, int srcX, int srcY, int srcW, int srcH,
             Color color, float scale, int centerX, int centerY) {
-        final Texture texture = ((NiftyRenderImage) image).getTexture();
+        final Texture internal = ((NiftyRenderImage) image).getTexture();
 
         //!
         //! Calculate offset of the image.
         //!
-        final Image data = texture.getImage();
+        final Image data = internal.getImage();
 
         final float tx1 = (float) srcX / data.getWidth();
         final float ty1 = (float) srcY / data.getHeight();
@@ -244,15 +250,19 @@ public final class NiftyRenderDevice implements RenderDevice {
         final float x0 = centerX + (x - centerX) * scale;
         final float y0 = centerY + (y - centerY) * scale;
 
-        mRender.draw(texture, x0, y0, w * scale, h * scale, tx1, ty1,  tx2, ty2, color);
+        mRender.draw(internal, x0, y0, w * scale, h * scale, tx1, ty1, tx2, ty2, color);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void renderFont(RenderFont font, String text, int x, int y, Color fontColor, float sizeX, float sizeY) {
-        // NOT_IMPLEMENTED_YET
+    public void renderFont(RenderFont font, String text, int x, int y, Color color, float sizeX, float sizeY) {
+        final Font internal = ((NiftyRenderFont) font).getFont();
+
+        mColour.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+        internal.render(mRender, text, x, y, sizeX, sizeY, mColour);
     }
 
     /**
@@ -260,7 +270,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public void enableClip(int x0, int y0, int x1, int y1) {
-        QKRender.apply(mRenderState.setScissor(RenderState.Flag.ENABLE).setScissorViewport(x0, y0, x1, y1));
+        mRender.enableClipping(x0, y0, x1, y1);
     }
 
     /**
@@ -268,7 +278,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public void disableClip() {
-        QKRender.apply(mRenderState.setScissor(RenderState.Flag.DISABLE));
+        mRender.disableClipping(getWidth(), getHeight());
     }
 
     /**

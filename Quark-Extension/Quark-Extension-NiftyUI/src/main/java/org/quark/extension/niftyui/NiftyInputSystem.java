@@ -52,6 +52,8 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
      */
     public NiftyInputSystem(InputListener listener) {
         mListener = listener;
+
+        QKInput.addInputListener(this);
     }
 
     /**

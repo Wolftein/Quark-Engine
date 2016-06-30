@@ -64,6 +64,13 @@ public final class Rectangle {
         mHeight = height;
     }
 
+    public void set(float x, float y, float width, float height) {
+        mX = x;
+        mY = y;
+        mWidth = width;
+        mHeight = height;
+    }
+
     /**
      * <p>Get the x position of the rectangle</p>
      *
@@ -179,16 +186,18 @@ public final class Rectangle {
      * @return <code>true</code> if the given rectangle is within, <code>false</code> otherwise
      */
     public boolean contain(float x, float y, float width, float height) {
+        final float f1 = mX + mWidth;
         final float f2 = x + width;
+        final float f3 = mY + mHeight;
         final float f4 = y + height;
 
-        return (x > mX) && (x < mX + mWidth)
+        return (x > mX) && (x < f1)
                 && (f2 > mX)
-                && (f2 < mX + mWidth)
+                && (f2 < f1)
                 && (y > mY)
-                && (y < mY + mHeight)
+                && (y < f3)
                 && (f4 > mY)
-                && (f4 < mY + mHeight);
+                && (f4 < f3);
     }
 
     /**
@@ -294,6 +303,6 @@ public final class Rectangle {
      */
     @Override
     public String toString() {
-        return '[' + mX + '/' + mY + ", " + mWidth + '/' + mHeight + ']';
+        return "[" + mX + '/' + mY + ", " + mWidth + '/' + mHeight + "]";
     }
 }

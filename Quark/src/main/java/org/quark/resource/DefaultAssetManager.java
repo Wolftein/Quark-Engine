@@ -313,6 +313,8 @@ public final class DefaultAssetManager implements AssetManager {
 
         if (loader != null) {
             try {
+                LOGGER.info("Loading asset '{}'", filename); /* INFO */
+
                 key = loader.load(DefaultAssetManager.this, input, descriptor);
 
                 //!
