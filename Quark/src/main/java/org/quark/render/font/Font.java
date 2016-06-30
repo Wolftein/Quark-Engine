@@ -19,6 +19,8 @@ package org.quark.render.font;
 
 import org.quark.mathematic.Colour;
 import org.quark.render.texture.Texture;
+import org.quark.render.texture.TextureFilter;
+import org.quark.resource.AssetDescriptor;
 
 import java.util.List;
 import java.util.Map;
@@ -271,5 +273,30 @@ public class Font {
         final FontGlyph glyph = mGlyphFactory.get(current);
 
         return glyph != null ? (int) ((glyph.getAdvance() + glyph.getKerning(next)) * scale) : 0;
+    }
+
+    /**
+     * <code>Descriptor</code> encapsulate an {@link AssetDescriptor} for {@link Font}.
+     */
+    public final static class Descriptor extends AssetDescriptor {
+        private final TextureFilter mFilter;
+
+        /**
+         * <p>Constructor</p>
+         */
+        public Descriptor(TextureFilter filter) {
+            super(true, true);
+
+            mFilter = filter;
+        }
+
+        /**
+         * <p>Get the {@link TextureFilter} of the font {@link Texture}</p>
+         *
+         * @return the {@link TextureFilter} of the font {@link Texture}
+         */
+        public TextureFilter getFilter() {
+            return mFilter;
+        }
     }
 }

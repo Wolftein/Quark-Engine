@@ -176,7 +176,7 @@ public final class Desktop {
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
-        mResources.registerAssetLoader(new FontAngelCodeAssetLoader(), "fnt");
+        mResources.registerAssetLoader(new FontBinaryAssetLoader(), "fnt");
 
         //!
         //! Handle the create notification.

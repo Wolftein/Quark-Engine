@@ -20,9 +20,7 @@ package org.quark.resource.loader;
 import org.quark.render.font.Font;
 import org.quark.render.font.FontGlyph;
 import org.quark.render.texture.Texture;
-import org.quark.render.texture.TextureFilter;
 import org.quark.render.texture.TextureFormat;
-import org.quark.resource.AssetDescriptor;
 import org.quark.resource.AssetKey;
 import org.quark.resource.AssetLoader;
 import org.quark.resource.AssetManager;
@@ -38,12 +36,13 @@ import java.util.Map;
 /**
  * <code>FontAngelCodeAssetLoader</code> encapsulate an {@link AssetLoader} for loading angel code font(s).
  */
-public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDescriptor> {
+public final class FontBinaryAssetLoader implements AssetLoader<Font, Font.Descriptor> {
     /**
-     * <code>FontHeader</code> represent the file format of a FNT file format.
+     * <code>FontHeader</code> represent the file format of a angel code file format.
      */
     private final static class FontHeader {
         public int mFontVersion;
+        public int mFontOutline;
         public int mFontLineHeight;
         public int mFontWidth;
         public int mFontHeight;
@@ -54,60 +53,53 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
      * {@inheritDoc}
      */
     @Override
-    public AssetKey<Font, AssetDescriptor> load(
-            AssetManager manager, InputStream input, AssetDescriptor descriptor) throws IOException {
-        return readFont(manager, descriptor, new DataInputStream(input));
-    }
+    public AssetKey<Font, Font.Descriptor> load(
+            AssetManager manager, InputStream input, Font.Descriptor descriptor) throws IOException {
+        final DataInputStream in = new DataInputStream(input);
 
-    /**
-     * <p>Read a {@link Font} from the {@link InputStream} given</p>
-     */
-    private AssetKey<Font, AssetDescriptor> readFont(
-            AssetManager manager, AssetDescriptor descriptor, DataInputStream input) throws IOException {
-        if (input.readByte() != 0x42 || input.readByte() != 0x4D || input.readByte() != 0x46) {
+        if (in.readByte() != 0x42 || in.readByte() != 0x4D || in.readByte() != 0x46) {
             throw new IOException("<Font> contains an invalid header");
         }
 
         //!
-        //! Read the header of the font.
+        //! Parse header
         //!
-        final FontHeader header = readHeader(input);
+        final FontHeader header = parseHeader(in);
 
         //!
-        //! Read the pages of the font.
+        //! Parse page
         //!
-        final List<String> dependencies = readPages(input, header);
+        final List<String> dependencies = parsePages(in, header);
 
         final List<Texture> textures = new ArrayList<>(dependencies.size());
 
         for (final String dependency : dependencies) {
             textures.add(manager.loadAsset(dependency,
-                    new Texture.Descriptor(TextureFormat.RGBA8, TextureFilter.ANISOTROPIC_16)));
+                    new Texture.Descriptor(TextureFormat.RGBA8, descriptor.getFilter())));
         }
 
         //!
-        //! Read the characters of the font.
+        //! Parse glyph
         //!
-        final Map<Integer, FontGlyph> glyphs = readCharacters(input, header);
+        final Map<Integer, FontGlyph> glyphs = parseGlyph(in, header);
 
         //!
         //! Read the kerning of the characters (if available)
         //!
-        if (input.available() > 0) {
-            input.skipBytes(0x01);
-            input.skipBytes(0x04);
+        if (in.available() > 0) {
+            in.skipBytes(0x01);
+            in.skipBytes(0x04);
         }
         while (input.available() > 0) {
-            glyphs.get(readIntLittleEndian(input))
-                    .addKerning(readIntLittleEndian(input), readShortLittleEndian(input));
+            glyphs.get(readIntLittleEndian(in)).addKerning(readIntLittleEndian(in), readShortLittleEndian(in));
         }
         return new AssetKey<>(new Font(textures, glyphs, header.mFontLineHeight), descriptor, dependencies);
     }
 
     /**
-     * <p>Read header block</p>
+     * <p>Parse header block</p>
      */
-    private FontHeader readHeader(DataInputStream input) throws IOException {
+    private FontHeader parseHeader(DataInputStream input) throws IOException {
         final FontHeader header = new FontHeader();
 
         //!
@@ -119,7 +111,13 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
         //! ==== INFO BLOCK ====
         //!
         input.skipBytes(0x01);
-        input.skipBytes(readIntLittleEndian(input));
+        input.skipBytes(0x04);
+
+        input.skipBytes(0x0D);
+
+        header.mFontOutline = (header.mFontVersion > 0x02 ? input.readByte() : 0);
+
+        while (input.readByte() != 0x00) ;
 
         //!
         //! ==== COMMON BLOCK ====
@@ -140,9 +138,9 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
     }
 
     /**
-     * <p>Read page block</p>
+     * <p>Parse page block</p>
      */
-    private List<String> readPages(DataInputStream input, FontHeader header) throws IOException  {
+    private List<String> parsePages(DataInputStream input, FontHeader header) throws IOException {
         final List<String> pages = new ArrayList<>(header.mFontPages);
 
         input.skipBytes(0x01);
@@ -179,9 +177,9 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
     }
 
     /**
-     * <p>Read character block</p>
+     * <p>Parse glyph block</p>
      */
-    private Map<Integer, FontGlyph> readCharacters(DataInputStream input, FontHeader header) throws IOException {
+    private Map<Integer, FontGlyph> parseGlyph(DataInputStream input, FontHeader header) throws IOException {
         input.skipBytes(0x01);
 
         final int length = readIntLittleEndian(input) / 20;
@@ -211,7 +209,7 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
                     cHeight,
                     cOffsetX,
                     cOffsetY,
-                    cAdvance,
+                    cAdvance + header.mFontOutline,
                     cPage,
                     (float) cX / header.mFontWidth,
                     (float) cY / header.mFontHeight,
@@ -227,7 +225,7 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
     }
 
     /**
-     * <b>Read a little endian integer (Required for FNT format)</b>
+     * <b>Read a little endian integer (Required for format)</b>
      */
     private int readIntLittleEndian(DataInputStream in) throws IOException {
         final int b0 = in.readInt();
@@ -240,7 +238,7 @@ public final class FontAngelCodeAssetLoader implements AssetLoader<Font, AssetDe
     }
 
     /**
-     * <b>Read a little endian short (Required for FNT format)</b>
+     * <b>Read a little endian short (Required for format)</b>
      */
     private int readShortLittleEndian(DataInputStream in) throws IOException {
         final int b0 = in.readShort();
