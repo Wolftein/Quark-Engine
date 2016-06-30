@@ -134,7 +134,7 @@ public final class AssetKey<A, B extends AssetDescriptor> {
      * @return true if the asset has no more reference, false otherwise
      */
     public boolean release() {
-        final boolean isDisposed = mReferences-- <= 0;
+        final boolean isDisposed = --mReferences <= 0;
 
         if (isDisposed) {
             dispose();
