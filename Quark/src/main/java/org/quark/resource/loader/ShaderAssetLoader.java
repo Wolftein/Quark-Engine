@@ -46,8 +46,8 @@ public final class ShaderAssetLoader implements AssetLoader<Shader, Shader.Descr
      * {@inheritDoc}
      */
     @Override
-    public void load(
-            AssetManager manager, AssetKey<Shader, Shader.Descriptor> key, InputStream input) throws IOException {
+    public void load(AssetManager manager,
+            AssetKey<Shader, Shader.Descriptor> key, InputStream input) throws IOException {
         //!
         //! Allocate an array and load the entire content in it.
         //!

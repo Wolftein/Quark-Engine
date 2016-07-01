@@ -53,8 +53,8 @@ public final class FontAssetLoader implements AssetLoader<Font, Font.Descriptor>
      * {@inheritDoc}
      */
     @Override
-    public void load(
-            AssetManager manager, AssetKey<Font, Font.Descriptor> key, InputStream input) throws IOException {
+    public void load(AssetManager manager,
+            AssetKey<Font, Font.Descriptor> key, InputStream input) throws IOException {
         final DataInputStream in = new DataInputStream(input);
 
         if (in.readByte() != 0x42 || in.readByte() != 0x4D || in.readByte() != 0x46) {

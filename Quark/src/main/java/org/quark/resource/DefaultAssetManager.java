@@ -239,6 +239,8 @@ public final class DefaultAssetManager implements AssetManager {
 
                             Emulation.forEach(
                                     mListeners, (listener) -> listener.onAssetFailed(filename)); /* NOTIFY */
+
+                            callback.onFail();
                         }
 
                         @Override
@@ -247,6 +249,8 @@ public final class DefaultAssetManager implements AssetManager {
 
                             if (asyncKey != null) {
                                 callback.onSuccess(asyncKey.getAsset());
+                            } else {
+                                callback.onFail();
                             }
                         }
                     }));
@@ -315,8 +319,7 @@ public final class DefaultAssetManager implements AssetManager {
             try {
                 LOGGER.info("Loading asset '{}'", filename); /* INFO */
 
-                loader.load(DefaultAssetManager.this,
-                        key = new AssetKey<A, B>(filename, descriptor), input);
+                loader.load(DefaultAssetManager.this, key = new AssetKey<>(filename, descriptor), input);
 
                 //!
                 //! Check if we should close the descriptor or not.

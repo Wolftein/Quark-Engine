@@ -74,8 +74,8 @@ public final class TextureDDSAssetLoader implements AssetLoader<Texture, Texture
      * {@inheritDoc}
      */
     @Override
-    public void load(
-            AssetManager manager, AssetKey<Texture, Texture.Descriptor> key, InputStream input) throws IOException {
+    public void load(AssetManager manager,
+            AssetKey<Texture, Texture.Descriptor> key, InputStream input) throws IOException {
         key.setAsset(readTexture(key.getDescriptor(), new DataInputStream(input)));
     }
 

@@ -55,9 +55,9 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
      * {@inheritDoc}
      */
     @Override
-    public void load(
-            AssetManager manager, AssetKey<Audio, Audio.Descriptor> key, InputStream input) throws IOException {
-            key.setAsset(readAudio(key.getDescriptor(), input));
+    public void load(AssetManager manager,
+            AssetKey<Audio, Audio.Descriptor> key, InputStream input) throws IOException {
+        key.setAsset(readAudio(key.getDescriptor(), input));
     }
 
     /**
@@ -279,7 +279,7 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
         @Override
         public void reset() throws IOException {
             mLogical = mStream.reload();
-            mVorbis  = new VorbisStream(mLogical);
+            mVorbis = new VorbisStream(mLogical);
 
             mInputEof = false;
             mCurrent = 0;

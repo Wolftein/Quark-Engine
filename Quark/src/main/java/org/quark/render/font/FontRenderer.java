@@ -27,7 +27,7 @@ public interface FontRenderer {
     /**
      * <p>Render a {@link FontGlyph}</p>
      *
-     * @param texture the texture
+     * @param texture the` texture
      * @param x       the x1 coordinate (in screen coordinates) of the glyph
      * @param y       the y1 coordinate (in screen coordinates) of the glyph
      * @param x2      the x2 coordinate (in screen coordinates) of the glyph

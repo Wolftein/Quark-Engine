@@ -50,8 +50,8 @@ public final class AudioWAVAssetLoader implements AssetLoader<Audio, Audio.Descr
      * {@inheritDoc}
      */
     @Override
-    public void load(
-            AssetManager manager, AssetKey<Audio, Audio.Descriptor> key, InputStream input) throws IOException {
+    public void load(AssetManager manager,
+            AssetKey<Audio, Audio.Descriptor> key, InputStream input) throws IOException {
         key.setAsset(readAudio(key.getDescriptor(), new DataInputStream(input)));
     }
 
