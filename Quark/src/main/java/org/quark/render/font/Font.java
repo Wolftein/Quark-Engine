@@ -104,6 +104,22 @@ public class Font {
      * @param colour   the text's colour
      */
     public void render(FontRenderer renderer, String text, int x, int y, float scaleX, float scaleY, Colour colour) {
+        render(renderer, text, x, y, scaleX, scaleY, 0.0F, colour);
+    }
+
+    /**
+     * <p>Render the given text</p>
+     *
+     * @param renderer the text's renderer
+     * @param text     the text
+     * @param x        the x coordinates (in screen coordinates)
+     * @param y        the y coordinates (in screen coordinates)
+     * @param scaleX   the x coordinates scale (clamp from 0.1-max)
+     * @param scaleY   the y coordinates scale (clamp from 0.1-max)
+     * @param border   the x/y coordinates scale (for border)
+     * @param colour   the text's colour
+     */
+    public void render(FontRenderer renderer, String text, int x, int y, float scaleX, float scaleY, float border, Colour colour) {
         int xPosition = x;
         int yPosition = y;
 
@@ -119,7 +135,7 @@ public class Font {
                 //! Handle special character (new line)
                 //!
                 case '\n':
-                    yPosition += getHeight();
+                    yPosition += getHeight() * scaleY;
                     xPosition = x;
                     continue;
             }
@@ -137,7 +153,7 @@ public class Font {
                         glyph.getTextureX2Coordinate(),
                         glyph.getTextureY2Coordinate(), colour);
 
-                xPosition += getAdvance(c1, c2, scaleX);
+                xPosition += getAdvance(c1, c2, scaleX) + (border * scaleX);
             }
         }
     }
@@ -295,7 +311,7 @@ public class Font {
             i += Character.charCount(c1);
 
             if (c1 == '\n') {
-                value += getHeight();
+                value += getHeight() * scale;
             } else {
                 value = Math.max(value, getHeight(c1, scale));
             }
