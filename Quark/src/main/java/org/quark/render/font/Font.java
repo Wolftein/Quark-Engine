@@ -187,15 +187,50 @@ public class Font {
      * @return the width of the given string
      */
     public int getWidth(String string, float scale) {
-        int value = 0;
+        int value0 = 0, value1 = 0, value2 = 0;
 
-        for (int i = 0, j = string.length(); i < j; i++) {
-            final char c1 = string.charAt(i);
-            final char c2 = (i == j - 1 ? '\0' : string.charAt(i + 1));
+        for (int i = 0, j = string.length(); i < j; ) {
+            final int c1 = string.codePointAt(i);
 
-            value += getAdvance(c1, c2, scale);
+            i += Character.charCount(c1);
+
+            switch (c1) {
+                //!
+                //! Handle special character (new line)
+                //!
+                case '\n':
+                    value1 = Math.max(value0, value1);
+                    value0 = 0;
+                    value2 = i;
+                    continue;
+            }
+
+            final FontGlyph glyph = mGlyphFactory.get(c1);
+            if (glyph == null) {
+                continue;
+            }
+
+            final int c2 = (i < j ? string.codePointAt(i) : '\0');
+
+            if (i == value2) {
+                //!
+                //! When the character is the first one we only extract the offset.
+                //!
+                value0 -= glyph.getOffsetX() * scale;
+            } else {
+                value0 += glyph.getKerning(c2) * scale;
+            }
+
+            if (c2 != '\0' && c2 != '\n') {
+                //!
+                //! When the character is the last one, don't add advance.
+                //!
+                value0 += glyph.getWidth() * scale + glyph.getOffsetX() * scale;
+            } else {
+                value0 += glyph.getAdvance() * scale;
+            }
         }
-        return value;
+        return Math.max(value0, value1);
     }
 
     /**
@@ -254,8 +289,16 @@ public class Font {
     public int getHeight(String string, float scale) {
         int value = 0;
 
-        for (int i = 0, j = string.length(); i < j; i++) {
-            value = Math.max(value, getHeight(string.charAt(i)));
+        for (int i = 0, j = string.length(); i < j; ) {
+            final int c1 = string.codePointAt(i);
+
+            i += Character.charCount(c1);
+
+            if (c1 == '\n') {
+                value += getHeight();
+            } else {
+                value = Math.max(value, getHeight(c1, scale));
+            }
         }
         return value;
     }

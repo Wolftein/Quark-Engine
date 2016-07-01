@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <code>FontAngelCodeAssetLoader</code> encapsulate an {@link AssetLoader} for loading angel code font(s).
+ * <code>FontAssetLoader</code> encapsulate an {@link AssetLoader} for loading angel code font(s).
  */
-public final class FontBinaryAssetLoader implements AssetLoader<Font, Font.Descriptor> {
+public final class FontAssetLoader implements AssetLoader<Font, Font.Descriptor> {
     /**
      * <code>FontHeader</code> represent the file format of a angel code file format.
      */

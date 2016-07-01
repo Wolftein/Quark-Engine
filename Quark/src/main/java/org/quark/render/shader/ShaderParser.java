@@ -85,14 +85,25 @@ public final class ShaderParser {
      * @return <code>Shader</code> generated
      */
     public Shader generate() {
+        return generate(mArray);
+    }
+
+    /**
+     * <p>Create a {@link Shader} from all instruction(s) in the given {@link Int8Array}</p>
+     *
+     * @param array the array that contain(s) all instruction(s)
+     *
+     * @return <code>Shader</code> generated
+     */
+    public Shader generate(Int8Array array) {
         //!
         //! Build the process for the operation.
         //!
         final Generator.Process process = new Generator.Process(mCapabilities);
 
-        mArray.flip();
+        array.flip();
 
-        while (mArray.hasRemaining()) {
+        while (array.hasRemaining()) {
             final StringBuffer output = new StringBuffer(64);
 
             //!
@@ -100,13 +111,13 @@ public final class ShaderParser {
             //!
             int op;
 
-            while ((op = mArray.readInt8()) != (byte) Builder.OP_BLOCK_END) {
-                mGenerator.get(op).generate(process, mArray, output.append('\n'));
+            while ((op = array.readInt8()) != (byte) Builder.OP_BLOCK_END) {
+                mGenerator.get(op).generate(process, array, output.append('\n'));
             }
             process.stages.add(new Stage(output.toString(), process.stage));
         }
 
-        mArray.clear();
+        array.clear();
 
         return new Shader(process.stages, process.attributes, process.uniforms);
     }

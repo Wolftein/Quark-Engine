@@ -165,7 +165,8 @@ public final class Web {
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
-        mResources.registerAssetLoader(new FontBinaryAssetLoader(), "fnt");
+        mResources.registerAssetLoader(new FontAssetLoader(), "fnt");
+        mResources.registerAssetLoader(new ShaderAssetLoader(QKRender.getCapabilities()), "shader");
 
         //!
         //! Handle the create notification.
