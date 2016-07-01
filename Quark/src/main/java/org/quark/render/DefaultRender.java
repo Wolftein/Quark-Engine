@@ -191,11 +191,11 @@ public final class DefaultRender implements Render {
             final boolean red
                     = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
             final boolean green
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+                    = RenderState.isFlagEnabled(states.getGreenMask(), mStates.getGreenMask());
             final boolean blue
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+                    = RenderState.isFlagEnabled(states.getBlueMask(), mStates.getBlueMask());
             final boolean alpha
-                    = RenderState.isFlagEnabled(states.getRedMask(), mStates.getRedMask());
+                    = RenderState.isFlagEnabled(states.getAlphaMask(), mStates.getAlphaMask());
 
             mGL.glColorMask(red, green, blue, alpha);
 
