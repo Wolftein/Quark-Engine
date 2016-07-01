@@ -17,6 +17,7 @@ Quark is a cross-platform Argentinian java framework based on OpenGL that works 
 Currently there are two simple showcase made with an older version of the engine.
 
 [Simple 3D](http://www.tecno-store.com.ar/LordFers/1/)
+
 [Simple 2D + Normal Mapping](http://www.tecno-store.com.ar/LordFers/2/)
 
 ## Get started
