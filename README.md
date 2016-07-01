@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/license-APACHE-blue.svg)](https://github.com/Wolftein/Quark-Engine/blob/master/LICENSE)
+![Size](https://reposs.herokuapp.com/?path=Wolftein/Quark-Engine)
+ 
 ## About
 
 Quark is a cross-platform Argentinian java framework based on OpenGL that works on desktop (Any OS) and browser (WebGL).
