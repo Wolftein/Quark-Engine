@@ -1,5 +1,6 @@
 [![License](https://img.shields.io/badge/license-APACHE-blue.svg)](https://github.com/Wolftein/Quark-Engine/blob/master/LICENSE)
 ![Size](https://reposs.herokuapp.com/?path=Wolftein/Quark-Engine)
+[![Build Status](https://travis-ci.org/Wolftein/Quark-Engine.svg?branch=master)](https://travis-ci.org/Wolftein/Quark-Engine)
  
 ## About
 
