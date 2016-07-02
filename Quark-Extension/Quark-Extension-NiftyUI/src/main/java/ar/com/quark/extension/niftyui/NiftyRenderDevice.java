@@ -25,9 +25,9 @@ import ar.com.quark.render.font.Font;
 import ar.com.quark.render.shader.Shader;
 import ar.com.quark.render.shader.data.UniformMatrix4;
 import ar.com.quark.render.texture.Image;
+import ar.com.quark.render.texture.Texture;
 import ar.com.quark.render.texture.TextureFilter;
 import ar.com.quark.render.texture.TextureFormat;
-import ar.com.quark.resource.AssetManager;
 import de.lessvoid.nifty.render.BlendMode;
 import de.lessvoid.nifty.spi.render.MouseCursor;
 import de.lessvoid.nifty.spi.render.RenderDevice;
@@ -35,7 +35,6 @@ import de.lessvoid.nifty.spi.render.RenderFont;
 import de.lessvoid.nifty.spi.render.RenderImage;
 import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.NiftyResourceLoader;
-import ar.com.quark.render.texture.Texture;
 
 import java.io.IOException;
 
@@ -127,7 +126,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderFont createFont(String filename) {
-        return new NiftyRenderFont(Quark.QKResources.load(filename, AssetManager.DEFAULT_CACHEABLE_DESCRIPTOR));
+        return new NiftyRenderFont(Quark.QKResources.load(filename, new Font.Descriptor(TextureFilter.BILINEAR)));
     }
 
     /**
