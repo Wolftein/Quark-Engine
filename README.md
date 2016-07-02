@@ -4,12 +4,12 @@
  
 ## About
 
-Quark is a cross-platform Argentinian java framework based on OpenGL that works on desktop (Any OS) and browser (WebGL).
+Quark is a cross-platform java framework based on OpenGL that works on desktop and browser.
 
 ## Features
   * Extend documentation for ease development
-  * Deploy games on Windows, Linux, Mac
-  * Deploy games on browser (Using the amazing TeaVM tool)
+  * Deploy games on Windows, Linux and Mac
+  * Deploy games on Browser ([TeaVM](https://github.com/konsoletyper/teavm))
   * Multi-threading support to keep your games running smooth
   * Support for legacy and modern OpenGL (OpenGL 2.1-3.3, OpenGL ES 2.0-3.2) with forward compatibility
   * Support for .PNG, .DDS, .OGG, .WAV file format
@@ -26,12 +26,21 @@ Currently there are two simple showcase made with an older version of the engine
 
 ## Get started
 
-Currently the framework isn't in maven, so the easiest way to start using is using [jitpack](http://jipack.io).
+Currently the framework isn't in maven, so the easiest way to start using it is using [jitpack](http://jipack.io).
 
 	allprojects {
 		repositories {
-			...
-			maven { url "https://jitpack.io" }
+            jcenter()
+            maven {
+                url "https://jitpack.io"
+            }
+            maven {
+                url "http://oss.sonatype.org/content/groups/public/"
+            }
+            maven {
+                url 'https://oss.sonatype.org/content/repositories/snapshots'
+            }
+            mavenCentral();
 		}
 	}
 	
