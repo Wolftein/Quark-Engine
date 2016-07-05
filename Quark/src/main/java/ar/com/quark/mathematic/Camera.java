@@ -314,7 +314,7 @@ public class Camera {
         result.mX = (2.0F * x) / viewport.getWidth() - 1.0F;
         result.mY = (2.0F * y) / viewport.getHeight() - 1.0F;
         result.mZ = (2.0F * coordinates.getZ()) - 1.0F;
-        mInverse.project(result, result);
+        mInverse.transform(result, result);
 
         return result;
     }
@@ -329,7 +329,7 @@ public class Camera {
      * @return a reference to <code>result</code>
      */
     public final Vector3f toScreenCoordinates(Vector3f coordinates, Rectangle viewport, MutableVector3f result) {
-        mCombination.project(coordinates, result);
+        mCombination.transform(coordinates, result);
 
         result.mX = (viewport.getWidth() * (result.mX + 1.0F)) * 0.5F + viewport.getX();
         result.mY = (viewport.getHeight() * (result.mY + 1.0F)) * 0.5F + viewport.getY();
