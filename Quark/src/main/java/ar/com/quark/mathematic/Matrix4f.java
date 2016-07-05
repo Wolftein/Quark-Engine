@@ -456,6 +456,27 @@ public abstract class Matrix4f {
     }
 
     /**
+     * <p>Project the provided vector to this matrix</p>
+     *
+     * @param vector the vector that contains the projection
+     * @param result the vector's destination
+     *
+     * @return a reference to <code>result</code>
+     */
+    public final <T extends Vector3f> T project(T vector, T result) {
+        final float x = vector.mX;
+        final float y = vector.mY;
+        final float z = vector.mZ;
+
+        final float w = x * m30 + y * m31 + z * m32 + m33;
+
+        result.mX = (x * m00 + y * m01 + z * m02 + m03) / w;
+        result.mY = (x * m10 + y * m11 + z * m12 + m13) / w;
+        result.mZ = (x * m20 + y * m21 + z * m22 + m23) / w;
+        return result;
+    }
+
+    /**
      * <p>Transform the provided values to this matrix</p>
      *
      * @param x      the value to transform the x component

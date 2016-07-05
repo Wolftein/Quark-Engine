@@ -130,10 +130,10 @@ public class Font {
 
             i += Character.charCount(c1);
 
+            //!
+            //! Handle special character
+            //!
             switch (c1) {
-                //!
-                //! Handle special character (new line)
-                //!
                 case '\n':
                     yPosition += getHeight() * scaleY;
                     xPosition = x;
@@ -210,10 +210,10 @@ public class Font {
 
             i += Character.charCount(c1);
 
+            //!
+            //! Handle special character
+            //!
             switch (c1) {
-                //!
-                //! Handle special character (new line)
-                //!
                 case '\n':
                     value1 = Math.max(value0, value1);
                     value0 = 0;

@@ -17,6 +17,8 @@
  */
 package ar.com.quark.mathematic;
 
+import ar.com.quark.mathematic.geometry.Rectangle;
+
 /**
  * <code>Camera</code> encapsulate a camera with position and rotation.
  */
@@ -39,6 +41,11 @@ public class Camera {
      * Hold the projection-view of the camera.
      */
     protected MutableMatrix4f mCombination = MutableMatrix4f.createIdentity();
+
+    /**
+     * Hold the inverse projection-view of the camera.
+     */
+    protected MutableMatrix4f mInverse = MutableMatrix4f.createIdentity();
 
     /**
      * Hold the position of the camera.
@@ -99,6 +106,11 @@ public class Camera {
             //!
             mCombination.set(mProjectionMatrix).mul(mViewMatrix);
 
+            //!
+            //! Calculate the inverse projection-view.
+            //!
+            mInverse.set(mCombination).invert();
+
             mDirty = false;
         }
         return mViewMatrix;
@@ -114,6 +126,15 @@ public class Camera {
             getView();
         }
         return mCombination;
+    }
+
+    /**
+     * <p>Get the inverse projection-view combined matrix of the camera</p>
+     *
+     * @return a reference to the inverse projection-view combined matrix
+     */
+    public Matrix4f getInverseViewProjection() {
+        return mInverse;
     }
 
     /**
@@ -275,5 +296,45 @@ public class Camera {
     public final void rotateByDegrees(float angle, float x, float y, float z) {
         mRotation.rotateAxisByDegrees(angle, x, y, z);
         mDirty = true;
+    }
+
+    /**
+     * <p>Get the world coordinates from the given screen coordinates</p>
+     *
+     * @param coordinates the screen coordinates
+     * @param viewport    the screen viewport
+     * @param result      the vector that will contain the result
+     *
+     * @return a reference to <code>result</code>
+     */
+    public final Vector3f toWorldCoordinates(Vector3f coordinates, Rectangle viewport, MutableVector3f result) {
+        final float x = coordinates.mX - viewport.getX();
+        final float y = viewport.getHeight() - coordinates.mY - 1 - viewport.getY();
+
+        result.mX = (2.0F * x) / viewport.getWidth() - 1.0F;
+        result.mY = (2.0F * y) / viewport.getHeight() - 1.0F;
+        result.mZ = (2.0F * coordinates.getZ()) - 1.0F;
+        mInverse.project(result, result);
+
+        return result;
+    }
+
+    /**
+     * <p>Get the screen coordinates from the given world coordinates</p>
+     *
+     * @param coordinates the world coordinates
+     * @param viewport    the screen viewport
+     * @param result      the vector that will contain the result
+     *
+     * @return a reference to <code>result</code>
+     */
+    public final Vector3f toScreenCoordinates(Vector3f coordinates, Rectangle viewport, MutableVector3f result) {
+        mCombination.project(coordinates, result);
+
+        result.mX = (viewport.getWidth() * (result.mX + 1.0F)) * 0.5F + viewport.getX();
+        result.mY = (viewport.getHeight() * (result.mY + 1.0F)) * 0.5F + viewport.getY();
+        result.mZ = (result.mZ + 1.0F) * 0.5F;
+
+        return result;
     }
 } 

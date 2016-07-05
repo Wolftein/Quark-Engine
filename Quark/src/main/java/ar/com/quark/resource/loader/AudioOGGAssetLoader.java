@@ -248,8 +248,7 @@ public final class AudioOGGAssetLoader implements AssetLoader<Audio, Audio.Descr
 
                     final int toRead = Math.min(remainingInStream, remainingToBuffer);
 
-                    if ((count = mVorbis.readPcm(buffer, offset + read, toRead)) <= 0
-                            || mCurrent >= mTotal) {
+                    if ((count = mVorbis.readPcm(buffer, offset + read, toRead)) <= 0 || mCurrent >= mTotal) {
                         mInputEof = true;
                         break;
                     }

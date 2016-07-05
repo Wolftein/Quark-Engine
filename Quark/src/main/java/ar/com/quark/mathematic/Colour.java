@@ -646,7 +646,10 @@ public final class Colour {
      * @return the packed colour
      */
     public int toPackedInt32FormatABGR() {
-        return ((int) (mAlpha * 255) << 24) | ((int) (mBlue * 255) << 16) | ((int) (mGreen * 255) << 8) | ((int) (mRed * 255));
+        return ((int) (mAlpha * 255) << 24)
+                | ((int) (mBlue * 255) << 16)
+                | ((int) (mGreen * 255) << 8)
+                | ((int) (mRed * 255));
     }
 
     /**
