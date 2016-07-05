@@ -468,11 +468,11 @@ public abstract class Matrix4f {
         final float y = vector.mY;
         final float z = vector.mZ;
 
-        final float w = x * m30 + y * m31 + z * m32 + m33;
+        final float w = 1.0F / (x * m30 + y * m31 + z * m32 + m33);
 
-        result.mX = (x * m00 + y * m01 + z * m02 + m03) / w;
-        result.mY = (x * m10 + y * m11 + z * m12 + m13) / w;
-        result.mZ = (x * m20 + y * m21 + z * m22 + m23) / w;
+        result.mX = (x * m00 + y * m01 + z * m02 + m03) * w;
+        result.mY = (x * m10 + y * m11 + z * m12 + m13) * w;
+        result.mZ = (x * m20 + y * m21 + z * m22 + m23) * w;
         return result;
     }
 
@@ -579,7 +579,6 @@ public abstract class Matrix4f {
             final float v32 = m32;
             final float v33 = m33;
             final float inverse = 1.0f / determinant;
-
 
             result.m00 = v11 * (v22 * v33 - v23 * v32) + v12 * (v23 * v31 - v21 * v33) + v13 * (v21 * v32 - v22 * v31);
             result.m00 *= inverse;

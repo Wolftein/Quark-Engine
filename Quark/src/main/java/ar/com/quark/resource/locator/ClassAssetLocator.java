@@ -49,7 +49,7 @@ public final class ClassAssetLocator implements AssetLocator {
      */
     @Override
     public InputStream locate(String filename) {
-        return locate(filename, null);
+        return mLoader.getResourceAsStream(filename);
     }
 
     /**
@@ -57,6 +57,13 @@ public final class ClassAssetLocator implements AssetLocator {
      */
     @Override
     public InputStream locate(String filename, AssetCallback<InputStream> callback) {
-        return mLoader.getResourceAsStream(filename);
+        final InputStream input = locate(filename);
+
+        if (input != null) {
+            callback.onSuccess(input);
+        } else {
+            callback.onFail();
+        }
+        return input;
     }
 }

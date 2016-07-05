@@ -69,14 +69,6 @@ public final class FilesAssetLocator implements AssetLocator {
      */
     @Override
     public InputStream locate(String filename) {
-        return locate(filename, null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputStream locate(String filename, AssetCallback<InputStream> callback) {
         final Path child = mFilesystem.getPath(filename);
 
         if (Files.exists(child) && Files.isReadable(child)) {
@@ -86,5 +78,20 @@ public final class FilesAssetLocator implements AssetLocator {
             }
         }
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public InputStream locate(String filename, AssetCallback<InputStream> callback) {
+        final InputStream input = locate(filename);
+
+        if (input != null) {
+            callback.onSuccess(input);
+        } else {
+            callback.onFail();
+        }
+        return input;
     }
 }
