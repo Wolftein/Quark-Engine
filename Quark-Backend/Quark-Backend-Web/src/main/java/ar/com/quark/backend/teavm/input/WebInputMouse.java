@@ -139,7 +139,7 @@ public final class WebInputMouse implements InputMouse {
      * <p>Handle mouse-wheel event</p>
      */
     private void onMouseWheel(WheelEvent event) {
-        QKInput.invokeMouseWheel(Math.min(-1, Math.max(1, (int) event.getDeltaY())));
+        QKInput.invokeMouseWheel(Math.max(-1, Math.min(1, (int) event.getDeltaY())));
     }
 
     /**
