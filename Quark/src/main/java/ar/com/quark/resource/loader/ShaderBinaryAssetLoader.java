@@ -32,13 +32,13 @@ import java.io.InputStream;
 /**
  * <code>ShaderAssetLoader</code> encapsulate an {@link AssetLoader} for loading shader(s).
  */
-public final class ShaderAssetLoader implements AssetLoader<Shader, Shader.Descriptor> {
+public final class ShaderBinaryAssetLoader implements AssetLoader<Shader, Shader.Descriptor> {
     private final ShaderParser mParser;
 
     /**
      * <p>Constructor</p>
      */
-    public ShaderAssetLoader(RenderCapabilities capabilities) {
+    public ShaderBinaryAssetLoader(RenderCapabilities capabilities) {
         mParser = new ShaderParser(capabilities);
     }
 
@@ -46,8 +46,8 @@ public final class ShaderAssetLoader implements AssetLoader<Shader, Shader.Descr
      * {@inheritDoc}
      */
     @Override
-    public void load(AssetManager manager,
-            AssetKey<Shader, Shader.Descriptor> key, InputStream input) throws IOException {
+    public void load(AssetManager manager, AssetKey<Shader, Shader.Descriptor> key, InputStream input)
+            throws IOException {
         //!
         //! Allocate an array and load the entire content in it.
         //!
