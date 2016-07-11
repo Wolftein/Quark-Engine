@@ -17,7 +17,6 @@
  */
 package ar.com.quark.audio.factory;
 
-import ar.com.quark.Quark;
 import ar.com.quark.audio.Audio;
 import ar.com.quark.audio.AudioFormat;
 import ar.com.quark.system.utility.Disposable;
@@ -26,6 +25,8 @@ import ar.com.quark.system.utility.Manageable;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static ar.com.quark.Quark.QKAudio;
 
 /**
  * Specialised implementation for {@link Audio} that are being stream.
@@ -97,7 +98,7 @@ public final class FactoryStreamingAudio extends Audio {
     public void delete() {
         super.delete();
 
-        Quark.QKAudio.delete(this);
+        QKAudio.delete(this);
     }
 
     /**
@@ -115,6 +116,6 @@ public final class FactoryStreamingAudio extends Audio {
      */
     @Override
     public void dispose() {
-        Quark.QKAudio.delete(this);
+        QKAudio.delete(this);
     }
 }

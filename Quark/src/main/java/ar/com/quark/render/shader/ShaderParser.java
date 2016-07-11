@@ -80,12 +80,12 @@ public final class ShaderParser {
     }
 
     /**
-     * <p>Create a {@link Shader} from all instruction(s)</p>
+     * <p>Generate the byte-code of the parser/p>
      *
-     * @return <code>Shader</code> generated
+     * @return an {@link Int8Array} that contain(s) the byte-code(s) generated
      */
-    public Shader generate() {
-        return generate(mArray);
+    public Int8Array generate() {
+        return mArray.flip();
     }
 
     /**

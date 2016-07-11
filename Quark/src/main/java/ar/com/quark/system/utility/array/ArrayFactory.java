@@ -60,17 +60,6 @@ public abstract class ArrayFactory {
     }
 
     /**
-     * <p>Allocate a new {@link Int64Array}</p>
-     *
-     * @param capacity the number of element(s) in the array
-     *
-     * @return the allocated array
-     */
-    public static Int64Array allocateInt64Array(int capacity) {
-        return instance.nAllocateInt64Array(capacity);
-    }
-
-    /**
      * <p>Allocate a new {@link UInt8Array}</p>
      *
      * @param capacity the number of element(s) in the array
@@ -126,17 +115,6 @@ public abstract class ArrayFactory {
     }
 
     /**
-     * <p>Allocate a new {@link Float64Array}</p>
-     *
-     * @param capacity the number of element(s) in the array
-     *
-     * @return the allocated array
-     */
-    public static Float64Array allocateFloat64Array(int capacity) {
-        return instance.nAllocateFloat64Array(capacity);
-    }
-
-    /**
      * <p>Deallocate a {@link Array}</p>
      *
      * @return <code>null</code>
@@ -174,15 +152,6 @@ public abstract class ArrayFactory {
      * @return the allocated array
      */
     protected abstract Int32Array nAllocateInt32Array(int capacity);
-
-    /**
-     * <p>Allocate a new {@link Int64Array}</p>
-     *
-     * @param capacity the number of element(s) in the array
-     *
-     * @return the allocated array
-     */
-    protected abstract Int64Array nAllocateInt64Array(int capacity);
 
     /**
      * <p>Allocate a new {@link UInt8Array}</p>
@@ -228,15 +197,6 @@ public abstract class ArrayFactory {
      * @return the allocated array
      */
     protected abstract Float32Array nAllocateFloat32Array(int capacity);
-
-    /**
-     * <p>Allocate a new {@link Float64Array}</p>
-     *
-     * @param capacity the number of element(s) in the array
-     *
-     * @return the allocated array
-     */
-    protected abstract Float64Array nAllocateFloat64Array(int capacity);
 
     /**
      * <p>Deallocate a {@link Array}</p>

@@ -54,14 +54,6 @@ public final class DesktopArrayFactory extends ArrayFactory {
      * {@inheritDoc}
      */
     @Override
-    protected Int64Array nAllocateInt64Array(int capacity) {
-        return new DesktopInt64Array(MemoryUtil.memAlloc(capacity * 0x08));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected UInt8Array nAllocateUInt8Array(int capacity) {
         return new DesktopUInt8Array(MemoryUtil.memAlloc(capacity));
     }
@@ -96,14 +88,6 @@ public final class DesktopArrayFactory extends ArrayFactory {
     @Override
     protected Float32Array nAllocateFloat32Array(int capacity) {
         return new DesktopFloat32Array(MemoryUtil.memAlloc(capacity * 0x04));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Float64Array nAllocateFloat64Array(int capacity) {
-        return new DesktopFloat64Array(MemoryUtil.memAlloc(capacity * 0x08));
     }
 
     /**
@@ -146,18 +130,6 @@ public final class DesktopArrayFactory extends ArrayFactory {
          * <p>Constructor</p>
          */
         public DesktopInt32Array(ByteBuffer buffer) {
-            super(buffer);
-        }
-    }
-
-    /**
-     * Specialised implementation for {@link Int64Array}.
-     */
-    public final static class DesktopInt64Array extends DesktopArray<Int64Array> implements Int64Array {
-        /**
-         * <p>Constructor</p>
-         */
-        public DesktopInt64Array(ByteBuffer buffer) {
             super(buffer);
         }
     }
@@ -218,18 +190,6 @@ public final class DesktopArrayFactory extends ArrayFactory {
          * <p>Constructor</p>
          */
         public DesktopFloat32Array(ByteBuffer buffer) {
-            super(buffer);
-        }
-    }
-
-    /**
-     * Specialised implementation for {@link Float64Array}.
-     */
-    public final static class DesktopFloat64Array extends DesktopArray<Float64Array> implements Float64Array {
-        /**
-         * <p>Constructor</p>
-         */
-        public DesktopFloat64Array(ByteBuffer buffer) {
             super(buffer);
         }
     }

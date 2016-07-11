@@ -147,28 +147,6 @@ public interface Array<A extends Array> {
     A writeInt32(int index, int value);
 
     /**
-     * @see ByteBuffer#putLong(long)
-     */
-    A writeInt64(long value);
-
-    /**
-     * @see java.nio.LongBuffer#put(long[])
-     */
-    default A writeInt64(long[] value) {
-        return writeInt64(value, 0, value.length);
-    }
-
-    /**
-     * @see java.nio.LongBuffer#put(long[], int, int)
-     */
-    A writeInt64(long[] value, int offset, int count);
-
-    /**
-     * @see ByteBuffer#putLong(int, long)
-     */
-    A writeInt64(int index, long value);
-
-    /**
      * @see ByteBuffer#putFloat(float)
      */
     A writeFloat32(float value);
@@ -189,28 +167,6 @@ public interface Array<A extends Array> {
      * @see ByteBuffer#putFloat(int, float)
      */
     A writeFloat32(int index, float value);
-
-    /**
-     * @see ByteBuffer#putDouble(double)
-     */
-    A writeFloat64(double value);
-
-    /**
-     * @see java.nio.DoubleBuffer#put(double[])
-     */
-    default A writeFloat64(double[] value) {
-        return writeFloat64(value, 0, value.length);
-    }
-
-    /**
-     * @see java.nio.DoubleBuffer#put(double[], int, int)
-     */
-    A writeFloat64(double[] value, int offset, int count);
-
-    /**
-     * @see ByteBuffer#putDouble(int, double)
-     */
-    A writeFloat64(int index, double value);
 
     /**
      * @see ByteBuffer#put(byte[])
@@ -251,16 +207,6 @@ public interface Array<A extends Array> {
     int readInt32(int index);
 
     /**
-     * @see ByteBuffer#getLong()
-     */
-    long readInt64();
-
-    /**
-     * @see ByteBuffer#getLong(int)
-     */
-    long readInt64(int index);
-
-    /**
      * @see ByteBuffer#getFloat()
      */
     float readFloat32();
@@ -269,16 +215,6 @@ public interface Array<A extends Array> {
      * @see ByteBuffer#getFloat(int)
      */
     float readFloat32(int index);
-
-    /**
-     * @see ByteBuffer#getDouble()
-     */
-    double readFloat64();
-
-    /**
-     * @see ByteBuffer#getDouble(int)
-     */
-    double readFloat64(int index);
 
     /**
      * @see ByteBuffer#get(byte[])

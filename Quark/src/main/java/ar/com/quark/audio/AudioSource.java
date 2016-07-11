@@ -17,11 +17,12 @@
  */
 package ar.com.quark.audio;
 
-import ar.com.quark.Quark;
 import ar.com.quark.mathematic.MutableVector3f;
 import ar.com.quark.mathematic.Vector3f;
 import ar.com.quark.mathematic.Vector3i;
 import ar.com.quark.system.utility.Manageable;
+
+import static ar.com.quark.Quark.QKAudio;
 
 /**
  * <code>AudioSource</code> encapsulate an audio source that can be manipulated.
@@ -87,28 +88,28 @@ public final class AudioSource extends Manageable {
         //!
         mAudio = audio;
 
-        Quark.QKAudio.play(this);
+        QKAudio.play(this);
     }
 
     /**
      * @see AudioManager#pause(AudioSource)
      */
     public void pause() {
-        Quark.QKAudio.pause(this);
+        QKAudio.pause(this);
     }
 
     /**
      * @see AudioManager#resume(AudioSource)
      */
     public void resume() {
-        Quark.QKAudio.resume(this);
+        QKAudio.resume(this);
     }
 
     /**
      * @see AudioManager#stop(AudioSource)
      */
     public void stop() {
-        Quark.QKAudio.stop(this);
+        QKAudio.stop(this);
     }
 
     /**

@@ -19,7 +19,6 @@ package ar.com.quark.backend.teavm.utility.array;
 
 import ar.com.quark.system.utility.array.*;
 import ar.com.quark.system.utility.array.Float32Array;
-import ar.com.quark.system.utility.array.Float64Array;
 import ar.com.quark.system.utility.array.Int16Array;
 import ar.com.quark.system.utility.array.Int32Array;
 import ar.com.quark.system.utility.array.Int8Array;
@@ -51,14 +50,6 @@ public final class WebArrayFactory extends ArrayFactory {
     @Override
     protected Int32Array nAllocateInt32Array(int capacity) {
         return new TeaVMInt32Array(ArrayBuffer.create(capacity * 0x04));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Int64Array nAllocateInt64Array(int capacity) {
-        return new TeaVMInt64Array(ArrayBuffer.create(capacity * 0x08));
     }
 
     /**
@@ -105,14 +96,6 @@ public final class WebArrayFactory extends ArrayFactory {
      * {@inheritDoc}
      */
     @Override
-    protected Float64Array nAllocateFloat64Array(int capacity) {
-        return new TeaVMFloat64Array(ArrayBuffer.create(capacity * 0x08));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     protected void nFree(Array<?> view) {
     }
 
@@ -148,18 +131,6 @@ public final class WebArrayFactory extends ArrayFactory {
          * <p>Constructor</p>
          */
         public TeaVMInt32Array(ArrayBuffer buffer) {
-            super(buffer);
-        }
-    }
-
-    /**
-     * Specialised implementation for {@link Int64Array}.
-     */
-    public final static class TeaVMInt64Array extends WebArray<Int64Array> implements Int64Array {
-        /**
-         * <p>Constructor</p>
-         */
-        public TeaVMInt64Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }
@@ -220,18 +191,6 @@ public final class WebArrayFactory extends ArrayFactory {
          * <p>Constructor</p>
          */
         public TeaVMFloat32Array(ArrayBuffer buffer) {
-            super(buffer);
-        }
-    }
-
-    /**
-     * Specialised implementation for {@link Float64Array}.
-     */
-    public final static class TeaVMFloat64Array extends WebArray<Float64Array> implements Float64Array {
-        /**
-         * <p>Constructor</p>
-         */
-        public TeaVMFloat64Array(ArrayBuffer buffer) {
             super(buffer);
         }
     }

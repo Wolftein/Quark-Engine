@@ -291,34 +291,10 @@ public final class DefaultAudioManager implements AudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void delete(FactoryStaticAudio audio) {
+    public void delete(Audio audio) {
         if (audio.getHandle() != Manageable.INVALID_HANDLE) {
             mAL.alDeleteBuffers(audio.setHandle(Manageable.INVALID_HANDLE));
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void delete(FactoryStreamingAudio audio) {
-    }
-
-    /**
-     * <p>Handle when updating an streaming audio data</p>
-     *
-     * @see #onUpdateStreaming(AudioSource, FactoryStreamingAudio)
-     */
-    private boolean onUpdateData(FactoryStreamingAudio audio, int buffer) {
-        final int length = audio.read(mTemp, 0, mTemp.length);
-
-        if (length > 0) {
-            mTempArray.clear();
-            mTempArray.write(mTemp, 0, length);
-            mTempArray.flip();
-            mAL.alBufferData(buffer, audio.getFormat().eType, mTempArray, audio.getRate());
-        }
-        return (length > 0);
     }
 
     /**
@@ -414,6 +390,23 @@ public final class DefaultAudioManager implements AudioManager {
             }
             source.setUpdated();
         }
+    }
+
+    /**
+     * <p>Handle when updating an streaming audio data</p>
+     *
+     * @see #onUpdateStreaming(AudioSource, FactoryStreamingAudio)
+     */
+    private boolean onUpdateData(FactoryStreamingAudio audio, int buffer) {
+        final int length = audio.read(mTemp, 0, mTemp.length);
+
+        if (length > 0) {
+            mTempArray.clear();
+            mTempArray.write(mTemp, 0, length);
+            mTempArray.flip();
+            mAL.alBufferData(buffer, audio.getFormat().eType, mTempArray, audio.getRate());
+        }
+        return (length > 0);
     }
 
     /**
@@ -525,14 +518,14 @@ public final class DefaultAudioManager implements AudioManager {
     }
 
     /**
-     * <p>Handle when detaching a static audio</p>
+     * <p>Handle when detaching a {@link FactoryStaticAudio}</p>
      */
     private void onDetachSource(AudioSource source, FactoryStaticAudio audio) {
         mAL.alSourcei(source.getHandle(), ALES10.AL_BUFFER, ALES10.AL_NONE);
     }
 
     /**
-     * <p>Handle when detaching a streaming audio</p>
+     * <p>Handle when detaching a {@link FactoryStreamingAudio}</p>
      */
     private void onDetachSource(AudioSource source, FactoryStreamingAudio audio) {
         for (int i = 0; i < MAX_BUFFER_CAPACITY; ++i) {
@@ -542,7 +535,7 @@ public final class DefaultAudioManager implements AudioManager {
     }
 
     /**
-     * <p>Handle when a source requires to be removed</p>
+     * <p>Handle when an {@link AudioSource} requires to be removed</p>
      */
     private void onRemoveSource(AudioSource source) {
         //!

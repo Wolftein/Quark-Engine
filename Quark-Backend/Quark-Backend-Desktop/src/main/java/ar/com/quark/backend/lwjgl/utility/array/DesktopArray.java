@@ -215,34 +215,6 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt64(long value) {
-        mBuffer.putLong(value);
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeInt64(long[] value, int offset, int count) {
-        mBuffer.asLongBuffer().put(value, offset, count);
-
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeInt64(int index, long value) {
-        mBuffer.putLong(index, value);
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public A writeFloat32(float value) {
         mBuffer.putFloat(value);
         return (A) this;
@@ -264,34 +236,6 @@ public class DesktopArray<A extends Array> implements Array<A> {
     @Override
     public A writeFloat32(int index, float value) {
         mBuffer.putFloat(index, value);
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(double value) {
-        mBuffer.putDouble(value);
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(double[] value, int offset, int count) {
-        mBuffer.asDoubleBuffer().put(value, offset, count);
-
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(int index, double value) {
-        mBuffer.putDouble(index, value);
         return (A) this;
     }
 
@@ -347,22 +291,6 @@ public class DesktopArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public long readInt64() {
-        return mBuffer.getLong();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long readInt64(int index) {
-        return mBuffer.getLong(index);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public float readFloat32() {
         return mBuffer.getFloat();
     }
@@ -373,22 +301,6 @@ public class DesktopArray<A extends Array> implements Array<A> {
     @Override
     public float readFloat32(int index) {
         return mBuffer.getFloat(index);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double readFloat64() {
-        return mBuffer.getDouble();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double readFloat64(int index) {
-        return mBuffer.getDouble(index);
     }
 
     /**

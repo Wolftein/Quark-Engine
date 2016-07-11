@@ -693,7 +693,8 @@ public final class DefaultRender implements Render {
                         //!
                         //! Requires TEXTURE_3D extension.
                         //!
-                        onUpdateTextureBorder(texture, tex2DCube.getBorderX(), tex2DCube.getBorderY(), tex2DCube.getBorderZ());
+                        onUpdateTextureBorder(texture,
+                                tex2DCube.getBorderX(), tex2DCube.getBorderY(), tex2DCube.getBorderZ());
                     } else {
                         onUpdateTextureBorder(texture, tex2DCube.getBorderX(), tex2DCube.getBorderY());
                     }

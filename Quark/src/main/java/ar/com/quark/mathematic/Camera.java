@@ -223,6 +223,32 @@ public class Camera {
     }
 
     /**
+     * <p>Changes the camera's rotation</p>
+     *
+     * @param angle the new angle of the rotation
+     * @param x the new rotation of the camera on the x coordinate
+     * @param y the new rotation of the camera on the y coordinate
+     * @param z the new rotation of the camera on the z coordinate
+     */
+    public final void setRotation(float angle, float x, float y, float z) {
+        mRotation.setXYZW(0.0F, 0.0F, 0.0F, 1.0F);
+        rotate(angle, x, y, z);
+    }
+
+    /**
+     * <p>Changes the camera's rotation (in degrees)</p>
+     *
+     * @param angle the new angle (in degrees) of the rotation
+     * @param x the new rotation of the camera on the x coordinate
+     * @param y the new rotation of the camera on the y coordinate
+     * @param z the new rotation of the camera on the z coordinate
+     */
+    public final void setRotationByDegrees(float angle, float x, float y, float z) {
+        mRotation.setXYZW(0.0F, 0.0F, 0.0F, 1.0F);
+        rotateByDegrees(angle, x, y, z);
+    }
+
+    /**
      * <p>Translate the camera's position</p>
      *
      * @param x the new translation of the camera on the x coordinate

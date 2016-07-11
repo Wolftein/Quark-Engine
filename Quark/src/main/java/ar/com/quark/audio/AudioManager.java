@@ -17,8 +17,6 @@
  */
 package ar.com.quark.audio;
 
-import ar.com.quark.audio.factory.FactoryStaticAudio;
-import ar.com.quark.audio.factory.FactoryStreamingAudio;
 import ar.com.quark.system.utility.array.Float32Array;
 import ar.com.quark.system.utility.array.Int8Array;
 
@@ -155,16 +153,9 @@ public interface AudioManager {
     void update(AudioListener listener);
 
     /**
-     * <p>Delete the given {@link FactoryStaticAudio}</p>
+     * <p>Delete the given {@link Audio}</p>
      *
      * @param audio the audio
      */
-    void delete(FactoryStaticAudio audio);
-
-    /**
-     * <p>Delete the given {@link FactoryStreamingAudio}</p>
-     *
-     * @param audio the audio
-     */
-    void delete(FactoryStreamingAudio audio);
+    void delete(Audio audio);
 }

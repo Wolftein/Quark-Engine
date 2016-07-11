@@ -231,29 +231,28 @@ public final class DefaultAssetManager implements AssetManager {
         AssetKey<A, B> key = loadAssetFromCache(filename, descriptor);
 
         if (key == null) {
-            mService.execute(() ->
-                    find(filename, new AssetCallback<InputStream>() {
-                        @Override
-                        public void onFail() {
-                            LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
+            mService.execute(() -> find(filename, new AssetCallback<InputStream>() {
+                @Override
+                public void onFail() {
+                    LOGGER.warn("Failed to find Asset '{}'", filename); /* WARNING */
 
-                            Emulation.forEach(
-                                    mListeners, (listener) -> listener.onAssetFailed(filename)); /* NOTIFY */
+                    Emulation.forEach(
+                            mListeners, (listener) -> listener.onAssetFailed(filename)); /* NOTIFY */
 
-                            callback.onFail();
-                        }
+                    callback.onFail();
+                }
 
-                        @Override
-                        public void onSuccess(InputStream asset) {
-                            final AssetKey<A, B> asyncKey = loadAssetFrom(filename, descriptor, asset);
+                @Override
+                public void onSuccess(InputStream asset) {
+                    final AssetKey<A, B> asyncKey = loadAssetFrom(filename, descriptor, asset);
 
-                            if (asyncKey != null) {
-                                callback.onSuccess(asyncKey.getAsset());
-                            } else {
-                                callback.onFail();
-                            }
-                        }
-                    }));
+                    if (asyncKey != null) {
+                        callback.onSuccess(asyncKey.getAsset());
+                    } else {
+                        callback.onFail();
+                    }
+                }
+            }));
         }
         return (key != null ? key.getAsset() : null);
     }
@@ -280,7 +279,7 @@ public final class DefaultAssetManager implements AssetManager {
             //!
             //! Dispose and remove a reference to each dependency of the asset.
             //!
-            key.getDependencies().forEach(this::unload);
+            Emulation.forEach(key.getDependencies(), this::unload);
 
             //!
             //! Notify the asset has been disposed.
@@ -294,8 +293,10 @@ public final class DefaultAssetManager implements AssetManager {
      */
     @Override
     public void unloadAll() {
-        mCache.values().forEach(AssetKey::dispose);
+        Emulation.forEach(mCache.values(), AssetKey::dispose);
+
         mCache.clear();
+
         mCacheNames.clear();
     }
 

@@ -64,6 +64,14 @@ public final class Rectangle {
         mHeight = height;
     }
 
+    /**
+     * <p>Change the geometry's dimension</p>
+     *
+     * @param x      the new x position of the rectangle.
+     * @param y      the new y position of the rectangle.
+     * @param width  the new width of the rectangle.
+     * @param height the new height of the rectangle.
+     */
     public void set(float x, float y, float width, float height) {
         mX = x;
         mY = y;

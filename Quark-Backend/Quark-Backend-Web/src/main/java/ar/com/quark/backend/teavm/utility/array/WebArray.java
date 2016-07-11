@@ -240,30 +240,6 @@ public class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public A writeInt64(long value) {
-        throw new UnsupportedOperationException("Int64 is not supported by the browser");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeInt64(long[] value, int offset, int count) {
-        throw new UnsupportedOperationException("Int64 is not supported by the browser");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeInt64(int index, long value) {
-        throw new UnsupportedOperationException("Int64 is not supported by the browser");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public A writeFloat32(float value) {
         mBuffer.setFloat32(mPosition, value, true);
 
@@ -290,39 +266,6 @@ public class WebArray<A extends Array> implements Array<A> {
     @Override
     public A writeFloat32(int index, float value) {
         mBuffer.setFloat32(index, value, true);
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(double value) {
-        mBuffer.setFloat64(mPosition, value, true);
-
-        mPosition += 8;
-
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(double[] value, int offset, int count) {
-        copy(mBuffer.getBuffer(), mPosition, Platform.getPlatformObject(value), offset, count * 8);
-
-        mPosition += (count * 0x08);
-
-        return (A) this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public A writeFloat64(int index, double value) {
-        mBuffer.setFloat64(index, value, true);
         return (A) this;
     }
 
@@ -386,22 +329,6 @@ public class WebArray<A extends Array> implements Array<A> {
      * {@inheritDoc}
      */
     @Override
-    public long readInt64() {
-        return Double.doubleToLongBits(readFloat64());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long readInt64(int index) {
-        return Double.doubleToLongBits(readFloat64(index));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public float readFloat32() {
         final float value = mBuffer.getFloat32(mPosition, true);
 
@@ -416,26 +343,6 @@ public class WebArray<A extends Array> implements Array<A> {
     @Override
     public float readFloat32(int index) {
         return mBuffer.getFloat32(index, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double readFloat64() {
-        final double value = mBuffer.getFloat64(mPosition, true);
-
-        mPosition += 0x08;
-
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double readFloat64(int index) {
-        return mBuffer.getFloat64(index, true);
     }
 
     /**
