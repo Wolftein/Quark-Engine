@@ -83,6 +83,15 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
     }
 
     /**
+     * <p>Get the data of the storage</p>
+     *
+     * @return the data of the storage
+     */
+    public final A getData() {
+        return mFactory.get();
+    }
+
+    /**
      * <p>Get the target of the storage</p>
      *
      * @return the target of the storage
@@ -211,6 +220,8 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
      * <code>Factory</code> encapsulate the definition of a buffer within a <code>Storage</code>.
      */
     private interface Factory<A extends Buffer<?>> {
+        A get();
+
         A map(Graphic gl);
 
         A map(Graphic gl, int access);
@@ -233,6 +244,14 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
          */
         public BufferClientFactory() {
             mData = create(Storage.this.mCapacity, Storage.this.mFormat);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public A get() {
+            return mData;
         }
 
         /**
@@ -303,6 +322,14 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
          * {@inheritDoc}
          */
         @Override
+        public A get() {
+            return mData;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public A map(Graphic gl) {
             return map(gl, 0, 0, mData.capacity());
         }
@@ -358,6 +385,16 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
      * Specialised implementation for {@link StorageType#SERVER_MAPPED}
      */
     private final class BufferServerMappedFactory implements Factory<A> {
+        private A mData;
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public A get() {
+            return mData;
+        }
+
         /**
          * {@inheritDoc}
          */
@@ -379,7 +416,9 @@ public class Storage<A extends Buffer<?>> extends Manageable implements Disposab
          */
         @Override
         public A map(Graphic gl, int access, int offset, int length) {
-            return gl.map(Storage.this, access, offset, length);
+            mData = gl.map(Storage.this, access, offset, length);
+
+            return mData;
         }
 
         /**

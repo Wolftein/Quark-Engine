@@ -1212,7 +1212,7 @@ public final class GraphicImpl implements Graphic {
      * <p>Update {@link Storage}</p>
      */
     private void onUpdateStorage(Storage storage) {
-        final Buffer buffer = storage.map();
+        final Buffer buffer = storage.getData();
 
         switch (storage.getFormat()) {
             case BYTE:
@@ -1246,7 +1246,7 @@ public final class GraphicImpl implements Graphic {
      * <p>Update {@link Storage}</p>
      */
     private void onUpdateStorageAgain(Storage storage) {
-        final Buffer buffer = storage.map();
+        final Buffer buffer = storage.getData();
         
         switch (storage.getFormat()) {
             case BYTE:
