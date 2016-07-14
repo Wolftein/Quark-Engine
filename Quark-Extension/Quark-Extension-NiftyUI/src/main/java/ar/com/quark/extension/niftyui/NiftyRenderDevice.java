@@ -17,17 +17,16 @@
  */
 package ar.com.quark.extension.niftyui;
 
-import ar.com.quark.Quark;
+import ar.com.quark.graphic.GraphicState;
+import ar.com.quark.graphic.font.Font;
+import ar.com.quark.graphic.shader.Shader;
+import ar.com.quark.graphic.shader.data.UniformMatrix4;
+import ar.com.quark.graphic.texture.Image;
+import ar.com.quark.graphic.texture.Texture;
+import ar.com.quark.graphic.texture.TextureFilter;
+import ar.com.quark.graphic.texture.TextureFormat;
 import ar.com.quark.mathematic.Colour;
 import ar.com.quark.mathematic.ImmutableMatrix4f;
-import ar.com.quark.render.RenderState;
-import ar.com.quark.render.font.Font;
-import ar.com.quark.render.shader.Shader;
-import ar.com.quark.render.shader.data.UniformMatrix4;
-import ar.com.quark.render.texture.Image;
-import ar.com.quark.render.texture.Texture;
-import ar.com.quark.render.texture.TextureFilter;
-import ar.com.quark.render.texture.TextureFormat;
 import de.lessvoid.nifty.render.BlendMode;
 import de.lessvoid.nifty.spi.render.MouseCursor;
 import de.lessvoid.nifty.spi.render.RenderDevice;
@@ -37,6 +36,8 @@ import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.NiftyResourceLoader;
 
 import java.io.IOException;
+
+import static ar.com.quark.Quark.*;
 
 /**
  * <code>NiftyRenderDevice</code> represent implementation of {@link RenderDevice}.
@@ -50,7 +51,7 @@ public final class NiftyRenderDevice implements RenderDevice {
     /**
      * Hold all state(s) being used by the device.
      */
-    private final RenderState mRenderState = new RenderState().setDepth(RenderState.Flag.DISABLE);
+    private final GraphicState mRenderState = new GraphicState().setDepth(GraphicState.Flag.DISABLE);
 
     /**
      * Hold the shader of the device.
@@ -79,7 +80,7 @@ public final class NiftyRenderDevice implements RenderDevice {
         //!
         //! Build a shader for the executing model.
         //!
-        mShader = Quark.QKResources.load("Data/Shader/Simple2D.shader", new Shader.Descriptor());
+        mShader = QKResources.load(new Shader.Descriptor("Resources/Shader/Simple2D.shader"));
         mShader.create();
 
         //!
@@ -90,8 +91,9 @@ public final class NiftyRenderDevice implements RenderDevice {
         //!
         //! Load the texture for rendering geometry (without texture).
         //!
-        mEmptyTexture = Quark.QKResources.load("Data/NiftyUI/Texture/Empty.png",
-                new Texture.Descriptor(TextureFormat.RGBA8, TextureFilter.POINT));
+        mEmptyTexture = QKResources.load(new Texture.Descriptor("Resources/Texture/Empty.png",
+                TextureFormat.RGBA8,
+                TextureFilter.POINT));
     }
 
     /**
@@ -117,8 +119,11 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderImage createImage(String filename, boolean filter) {
-        return new NiftyRenderImage(Quark.QKResources.load(filename,
-                new Texture.Descriptor(TextureFormat.RGBA8, filter ? TextureFilter.BILINEAR : TextureFilter.POINT)));
+        final Texture.Descriptor descriptor = new Texture.Descriptor(filename,
+                TextureFormat.RGBA8,
+                filter ? TextureFilter.BILINEAR : TextureFilter.POINT);
+
+        return new NiftyRenderImage(QKResources.load(descriptor));
     }
 
     /**
@@ -126,7 +131,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public RenderFont createFont(String filename) {
-        return new NiftyRenderFont(Quark.QKResources.load(filename, new Font.Descriptor(TextureFilter.BILINEAR)));
+        return new NiftyRenderFont(QKResources.load(new Font.Descriptor(filename, TextureFilter.BILINEAR)));
     }
 
     /**
@@ -134,7 +139,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public int getWidth() {
-        return Quark.QKDisplay.getWidth();
+        return QKDisplay.getWidth();
     }
 
     /**
@@ -142,7 +147,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public int getHeight() {
-        return Quark.QKDisplay.getHeight();
+        return QKDisplay.getHeight();
     }
 
     /**
@@ -177,7 +182,7 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public void clear() {
-        Quark.QKRender.clear(true, false, false);
+        QKGraphic.clear(true, false, false);
     }
 
     /**
@@ -186,13 +191,13 @@ public final class NiftyRenderDevice implements RenderDevice {
     @Override
     public void setBlendMode(BlendMode renderMode) {
         if (renderMode == BlendMode.BLEND) {
-            mRenderState.setBlend(RenderState.Blend.ALPHA);
+            mRenderState.setBlend(GraphicState.Blend.ALPHA);
         } else if (renderMode == BlendMode.MULIPLY) {
-            mRenderState.setBlend(RenderState.Blend.MULTIPLY);
+            mRenderState.setBlend(GraphicState.Blend.MULTIPLY);
         } else {
-            mRenderState.setBlend(RenderState.Blend.NONE);
+            mRenderState.setBlend(GraphicState.Blend.NONE);
         }
-        Quark.QKRender.apply(mRenderState);
+        QKGraphic.apply(mRenderState);
     }
 
     /**
@@ -281,8 +286,11 @@ public final class NiftyRenderDevice implements RenderDevice {
      */
     @Override
     public MouseCursor createMouseCursor(String filename, int hotspotX, int hotspotY) throws IOException {
-        return new NiftyCursor(Quark.QKResources.load(filename,
-                new Texture.Descriptor(TextureFormat.RGBA8, TextureFilter.BILINEAR)), hotspotX, hotspotY);
+        final Texture.Descriptor descriptor = new Texture.Descriptor(filename,
+                TextureFormat.RGBA8,
+                TextureFilter.BILINEAR);
+
+        return new NiftyCursor(QKResources.load(descriptor), hotspotX, hotspotY);
     }
 
     /**

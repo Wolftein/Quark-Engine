@@ -19,8 +19,8 @@ package ar.com.quark.audio.factory;
 
 import ar.com.quark.audio.Audio;
 import ar.com.quark.audio.AudioFormat;
-import ar.com.quark.system.utility.Disposable;
-import ar.com.quark.system.utility.Manageable;
+import ar.com.quark.utility.Disposable;
+import ar.com.quark.utility.Manageable;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

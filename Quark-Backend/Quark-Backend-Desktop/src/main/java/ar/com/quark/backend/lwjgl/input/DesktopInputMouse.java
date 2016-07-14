@@ -18,9 +18,9 @@
 package ar.com.quark.backend.lwjgl.input;
 
 import ar.com.quark.input.device.InputMouse;
-import ar.com.quark.system.utility.array.Int32Array;
+import ar.com.quark.utility.buffer.BufferFactory;
+import ar.com.quark.utility.buffer.Int32Buffer;
 import org.lwjgl.glfw.GLFW;
-import ar.com.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
 import ar.com.quark.input.device.InputMouseButton;
 
 /**
@@ -40,7 +40,7 @@ public final class DesktopInputMouse implements InputMouse {
     /**
      * Hold the device buffer.
      */
-    private Int32Array mBuffer = DesktopArrayFactory.allocateInt32Array(512);
+    private Int32Buffer mBuffer = BufferFactory.allocateInt32(512);
 
     /**
      * <p>Constructor</p>
@@ -63,9 +63,9 @@ public final class DesktopInputMouse implements InputMouse {
      * {@inheritDoc}
      */
     @Override
-    public void update(Int32Array buffer) {
+    public void update(Int32Buffer buffer) {
         synchronized (mLock) {
-            buffer.write(mBuffer.flip());
+            buffer.copy(mBuffer.flip());
 
             //!
             //! Change the buffer mode to write-mode.

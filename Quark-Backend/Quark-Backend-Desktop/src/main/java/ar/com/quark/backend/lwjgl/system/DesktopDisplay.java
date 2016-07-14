@@ -17,18 +17,17 @@
  */
 package ar.com.quark.backend.lwjgl.system;
 
-import ar.com.quark.render.texture.Image;
+import ar.com.quark.graphic.texture.Image;
 import ar.com.quark.system.Display;
 import ar.com.quark.system.DisplayMode;
+import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Implementation for {@link Display}.
@@ -52,7 +51,7 @@ public final class DesktopDisplay implements Display {
     /**
      * <p>Handle when the module create</p>
      */
-    public void onModuleCreate(Display.Preference preference,
+    public void onModuleCreate(Preference preference,
             GLFWFramebufferSizeCallback resize, GLFWWindowIconifyCallback iconify) {
         if (GLFW.glfwInit()) {
             final DisplayMode mode = preference.getMode();
@@ -183,7 +182,7 @@ public final class DesktopDisplay implements Display {
             final GLFWImage hwImage = GLFWImage.malloc();
             hwImage.width(image.getWidth());
             hwImage.height(image.getHeight());
-            hwImage.pixels(image.getLayer().get(0).data.data());
+            hwImage.pixels(image.getLayer().get(0).data.underlying());
 
             //!
             //! Create the new cursor.
@@ -318,10 +317,10 @@ public final class DesktopDisplay implements Display {
      * {@inheritDoc}
      */
     @Override
-    public Collection<DisplayMode> getAvailableDisplayModes() {
+    public ImmutableList<DisplayMode> getAvailableDisplayModes() {
         final GLFWVidMode.Buffer videoModeList = GLFW.glfwGetVideoModes(GLFW.glfwGetPrimaryMonitor());
 
-        final List<DisplayMode> modes = new ArrayList<>(videoModeList.limit());
+        final FastList<DisplayMode> modes = new FastList<>(videoModeList.limit());
 
         while (videoModeList.hasRemaining()) {
             final GLFWVidMode videoMode = videoModeList.get();
@@ -329,6 +328,6 @@ public final class DesktopDisplay implements Display {
             modes.add(new DisplayMode(videoMode.width(), videoMode.height(), videoMode.refreshRate()));
         }
 
-        return modes;
+        return modes.toImmutable();
     }
 }

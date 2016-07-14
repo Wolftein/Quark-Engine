@@ -17,21 +17,21 @@
  */
 package ar.com.quark.backend.lwjgl.opengl;
 
-import ar.com.quark.render.Render;
-import ar.com.quark.system.utility.Manageable;
-import ar.com.quark.system.utility.array.UInt32Array;
-import ar.com.quark.system.utility.array.Array;
-import ar.com.quark.system.utility.array.Int8Array;
+import ar.com.quark.backend.lwjgl.utility.buffer.*;
+import ar.com.quark.graphic.Graphic;
+import ar.com.quark.utility.Manageable;
+import ar.com.quark.utility.buffer.Buffer;
+import ar.com.quark.utility.buffer.Int8Buffer;
+import ar.com.quark.utility.buffer.UnsignedInt32Buffer;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
-import ar.com.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
- * Implementation for {@link Render.GLES3}.
+ * Implementation for {@link Graphic.GLES3}.
  */
-public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
+public class DesktopGLES30 extends DesktopGLES20 implements Graphic.GLES3 {
     /**
      * Hold {@link EXT_Vertex_Array_Object} extension.
      */
@@ -110,34 +110,34 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array<?>> T glMapBufferRange(int target, int offset, int size, int access, int format) {
+    public <T extends Buffer<?>> T glMapBufferRange(int target, int offset, int size, int access, int format) {
         switch (format) {
             case GL_UNSIGNED_BYTE:
-                return (T) new DesktopArrayFactory.DesktopUInt8Array(
+                return (T) new DesktopUnsignedInt8Buffer(
                         mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
             case GL_UNSIGNED_SHORT:
-                return (T) new DesktopArrayFactory.DesktopUInt16Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
-            case GL_UNSIGNED_INT:
-                return (T) new DesktopArrayFactory.DesktopUInt32Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+                return (T) new DesktopUnsignedInt16Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asShortBuffer());
+            case DesktopGLES30.GL_UNSIGNED_INT:
+                return (T) new DesktopUnsignedInt32Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asIntBuffer());
             case GL_BYTE:
-                return (T) new DesktopArrayFactory.DesktopInt8Array(
+                return (T) new DesktopInt8Buffer(
                         mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
             case GL_SHORT:
-                return (T) new DesktopArrayFactory.DesktopInt16Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
-            case GL_INT:
-                return (T) new DesktopArrayFactory.DesktopInt32Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
-            case GL_HALF_FLOAT:
-                return (T) new DesktopArrayFactory.DesktopFloat16Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+                return (T) new DesktopInt16Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asShortBuffer());
+            case DesktopGLES30.GL_INT:
+                return (T) new DesktopInt32Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asIntBuffer());
+            case DesktopGLES30.GL_HALF_FLOAT:
+                return (T) new DesktopFloat16Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asShortBuffer());
             case GL_FLOAT:
-                return (T) new DesktopArrayFactory.DesktopFloat32Array(
-                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access));
+                return (T) new DesktopFloat32Buffer(
+                        mBufferMapRangeExtension.glMapBufferRange(target, offset, size, access).asFloatBuffer());
         }
-        throw new IllegalArgumentException("Format unsupported");
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -145,8 +145,8 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
      */
     @Override
     public void glTexImage3D(int target, int level, int internal, int width, int height, int depth, int border,
-            int format, int type, Int8Array data) {
-        GL12.glTexImage3D(target, level, internal, width, height, depth, border, format, type, data.<ByteBuffer>data());
+            int format, int type, Int8Buffer data) {
+        GL12.glTexImage3D(target, level, internal, width, height, depth, border, format, type, data.<ByteBuffer>underlying());
     }
 
     /**
@@ -154,8 +154,8 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
      */
     @Override
     public void glCompressedTexImage3D(int target, int level, int internal, int width, int height, int depth,
-            int border, Int8Array data) {
-        GL13.glCompressedTexImage3D(target, level, internal, width, height, depth, border, data.data());
+            int border, Int8Buffer data) {
+        GL13.glCompressedTexImage3D(target, level, internal, width, height, depth, border, data.underlying());
     }
 
     /**
@@ -202,8 +202,8 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
      * {@inheritDoc}
      */
     @Override
-    public void glUniform1uiv(int name, UInt32Array buffer) {
-        GL30.nglUniform1uiv(name, buffer.remaining(), MemoryUtil.memAddress(buffer.<ByteBuffer>data()));
+    public void glUniform1uiv(int name, UnsignedInt32Buffer buffer) {
+        GL30.glUniform1uiv(name, buffer.<IntBuffer>underlying());
     }
 
     /**
@@ -226,7 +226,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         CORE;
 
         /**
-         * @see Render.GLES3#glGenVertexArrays()
+         * @see Graphic.GLES3#glGenVertexArrays()
          */
         public int glGenVertexArrays() {
             switch (this) {
@@ -239,7 +239,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         }
 
         /**
-         * @see Render.GLES3#glBindVertexArray(int)
+         * @see Graphic.GLES3#glBindVertexArray(int)
          */
         public void glBindVertexArray(int name) {
             switch (this) {
@@ -253,7 +253,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         }
 
         /**
-         * @see Render.GLES3#glDeleteVertexArrays(int)
+         * @see Graphic.GLES3#glDeleteVertexArrays(int)
          */
         public void glDeleteVertexArrays(int name) {
             switch (this) {
@@ -287,7 +287,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         CORE;
 
         /**
-         * @see Render.GLES3#glMapBufferRange(int, int, int, int, int) ()
+         * @see Graphic.GLES3#glMapBufferRange(int, int, int, int, int) ()
          */
         public ByteBuffer glMapBufferRange(int target, int offset, int size, int access) {
             switch (this) {
@@ -320,7 +320,7 @@ public class DesktopGLES30 extends DesktopGLES20 implements Render.GLES3 {
         CORE;
 
         /**
-         * @see Render.GLES3#glRenderbufferStorageMultisample(int, int, int, int, int)
+         * @see Graphic.GLES3#glRenderbufferStorageMultisample(int, int, int, int, int)
          */
         public void glRenderbufferStorageMultisample(int target, int samples, int format, int width, int height) {
             switch (this) {

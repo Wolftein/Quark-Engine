@@ -17,8 +17,8 @@
  */
 package ar.com.quark.audio;
 
-import ar.com.quark.system.utility.array.Float32Array;
-import ar.com.quark.system.utility.array.Int8Array;
+import ar.com.quark.utility.buffer.Float32Buffer;
+import ar.com.quark.utility.buffer.Int8Buffer;
 
 /**
  * <code>AudioManager</code> encapsulate a service for managing {@link Audio}.
@@ -83,7 +83,7 @@ public interface AudioManager {
 
         void alListenerf(int type, float value1, float value2, float value3);
 
-        void alListenerf(int type, Float32Array value);
+        void alListenerf(int type, Float32Buffer value);
 
         int alGetSourcei(int name, int type);
 
@@ -91,7 +91,7 @@ public interface AudioManager {
 
         void alSourceQueueBuffers(int name, int id);
 
-        void alBufferData(int name, int format, Int8Array data, int rate);
+        void alBufferData(int name, int format, Int8Buffer data, int rate);
     }
 
     /**

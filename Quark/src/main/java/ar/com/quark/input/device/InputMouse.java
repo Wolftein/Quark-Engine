@@ -18,7 +18,7 @@
 package ar.com.quark.input.device;
 
 import ar.com.quark.input.Input;
-import ar.com.quark.system.utility.array.Int32Array;
+import ar.com.quark.utility.buffer.Int32Buffer;
 
 /**
  * <code>InputMouse</code> encapsulate an {@link Input} for handling mouse based device(s).
@@ -66,7 +66,7 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_MOVE
      */
-    static void onFactoryMove(Int32Array buffer, int x, int y) {
+    static void onFactoryMove(Int32Buffer buffer, int x, int y) {
         buffer.write(EVENT_MOVE).write(x).write(y);
     }
 
@@ -75,7 +75,7 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_BUTTON_UP
      */
-    static void onFactoryButtonUp(Int32Array buffer, InputMouseButton button) {
+    static void onFactoryButtonUp(Int32Buffer buffer, InputMouseButton button) {
         buffer.write(EVENT_BUTTON_UP).write(button.ordinal());
     }
 
@@ -84,7 +84,7 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_BUTTON_DOWN
      */
-    static void onFactoryButtonDown(Int32Array buffer, InputMouseButton button) {
+    static void onFactoryButtonDown(Int32Buffer buffer, InputMouseButton button) {
         buffer.write(EVENT_BUTTON_DOWN).write(button.ordinal());
     }
 
@@ -93,7 +93,7 @@ public interface InputMouse extends Input {
      *
      * @see #EVENT_WHEEL
      */
-    static void onFactoryWheel(Int32Array buffer, int delta) {
+    static void onFactoryWheel(Int32Buffer buffer, int delta) {
         buffer.write(EVENT_WHEEL).write(delta);
     }
 }

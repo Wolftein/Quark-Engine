@@ -17,10 +17,10 @@
  */
 package ar.com.quark.input;
 
-import ar.com.quark.system.utility.array.Int32Array;
+import ar.com.quark.utility.buffer.Int32Buffer;
 
 /**
- * <code>Input</code> encapsulate an input-device to interface with <code>InputManager</code>.
+ * <code>Input</code> encapsulate an input-device to interface with {@link InputManager}.
  */
 public interface Input {
     /**
@@ -33,7 +33,7 @@ public interface Input {
      *
      * @param buffer the buffer that will contain the input when updating
      */
-    void update(Int32Array buffer);
+    void update(Int32Buffer buffer);
 
     /**
      * <p>Destroy the device</p>

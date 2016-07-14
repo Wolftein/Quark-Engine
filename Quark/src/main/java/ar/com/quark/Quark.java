@@ -17,11 +17,11 @@
  */
 package ar.com.quark;
 
+import ar.com.quark.asset.AssetManager;
 import ar.com.quark.audio.AudioManager;
-import ar.com.quark.render.Render;
-import ar.com.quark.resource.AssetManager;
-import ar.com.quark.system.Display;
+import ar.com.quark.graphic.Graphic;
 import ar.com.quark.input.InputManager;
+import ar.com.quark.system.Display;
 
 /**
  * <code>Quark</code> encapsulate a singleton for the entire framework.
@@ -49,11 +49,11 @@ public final class Quark {
     public static InputManager QKInput;
 
     /**
-     * Hold the {@link Render} implementation.
+     * Hold the {@link Graphic} implementation.
      *
-     * @see Render
+     * @see Graphic
      */
-    public static Render QKRender;
+    public static Graphic QKGraphic;
 
     /**
      * Hold the {@link AssetManager} implementation.

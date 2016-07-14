@@ -20,7 +20,7 @@ package ar.com.quark.audio;
 import ar.com.quark.mathematic.MutableVector3f;
 import ar.com.quark.mathematic.Vector3f;
 import ar.com.quark.mathematic.Vector3i;
-import ar.com.quark.system.utility.Manageable;
+import ar.com.quark.utility.Manageable;
 
 import static ar.com.quark.Quark.QKAudio;
 

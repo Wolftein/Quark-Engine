@@ -17,7 +17,7 @@
  */
 package ar.com.quark.mathematic;
 
-import ar.com.quark.system.utility.array.Float32Array;
+import ar.com.quark.utility.buffer.Float32Buffer;
 
 /**
  * <code>Matrix4f</code> encapsulate a single precision floating point 4 by 4 matrix.
@@ -66,41 +66,29 @@ public abstract class Matrix4f {
     }
 
     /**
-     * <p>Put the matrix into a {@link Float32Array}</p>
+     * <p>Put the matrix into a {@link Float32Buffer}</p>
      *
      * @param buffer the buffer
      *
      * @return a reference to <code>buffer</code>
      */
-    public final Float32Array store(Float32Array buffer) {
-        return store(buffer.position(), buffer);
-    }
-
-    /**
-     * <p>Put the matrix into a {@link Float32Array}</p>
-     *
-     * @param index  the buffer's offset
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>buffer</code>
-     */
-    public final Float32Array store(int index, Float32Array buffer) {
-        buffer.write(index, m00);
-        buffer.write(index + 1, m10);
-        buffer.write(index + 2, m20);
-        buffer.write(index + 3, m30);
-        buffer.write(index + 4, m01);
-        buffer.write(index + 5, m11);
-        buffer.write(index + 6, m21);
-        buffer.write(index + 7, m31);
-        buffer.write(index + 8, m02);
-        buffer.write(index + 9, m12);
-        buffer.write(index + 10, m22);
-        buffer.write(index + 11, m32);
-        buffer.write(index + 12, m03);
-        buffer.write(index + 13, m13);
-        buffer.write(index + 14, m23);
-        buffer.write(index + 15, m33);
+    public final Float32Buffer store(Float32Buffer buffer) {
+        buffer.write(m00);
+        buffer.write(m10);
+        buffer.write(m20);
+        buffer.write(m30);
+        buffer.write(m01);
+        buffer.write(m11);
+        buffer.write(m21);
+        buffer.write(m31);
+        buffer.write(m02);
+        buffer.write(m12);
+        buffer.write(m22);
+        buffer.write(m32);
+        buffer.write(m03);
+        buffer.write(m13);
+        buffer.write(m23);
+        buffer.write(m33);
         return buffer;
     }
 

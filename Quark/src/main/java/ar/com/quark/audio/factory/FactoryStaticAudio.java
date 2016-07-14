@@ -19,10 +19,10 @@ package ar.com.quark.audio.factory;
 
 import ar.com.quark.audio.Audio;
 import ar.com.quark.audio.AudioFormat;
-import ar.com.quark.system.utility.Disposable;
-import ar.com.quark.system.utility.Manageable;
-import ar.com.quark.system.utility.array.ArrayFactory;
-import ar.com.quark.system.utility.array.Int8Array;
+import ar.com.quark.utility.Disposable;
+import ar.com.quark.utility.Manageable;
+import ar.com.quark.utility.buffer.BufferFactory;
+import ar.com.quark.utility.buffer.Int8Buffer;
 
 import static ar.com.quark.Quark.QKAudio;
 
@@ -30,15 +30,12 @@ import static ar.com.quark.Quark.QKAudio;
  * Specialised implementation for {@link Audio} that are being loaded at once.
  */
 public final class FactoryStaticAudio extends Audio {
-    /**
-     * @apiNote [MUTABLE-DISPOSABLE]
-     */
-    private Int8Array mData;
+    private Int8Buffer mData;
 
     /**
      * <p>Constructor</p>
      */
-    public FactoryStaticAudio(Int8Array data, AudioFormat format, int duration, int rate) {
+    public FactoryStaticAudio(Int8Buffer data, AudioFormat format, int duration, int rate) {
         super(format, duration, rate);
         mData = data;
     }
@@ -48,7 +45,7 @@ public final class FactoryStaticAudio extends Audio {
      *
      * @return the data of the audio
      */
-    public Int8Array getData() {
+    public Int8Buffer getData() {
         return mData;
     }
 
@@ -75,7 +72,7 @@ public final class FactoryStaticAudio extends Audio {
      */
     @Override
     public void deleteAllMemory() {
-        mData = ArrayFactory.free(mData);
+        mData = BufferFactory.deallocate(mData);
     }
 
     /**

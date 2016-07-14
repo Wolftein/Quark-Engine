@@ -17,7 +17,7 @@
  */
 package ar.com.quark.extension.niftyui;
 
-import ar.com.quark.render.texture.Texture;
+import ar.com.quark.graphic.texture.Texture;
 import de.lessvoid.nifty.spi.render.MouseCursor;
 
 import static ar.com.quark.Quark.QKDisplay;

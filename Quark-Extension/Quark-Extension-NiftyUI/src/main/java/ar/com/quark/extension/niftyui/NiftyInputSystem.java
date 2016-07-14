@@ -22,13 +22,14 @@ import ar.com.quark.input.device.InputKey;
 import ar.com.quark.input.device.InputKeyboard;
 import ar.com.quark.input.device.InputMouse;
 import ar.com.quark.input.device.InputMouseButton;
-import ar.com.quark.system.utility.array.ArrayFactory;
-import ar.com.quark.system.utility.array.Int32Array;
-import ar.com.quark.Quark;
+import ar.com.quark.utility.buffer.BufferFactory;
+import ar.com.quark.utility.buffer.Int32Buffer;
 import de.lessvoid.nifty.NiftyInputConsumer;
 import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
 import de.lessvoid.nifty.spi.input.InputSystem;
 import de.lessvoid.nifty.tools.resourceloader.NiftyResourceLoader;
+
+import static ar.com.quark.Quark.QKInput;
 
 /**
  * <code>NiftyInputSystem</code> represent implementation of {@link InputSystem}.
@@ -37,9 +38,9 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
     private final KeyboardInputEvent mKeyboardInputEvent = new KeyboardInputEvent();
 
     /**
-     * Hold an array that contain(s) all event(s)
+     * Hold an buffer that contain(s) all event(s)
      */
-    private final Int32Array mInput = ArrayFactory.allocateInt32Array(2048);
+    private final Int32Buffer mInput = BufferFactory.allocateInt32(2048);
 
     /**
      * Hold the listener of the input-system doesn't handle the event.
@@ -52,7 +53,7 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
     public NiftyInputSystem(InputListener listener) {
         mListener = listener;
 
-        Quark.QKInput.addInputListener(this);
+        QKInput.addInputListener(this);
     }
 
     /**
@@ -123,7 +124,7 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
      */
     @Override
     public void setMousePosition(int x, int y) {
-        Quark.QKInput.setCursorPosition(x, y);
+        QKInput.setCursorPosition(x, y);
     }
 
     /**
@@ -134,10 +135,10 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
         InputKeyboard.onFactoryKeyDown(mInput, key);
 
         mInput
-                .write(Quark.QKInput.isKeyDown(InputKey.KEY_LEFT_SHIFT)
-                        || Quark.QKInput.isKeyDown(InputKey.KEY_RIGHT_SHIFT) ? 1 : 0)
-                .write(Quark.QKInput.isKeyDown(InputKey.KEY_LEFT_CONTROL)
-                        || Quark.QKInput.isKeyDown(InputKey.KEY_RIGHT_CONTROL) ? 1 : 0);
+                .write(QKInput.isKeyDown(InputKey.KEY_LEFT_SHIFT)
+                        || QKInput.isKeyDown(InputKey.KEY_RIGHT_SHIFT) ? 1 : 0)
+                .write(QKInput.isKeyDown(InputKey.KEY_LEFT_CONTROL)
+                        || QKInput.isKeyDown(InputKey.KEY_RIGHT_CONTROL) ? 1 : 0);
 
         return true;
     }
@@ -150,10 +151,10 @@ public final class NiftyInputSystem implements InputSystem, InputListener {
         InputKeyboard.onFactoryKeyUp(mInput, key);
 
         mInput
-                .write(Quark.QKInput.isKeyDown(InputKey.KEY_LEFT_SHIFT)
-                        || Quark.QKInput.isKeyDown(InputKey.KEY_RIGHT_SHIFT) ? 1 : 0)
-                .write(Quark.QKInput.isKeyDown(InputKey.KEY_LEFT_CONTROL)
-                        || Quark.QKInput.isKeyDown(InputKey.KEY_RIGHT_CONTROL) ? 1 : 0);
+                .write(QKInput.isKeyDown(InputKey.KEY_LEFT_SHIFT)
+                        || QKInput.isKeyDown(InputKey.KEY_RIGHT_SHIFT) ? 1 : 0)
+                .write(QKInput.isKeyDown(InputKey.KEY_LEFT_CONTROL)
+                        || QKInput.isKeyDown(InputKey.KEY_RIGHT_CONTROL) ? 1 : 0);
 
         return true;
     }

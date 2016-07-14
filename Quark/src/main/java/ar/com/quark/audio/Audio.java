@@ -17,9 +17,9 @@
  */
 package ar.com.quark.audio;
 
-import ar.com.quark.resource.AssetDescriptor;
-import ar.com.quark.system.utility.Disposable;
-import ar.com.quark.system.utility.Manageable;
+import ar.com.quark.asset.AssetDescriptor;
+import ar.com.quark.utility.Disposable;
+import ar.com.quark.utility.Manageable;
 
 /**
  * <code>Audio</code> encapsulate the data of a sound.
@@ -103,8 +103,8 @@ public abstract class Audio extends Manageable implements Disposable {
         /**
          * <p>Constructor</p>
          */
-        public Descriptor(boolean streaming) {
-            super(true, !streaming);
+        public Descriptor(String filename, boolean streaming) {
+            super(filename, true, !streaming, true);
         }
     }
 }

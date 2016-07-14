@@ -18,7 +18,7 @@
 package ar.com.quark.input.device;
 
 import ar.com.quark.input.Input;
-import ar.com.quark.system.utility.array.Int32Array;
+import ar.com.quark.utility.buffer.Int32Buffer;
 
 /**
  * <code>InputKeyboard</code> encapsulate an {@link Input} for handling keyboard based device(s).
@@ -44,7 +44,7 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_UP
      */
-    static void onFactoryKeyUp(Int32Array buffer, InputKey key) {
+    static void onFactoryKeyUp(Int32Buffer buffer, InputKey key) {
         buffer.write(EVENT_KEY_UP).write(key.ordinal());
     }
 
@@ -53,7 +53,7 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_DOWN
      */
-    static void onFactoryKeyDown(Int32Array buffer, InputKey key) {
+    static void onFactoryKeyDown(Int32Buffer buffer, InputKey key) {
         buffer.write(EVENT_KEY_DOWN).write(key.ordinal());
     }
 
@@ -62,7 +62,7 @@ public interface InputKeyboard extends Input {
      *
      * @see #EVENT_KEY_TYPE
      */
-    static void onFactoryKeyType(Int32Array buffer, char key) {
+    static void onFactoryKeyType(Int32Buffer buffer, char key) {
         buffer.write(EVENT_KEY_TYPE).write(key);
     }
 }

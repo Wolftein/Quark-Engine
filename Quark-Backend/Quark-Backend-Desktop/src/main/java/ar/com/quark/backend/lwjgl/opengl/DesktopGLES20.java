@@ -17,26 +17,26 @@
  */
 package ar.com.quark.backend.lwjgl.opengl;
 
-import ar.com.quark.system.utility.array.*;
+import ar.com.quark.backend.lwjgl.utility.buffer.*;
+import ar.com.quark.graphic.Graphic;
+import ar.com.quark.graphic.GraphicCapabilities;
+import ar.com.quark.utility.Manageable;
+import ar.com.quark.utility.buffer.*;
+import org.eclipse.collections.api.map.primitive.MutableObjectBooleanMap;
+import org.eclipse.collections.api.map.primitive.MutableObjectFloatMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectBooleanHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectFloatHashMap;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
-import ar.com.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
-import ar.com.quark.render.Render;
-import ar.com.quark.render.RenderCapabilities;
-import ar.com.quark.system.utility.Manageable;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-
-import static ar.com.quark.render.Render.GLES3.GL_HALF_FLOAT;
-import static ar.com.quark.render.Render.GLES3.GL_INT;
-import static ar.com.quark.render.Render.GLES3.GL_UNSIGNED_INT;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 /**
- * Implementation for {@link Render.GLES2}.
+ * Implementation for {@link Graphic.GLES2}.
  */
-public class DesktopGLES20 implements Render.GLES2 {
+public class DesktopGLES20 implements Graphic.GLES2 {
     protected final GLCapabilities mCapabilities;
 
     /**
@@ -71,23 +71,23 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public RenderCapabilities glCapabilities() {
+    public GraphicCapabilities glCapabilities() {
         //!
         //! Retrieves the capabilities from the context.
         //!
         final GLCapabilities capabilities = GL.getCapabilities();
 
-        final RenderCapabilities.LanguageVersion version;
+        final GraphicCapabilities.LanguageVersion version;
         if (capabilities.OpenGL33) {
-            version = RenderCapabilities.LanguageVersion.GL33;
+            version = GraphicCapabilities.LanguageVersion.GL33;
         } else if (capabilities.OpenGL32) {
-            version = RenderCapabilities.LanguageVersion.GL32;
+            version = GraphicCapabilities.LanguageVersion.GL32;
         } else if (capabilities.OpenGL31) {
-            version = RenderCapabilities.LanguageVersion.GL31;
+            version = GraphicCapabilities.LanguageVersion.GL31;
         } else if (capabilities.OpenGL30) {
-            version = RenderCapabilities.LanguageVersion.GL30;
+            version = GraphicCapabilities.LanguageVersion.GL30;
         } else if (capabilities.OpenGL21) {
-            version = RenderCapabilities.LanguageVersion.GL21;
+            version = GraphicCapabilities.LanguageVersion.GL21;
         } else {
             throw new RuntimeException("Cannot find a suitable context, OpenGL 2.1 is at-least required.");
         }
@@ -95,59 +95,61 @@ public class DesktopGLES20 implements Render.GLES2 {
         //!
         //! Retrieves the limitation from the context.
         //!
-        final Map<RenderCapabilities.Limit, Float> limit = new HashMap<>();
+        final MutableObjectFloatMap<GraphicCapabilities.Limit> limit
+                = new ObjectFloatHashMap(GraphicCapabilities.Limit.values().length);
 
-        limit.put(RenderCapabilities.Limit.FRAME_ATTACHMENT,
+        limit.put(GraphicCapabilities.Limit.FRAME_ATTACHMENT,
                 GL11.glGetFloat(GL30.GL_MAX_COLOR_ATTACHMENTS));
 
-        limit.put(RenderCapabilities.Limit.FRAME_MULTIPLE_RENDER_ATTACHMENT,
+        limit.put(GraphicCapabilities.Limit.FRAME_MULTIPLE_RENDER_ATTACHMENT,
                 GL11.glGetFloat(ARBDrawBuffers.GL_MAX_DRAW_BUFFERS_ARB));
 
-        limit.put(RenderCapabilities.Limit.FRAME_SAMPLE,
+        limit.put(GraphicCapabilities.Limit.FRAME_SAMPLE,
                 GL11.glGetFloat(GL30.GL_MAX_SAMPLES));
 
-        limit.put(RenderCapabilities.Limit.TEXTURE_ANISOTROPIC,
+        limit.put(GraphicCapabilities.Limit.TEXTURE_ANISOTROPIC,
                 GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
 
-        limit.put(RenderCapabilities.Limit.TEXTURE_SIZE,
+        limit.put(GraphicCapabilities.Limit.TEXTURE_SIZE,
                 GL11.glGetFloat(GL11.GL_MAX_TEXTURE_SIZE));
 
-        limit.put(RenderCapabilities.Limit.TEXTURE_STAGE,
+        limit.put(GraphicCapabilities.Limit.TEXTURE_STAGE,
                 GL11.glGetFloat(GL20.GL_MAX_TEXTURE_IMAGE_UNITS));
 
-        limit.put(RenderCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES,
+        limit.put(GraphicCapabilities.Limit.GLSL_MAX_VERTEX_ATTRIBUTES,
                 GL11.glGetFloat(GL20.GL_MAX_VERTEX_ATTRIBS));
 
         //!
         //! Retrieves the extension from the context.
         //!
-        final Map<RenderCapabilities.Extension, Boolean> extension = new HashMap<>();
+        final MutableObjectBooleanMap<GraphicCapabilities.Extension> extension
+                = new ObjectBooleanHashMap<>(GraphicCapabilities.Extension.values().length);
 
-        extension.put(RenderCapabilities.Extension.FRAME_BUFFER,
+        extension.put(GraphicCapabilities.Extension.FRAME_BUFFER,
                 capabilities.GL_ARB_framebuffer_object);
-        extension.put(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_RENDER_TARGET,
+        extension.put(GraphicCapabilities.Extension.FRAME_BUFFER_MULTIPLE_RENDER_TARGET,
                 capabilities.GL_ARB_draw_buffers);
-        extension.put(RenderCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE,
+        extension.put(GraphicCapabilities.Extension.FRAME_BUFFER_MULTIPLE_SAMPLE,
                 capabilities.GL_ARB_multisample);
 
-        extension.put(RenderCapabilities.Extension.VERTEX_ARRAY_OBJECT,
+        extension.put(GraphicCapabilities.Extension.VERTEX_ARRAY_OBJECT,
                 capabilities.GL_ARB_vertex_array_object);
 
-        extension.put(RenderCapabilities.Extension.TEXTURE_3D, true);
-        extension.put(RenderCapabilities.Extension.TEXTURE_COMPRESSION_S3TC,
+        extension.put(GraphicCapabilities.Extension.TEXTURE_3D, true);
+        extension.put(GraphicCapabilities.Extension.TEXTURE_COMPRESSION_S3TC,
                 capabilities.GL_EXT_texture_compression_s3tc);
-        extension.put(RenderCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
+        extension.put(GraphicCapabilities.Extension.TEXTURE_FILTER_ANISOTROPIC,
                 capabilities.GL_EXT_texture_filter_anisotropic);
 
-        extension.put(RenderCapabilities.Extension.GLSL_PRECISION,
+        extension.put(GraphicCapabilities.Extension.GLSL_PRECISION,
                 capabilities.GL_ARB_shader_precision);
-        extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE,
+        extension.put(GraphicCapabilities.Extension.GLSL_EXPLICIT_ATTRIBUTE,
                 capabilities.GL_ARB_explicit_attrib_location);
-        extension.put(RenderCapabilities.Extension.GLSL_EXPLICIT_UNIFORM,
+        extension.put(GraphicCapabilities.Extension.GLSL_EXPLICIT_UNIFORM,
                 capabilities.GL_ARB_explicit_uniform_location);
-        extension.put(RenderCapabilities.Extension.GLSL_GEOMETRY,
+        extension.put(GraphicCapabilities.Extension.GLSL_GEOMETRY,
                 capabilities.GL_ARB_geometry_shader4);
-        return new RenderCapabilities(version, extension, limit);
+        return new GraphicCapabilities(version, extension.toImmutable(), limit.toImmutable());
     }
 
     /**
@@ -410,128 +412,128 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Int8Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, Int8Buffer data, int usage) {
+        GL15.glBufferData(target, data.<ByteBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Int16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, Int16Buffer data, int usage) {
+        GL15.glBufferData(target, data.<ShortBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Int32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, Int32Buffer data, int usage) {
+        GL15.glBufferData(target, data.<IntBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, UInt8Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, UnsignedInt8Buffer data, int usage) {
+        GL15.glBufferData(target, data.<ByteBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, UInt16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, UnsignedInt16Buffer data, int usage) {
+        GL15.glBufferData(target, data.<ShortBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, UInt32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, UnsignedInt32Buffer data, int usage) {
+        GL15.glBufferData(target, data.<IntBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Float16Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, Float16Buffer data, int usage) {
+        GL15.glBufferData(target, data.<ShortBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferData(int target, Float32Array data, int usage) {
-        GL15.nglBufferData(target, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()), usage);
+    public void glBufferData(int target, Float32Buffer data, int usage) {
+        GL15.glBufferData(target, data.<FloatBuffer>underlying(), usage);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, Int8Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, Int8Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<ByteBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, Int16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, Int16Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<ShortBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, Int32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, Int32Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<IntBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, UInt8Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, UnsignedInt8Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<ByteBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, UInt16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, UnsignedInt16Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<ShortBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, UInt32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, UnsignedInt32Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<IntBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, Float16Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, Float16Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<ShortBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glBufferSubData(int target, int offset, Float32Array data) {
-        GL15.nglBufferSubData(target, offset, data.remaining(), MemoryUtil.memAddress(data.<ByteBuffer>data()));
+    public void glBufferSubData(int target, int offset, Float32Buffer data) {
+        GL15.glBufferSubData(target, offset, data.<FloatBuffer>underlying());
     }
 
     /**
@@ -562,26 +564,26 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public <T extends Array<?>> T glMapBuffer(int target, int access, int format) {
+    public <T extends Buffer<?>> T glMapBuffer(int target, int access, int format) {
         switch (format) {
             case GL_UNSIGNED_BYTE:
-                return (T) new DesktopArrayFactory.DesktopUInt8Array(GL15.glMapBuffer(target, access));
+                return (T) new DesktopUnsignedInt8Buffer(GL15.glMapBuffer(target, access));
             case GL_UNSIGNED_SHORT:
-                return (T) new DesktopArrayFactory.DesktopUInt16Array(GL15.glMapBuffer(target, access));
-            case GL_UNSIGNED_INT:
-                return (T) new DesktopArrayFactory.DesktopUInt32Array(GL15.glMapBuffer(target, access));
+                return (T) new DesktopUnsignedInt16Buffer(GL15.glMapBuffer(target, access).asShortBuffer());
+            case DesktopGLES30.GL_UNSIGNED_INT:
+                return (T) new DesktopUnsignedInt32Buffer(GL15.glMapBuffer(target, access).asIntBuffer());
             case GL_BYTE:
-                return (T) new DesktopArrayFactory.DesktopInt8Array(GL15.glMapBuffer(target, access));
+                return (T) new DesktopInt8Buffer(GL15.glMapBuffer(target, access));
             case GL_SHORT:
-                return (T) new DesktopArrayFactory.DesktopInt16Array(GL15.glMapBuffer(target, access));
-            case GL_INT:
-                return (T) new DesktopArrayFactory.DesktopInt32Array(GL15.glMapBuffer(target, access));
-            case GL_HALF_FLOAT:
-                return (T) new DesktopArrayFactory.DesktopFloat16Array(GL15.glMapBuffer(target, access));
+                return (T) new DesktopInt16Buffer(GL15.glMapBuffer(target, access).asShortBuffer());
+            case DesktopGLES30.GL_INT:
+                return (T) new DesktopInt32Buffer(GL15.glMapBuffer(target, access).asIntBuffer());
+            case DesktopGLES30.GL_HALF_FLOAT:
+                return (T) new DesktopFloat16Buffer(GL15.glMapBuffer(target, access).asShortBuffer());
             case GL_FLOAT:
-                return (T) new DesktopArrayFactory.DesktopFloat32Array(GL15.glMapBuffer(target, access));
+                return (T) new DesktopFloat32Buffer(GL15.glMapBuffer(target, access).asFloatBuffer());
         }
-        throw new IllegalArgumentException("Format unsupported");
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -605,8 +607,8 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glTexImage2D(int target, int level, int internal, int width, int height, int border,
-            int format, int type, Int8Array data) {
-        GL11.glTexImage2D(target, level, internal, width, height, border, format, type, data.<ByteBuffer>data());
+            int format, int type, Int8Buffer data) {
+        GL11.glTexImage2D(target, level, internal, width, height, border, format, type, data.<ByteBuffer>underlying());
     }
 
     /**
@@ -614,8 +616,8 @@ public class DesktopGLES20 implements Render.GLES2 {
      */
     @Override
     public void glCompressedTexImage2D(int target, int level, int internal, int width, int height, int border,
-            Int8Array data) {
-        GL13.glCompressedTexImage2D(target, level, internal, width, height, border, data.data());
+            Int8Buffer data) {
+        GL13.glCompressedTexImage2D(target, level, internal, width, height, border, data.underlying());
     }
 
     /**
@@ -782,8 +784,8 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glUniform1fv(int name, Float32Array buffer) {
-        GL20.nglUniform1fv(name, buffer.remaining(), MemoryUtil.memAddress(buffer.<ByteBuffer>data()));
+    public void glUniform1fv(int name, Float32Buffer buffer) {
+        GL20.glUniform1fv(name, buffer.<FloatBuffer>underlying());
     }
 
     /**
@@ -822,26 +824,24 @@ public class DesktopGLES20 implements Render.GLES2 {
      * {@inheritDoc}
      */
     @Override
-    public void glUniform1iv(int name, Int32Array buffer) {
-        GL20.nglUniform1iv(name, buffer.remaining(), MemoryUtil.memAddress(buffer.<ByteBuffer>data()));
+    public void glUniform1iv(int name, Int32Buffer buffer) {
+        GL20.glUniform1iv(name, buffer.<IntBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glUniformMatrix3fv(int name, boolean transpose, Float32Array buffer) {
-        GL20.nglUniformMatrix3fv(
-                name, (buffer.remaining() >> 2) / 9, transpose, MemoryUtil.memAddress(buffer.<ByteBuffer>data()));
+    public void glUniformMatrix3fv(int name, boolean transpose, Float32Buffer buffer) {
+        GL20.glUniformMatrix3fv(name, transpose, buffer.<FloatBuffer>underlying());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void glUniformMatrix4fv(int name, boolean transpose, Float32Array buffer) {
-        GL20.nglUniformMatrix4fv(
-                name, buffer.remaining() >> 6, transpose, MemoryUtil.memAddress(buffer.<ByteBuffer>data()));
+    public void glUniformMatrix4fv(int name, boolean transpose, Float32Buffer buffer) {
+        GL20.glUniformMatrix4fv(name, transpose, buffer.<FloatBuffer>underlying());
     }
 
     /**
@@ -877,7 +877,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         CORE;
 
         /**
-         * @see Render.GLES2#glGenFramebuffers()
+         * @see Graphic.GLES2#glGenFramebuffers()
          */
         public int glGenFramebuffers() {
             switch (this) {
@@ -892,7 +892,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glGenRenderbuffers()
+         * @see Graphic.GLES2#glGenRenderbuffers()
          */
         public int glGenRenderbuffers() {
             switch (this) {
@@ -907,7 +907,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glBindFramebuffer(int, int)
+         * @see Graphic.GLES2#glBindFramebuffer(int, int)
          */
         public void glBindFramebuffer(int type, int name) {
             switch (this) {
@@ -924,7 +924,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glBindRenderbuffer(int, int)
+         * @see Graphic.GLES2#glBindRenderbuffer(int, int)
          */
         public void glBindRenderbuffer(int type, int name) {
             switch (this) {
@@ -941,7 +941,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glFramebufferTexture2D(int, int, int, int, int)
+         * @see Graphic.GLES2#glFramebufferTexture2D(int, int, int, int, int)
          */
         public void glFramebufferTexture2D(int target, int attachment, int texture, int name, int level) {
             switch (this) {
@@ -958,7 +958,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glRenderbufferStorage(int, int, int, int)
+         * @see Graphic.GLES2#glRenderbufferStorage(int, int, int, int)
          */
         public void glRenderbufferStorage(int target, int format, int width, int height) {
             switch (this) {
@@ -975,7 +975,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glDeleteFramebuffers(int)
+         * @see Graphic.GLES2#glDeleteFramebuffers(int)
          */
         public void glDeleteFramebuffers(int name) {
             switch (this) {
@@ -992,7 +992,7 @@ public class DesktopGLES20 implements Render.GLES2 {
         }
 
         /**
-         * @see Render.GLES2#glDeleteRenderbuffers(int)
+         * @see Graphic.GLES2#glDeleteRenderbuffers(int)
          */
         public void glDeleteRenderbuffers(int name) {
             switch (this) {

@@ -17,7 +17,7 @@
  */
 package ar.com.quark.mathematic;
 
-import ar.com.quark.system.utility.array.Float32Array;
+import ar.com.quark.utility.buffer.Float32Buffer;
 
 /**
  * <code>Matrix3f</code> encapsulate a single precision floating point 3 by 3 matrix.
@@ -56,34 +56,22 @@ public abstract class Matrix3f {
     }
 
     /**
-     * <p>Put the matrix into a {@link Float32Array}</p>
+     * <p>Put the matrix into a {@link Float32Buffer}</p>
      *
      * @param buffer the buffer
      *
      * @return a reference to <code>buffer</code>
      */
-    public final Float32Array store(Float32Array buffer) {
-        return store(buffer.position(), buffer);
-    }
-
-    /**
-     * <p>Put the matrix into a {@link Float32Array}</p>
-     *
-     * @param index  the buffer's offset
-     * @param buffer the buffer
-     *
-     * @return a reference to <code>buffer</code>
-     */
-    public final Float32Array store(int index, Float32Array buffer) {
-        buffer.write(index, m00);
-        buffer.write(index + 1, m01);
-        buffer.write(index + 2, m02);
-        buffer.write(index + 3, m10);
-        buffer.write(index + 4, m11);
-        buffer.write(index + 5, m12);
-        buffer.write(index + 6, m20);
-        buffer.write(index + 7, m21);
-        buffer.write(index + 8, m22);
+    public final Float32Buffer store(Float32Buffer buffer) {
+        buffer.write(m00);
+        buffer.write(m10);
+        buffer.write(m20);
+        buffer.write(m01);
+        buffer.write(m11);
+        buffer.write(m21);
+        buffer.write(m02);
+        buffer.write(m12);
+        buffer.write(m22);
         return buffer;
     }
 

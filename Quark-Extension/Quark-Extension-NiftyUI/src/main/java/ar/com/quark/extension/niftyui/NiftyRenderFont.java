@@ -17,7 +17,7 @@
  */
 package ar.com.quark.extension.niftyui;
 
-import ar.com.quark.render.font.Font;
+import ar.com.quark.graphic.font.Font;
 import de.lessvoid.nifty.spi.render.RenderFont;
 
 import static ar.com.quark.Quark.QKResources;

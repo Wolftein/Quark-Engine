@@ -29,7 +29,7 @@ public interface InputManager {
     /**
      * <p>Invoke a raw input event immediately</p>
      *
-     * @param event an array that contain(s) the event (in binary)
+     * @param event an buffer that contain(s) the event (in binary)
      */
     void invoke(int[] event);
 

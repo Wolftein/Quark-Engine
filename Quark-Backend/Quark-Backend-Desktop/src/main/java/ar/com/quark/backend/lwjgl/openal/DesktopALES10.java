@@ -18,8 +18,8 @@
 package ar.com.quark.backend.lwjgl.openal;
 
 import ar.com.quark.audio.AudioManager;
-import ar.com.quark.system.utility.array.Float32Array;
-import ar.com.quark.system.utility.array.Int8Array;
+import ar.com.quark.utility.buffer.Float32Buffer;
+import ar.com.quark.utility.buffer.Int8Buffer;
 import org.lwjgl.openal.*;
 import org.lwjgl.system.MemoryUtil;
 
@@ -172,8 +172,8 @@ public final class DesktopALES10 implements AudioManager.ALES10 {
      * {@inheritDoc}
      */
     @Override
-    public void alListenerf(int type, Float32Array value) {
-        AL10.nalListenerfv(AL10.AL_ORIENTATION, MemoryUtil.memAddress(value.<ByteBuffer>data()));
+    public void alListenerf(int type, Float32Buffer value) {
+        AL10.nalListenerfv(AL10.AL_ORIENTATION, MemoryUtil.memAddress(value.<ByteBuffer>underlying()));
     }
 
     /**
@@ -204,7 +204,7 @@ public final class DesktopALES10 implements AudioManager.ALES10 {
      * {@inheritDoc}
      */
     @Override
-    public void alBufferData(int name, int format, Int8Array data, int rate) {
-        AL10.alBufferData(name, format, data.<ByteBuffer>data(), rate);
+    public void alBufferData(int name, int format, Int8Buffer data, int rate) {
+        AL10.alBufferData(name, format, data.<ByteBuffer>underlying(), rate);
     }
 }

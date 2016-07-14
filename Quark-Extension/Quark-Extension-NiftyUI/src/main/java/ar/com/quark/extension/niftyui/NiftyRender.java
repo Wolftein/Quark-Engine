@@ -17,18 +17,19 @@
  */
 package ar.com.quark.extension.niftyui;
 
-import ar.com.quark.Quark;
+import ar.com.quark.graphic.font.FontRenderer;
+import ar.com.quark.graphic.storage.*;
+import ar.com.quark.graphic.storage.factory.FactoryArrayStorage;
+import ar.com.quark.graphic.storage.factory.FactoryElementStorage;
+import ar.com.quark.graphic.texture.Texture;
 import ar.com.quark.mathematic.Colour;
-import ar.com.quark.render.storage.*;
-import ar.com.quark.render.storage.factory.FactoryArrayStorage;
-import ar.com.quark.render.storage.factory.FactoryElementStorage;
-import ar.com.quark.system.utility.Manageable;
-import ar.com.quark.system.utility.array.UInt16Array;
-import ar.com.quark.render.font.FontRenderer;
-import ar.com.quark.render.texture.Texture;
-import ar.com.quark.system.utility.array.Float32Array;
+import ar.com.quark.utility.Manageable;
+import ar.com.quark.utility.buffer.Float32Buffer;
+import ar.com.quark.utility.buffer.UnsignedInt16Buffer;
 import de.lessvoid.nifty.spi.render.RenderDevice;
 import de.lessvoid.nifty.tools.Color;
+
+import static ar.com.quark.Quark.QKGraphic;
 
 /**
  * <code>NiftyRender</code> encapsulate the batch renderer for {@link NiftyRenderDevice}.
@@ -42,7 +43,7 @@ public final class NiftyRender extends Mesh implements FontRenderer {
     /**
      * Hold a buffer being mapped to the GPU that hold(s) all vertices of the renderer..
      */
-    private Float32Array mVertices;
+    private Float32Buffer mVertices;
 
     /**
      * Hold the current number of primitives in the batch.
@@ -82,7 +83,7 @@ public final class NiftyRender extends Mesh implements FontRenderer {
         //!
         //! Allocate the indices storage.
         //!
-        final UInt16Array indices = (UInt16Array) getIndices().map();
+        final UnsignedInt16Buffer indices = (UnsignedInt16Buffer) getIndices().map();
         for (short i = 0, j = 0; i < indices.capacity(); i += 6 * 2, j += 4) {
             indices.write(j);
             indices.write(j + 1);
@@ -326,7 +327,7 @@ public final class NiftyRender extends Mesh implements FontRenderer {
             texture.create();
             texture.acquire();
             texture.update();
-        } else if (!Quark.QKRender.isActive(texture)) {
+        } else if (!QKGraphic.isActive(texture)) {
             //!
             //! NOTE: Handle when the texture doesn't match.
             //!

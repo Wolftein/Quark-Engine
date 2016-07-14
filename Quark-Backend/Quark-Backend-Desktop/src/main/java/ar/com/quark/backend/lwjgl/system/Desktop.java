@@ -17,31 +17,30 @@
  */
 package ar.com.quark.backend.lwjgl.system;
 
+import ar.com.quark.asset.AssetManagerImpl;
+import ar.com.quark.asset.loader.*;
+import ar.com.quark.asset.locator.ClassAssetLocator;
+import ar.com.quark.asset.locator.FilesAssetLocator;
 import ar.com.quark.audio.AudioManager;
-import ar.com.quark.audio.DefaultAudioManager;
+import ar.com.quark.audio.AudioManagerImpl;
 import ar.com.quark.backend.lwjgl.input.DesktopInputKeyboard;
 import ar.com.quark.backend.lwjgl.input.DesktopInputMouse;
 import ar.com.quark.backend.lwjgl.openal.DesktopALES10;
 import ar.com.quark.backend.lwjgl.opengl.DesktopGLES32;
-import ar.com.quark.input.DefaultInputManager;
-import ar.com.quark.render.DefaultRender;
-import ar.com.quark.render.Render;
-import ar.com.quark.resource.DefaultAssetManager;
-import ar.com.quark.resource.loader.*;
-import ar.com.quark.resource.locator.FilesAssetLocator;
+import ar.com.quark.backend.lwjgl.utility.buffer.DesktopBufferFactory;
+import ar.com.quark.graphic.Graphic;
+import ar.com.quark.graphic.GraphicImpl;
+import ar.com.quark.input.InputManager;
+import ar.com.quark.input.InputManagerImpl;
 import ar.com.quark.system.Display;
 import ar.com.quark.system.DisplayLifecycle;
-import ar.com.quark.system.utility.array.ArrayFactory;
-import ar.com.quark.input.InputManager;
+import ar.com.quark.utility.buffer.BufferFactory;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWWindowIconifyCallback;
-import ar.com.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
-import ar.com.quark.resource.locator.ClassAssetLocator;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static ar.com.quark.Quark.*;
@@ -86,25 +85,25 @@ public final class Desktop {
     private final DesktopDisplay mDisplay = (DesktopDisplay) (QKDisplay = new DesktopDisplay());
 
     /**
-     * Hold {@link Render} module.
+     * Hold {@link Graphic} module.
      */
-    private final DefaultRender mRender = (DefaultRender) (QKRender = new DefaultRender());
+    private final GraphicImpl mGraphic = (GraphicImpl) (QKGraphic = new GraphicImpl());
 
     /**
      * Hold {@link AudioManager} module.
      */
-    private final DefaultAudioManager mAudio = (DefaultAudioManager) (QKAudio = new DefaultAudioManager());
+    private final AudioManagerImpl mAudio = (AudioManagerImpl) (QKAudio = new AudioManagerImpl());
 
     /**
      * Hold {@link InputManager} module.
      */
-    private final DefaultInputManager mInput = (DefaultInputManager) (QKInput = new DefaultInputManager());
+    private final InputManagerImpl mInput = (InputManagerImpl) (QKInput = new InputManagerImpl());
 
     /**
      * Hold {@link InputManager} module.
      */
-    private final DefaultAssetManager mResources
-            = (DefaultAssetManager) (QKResources = new DefaultAssetManager(new ThreadGroupService()));
+    private final AssetManagerImpl mResources = (AssetManagerImpl) (QKResources = new AssetManagerImpl(
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())));
 
     /**
      * <p>Constructor</p>
@@ -164,7 +163,7 @@ public final class Desktop {
         //!
         //! Create render module.
         //!
-        mRender.onModuleCreate(new DesktopGLES32());
+        mGraphic.onModuleCreate(new DesktopGLES32());
 
         //!
         //! Create resource module.
@@ -176,8 +175,8 @@ public final class Desktop {
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
-        mResources.registerAssetLoader(new FontBinaryAssetLoader(), "fnt");
-        mResources.registerAssetLoader(new ShaderBinaryAssetLoader(QKRender.getCapabilities()), "shader");
+        mResources.registerAssetLoader(new FontAngelBinaryAssetLoader(), "fnt");
+        mResources.registerAssetLoader(new ShaderBinaryAssetLoader(QKGraphic.getCapabilities()), "shader");
 
         //!
         //! Handle the create notification.
@@ -199,7 +198,6 @@ public final class Desktop {
         //!
         //! Unload resource module.
         //!
-        mResources.onModuleDestroy();
         mResources.unloadAll();
 
         //!
@@ -219,7 +217,7 @@ public final class Desktop {
         //!
         //! NOTE: Update the render to destroy all render component(s)
         //!
-        mRender.onModuleDestroy();
+        mGraphic.onModuleDestroy();
 
         //!
         //! Unload display module.
@@ -263,7 +261,7 @@ public final class Desktop {
         //!
         //! NOTE: House-keeping of render component(s).
         //!
-        mRender.onModuleUpdate();
+        mGraphic.onModuleUpdate();
 
         //!
         //! Update the display.
@@ -282,7 +280,7 @@ public final class Desktop {
         //!
         //! NOTE: Most module requires this module.
         //!
-        ArrayFactory.instance = new DesktopArrayFactory();
+        BufferFactory.INSTANCE = new DesktopBufferFactory();
 
         //!
         //! Create entry
@@ -291,29 +289,5 @@ public final class Desktop {
         entry.onModuleCreate(preference);
         entry.onModuleUpdate();
         entry.onModuleDestroy();
-    }
-
-    /**
-     * Implementation for {@link DefaultAssetManager.Service}.
-     */
-    private final static class ThreadGroupService implements DefaultAssetManager.Service {
-        private final ExecutorService mExecutor
-                = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void shutdown() {
-            mExecutor.shutdown();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void execute(Runnable command) {
-            mExecutor.execute(command);
-        }
     }
 }

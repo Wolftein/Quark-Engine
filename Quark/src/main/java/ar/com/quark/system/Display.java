@@ -17,10 +17,9 @@
  */
 package ar.com.quark.system;
 
-import ar.com.quark.render.texture.Image;
-import ar.com.quark.render.texture.ImageFormat;
-
-import java.util.Collection;
+import ar.com.quark.graphic.texture.Image;
+import ar.com.quark.graphic.texture.ImageFormat;
+import org.eclipse.collections.api.collection.ImmutableCollection;
 
 /**
  * <code>Display</code> encapsulate the display of the framework.
@@ -60,11 +59,7 @@ public interface Display {
         private final DisplayMode mMode;
         private final String mTitle;
         private final int mSamples;
-        private final boolean mSynchronised;
-        private final boolean mDecorated;
-        private final boolean mResizable;
-        private final boolean mFullscreen;
-        private final boolean mSRGB;
+        private final int mFeatures;
 
         /**
          * <p>Constructor</p>
@@ -73,11 +68,7 @@ public interface Display {
             mMode = mode;
             mTitle = title;
             mSamples = samples;
-            mDecorated = (features & FLAG_DECORATED) != 0;
-            mResizable = (features & FLAG_RESIZABLE) != 0;
-            mFullscreen = (features & FLAG_FULLSCREEN) != 0;
-            mSynchronised = (features & FLAG_SYNCHRONISED) != 0;
-            mSRGB = (features & FLAG_SRGB) != 0;
+            mFeatures = features;
         }
 
         /**
@@ -120,7 +111,7 @@ public interface Display {
          * @return <code>true</code> if the display will be synchronised, <code>false</code> otherwise
          */
         public boolean isSynchronised() {
-            return mSynchronised;
+            return (mFeatures & FLAG_SYNCHRONISED) != 0;
         }
 
         /**
@@ -129,7 +120,7 @@ public interface Display {
          * @return <code>true</code> if the display will be decorated, <code>false</code> otherwise
          */
         public boolean isDecorated() {
-            return mDecorated;
+            return (mFeatures & FLAG_DECORATED) != 0;
         }
 
         /**
@@ -138,7 +129,7 @@ public interface Display {
          * @return <code>true</code> if the display will be resizable, <code>false</code> otherwise
          */
         public boolean isResizable() {
-            return mResizable;
+            return (mFeatures & FLAG_RESIZABLE) != 0;
         }
 
         /**
@@ -147,7 +138,7 @@ public interface Display {
          * @return <code>true</code> if the display will be created in fullscreen, <code>false</code> otherwise
          */
         public boolean isFullscreen() {
-            return mFullscreen;
+            return (mFeatures & FLAG_FULLSCREEN) != 0;
         }
 
         /**
@@ -156,7 +147,7 @@ public interface Display {
          * @return <code>true</code> if the display will be created using sRGB format, <code>false</code> otherwise
          */
         public boolean isSRGB() {
-            return mSRGB;
+            return (mFeatures & FLAG_SRGB) != 0;
         }
     }
 
@@ -185,7 +176,7 @@ public interface Display {
     /**
      * <p>Change the hardware based cursor of the display</p>
      * <p>
-     * NOTE: Image must be in {@link ImageFormat#RGBA}
+     * NOTE: Format must be {@link ImageFormat#RGBA}
      *
      * @param image    the image
      * @param xHotspot the hotspot for the x coordinate
@@ -281,5 +272,5 @@ public interface Display {
      *
      * @return all available display mode of the primary device
      */
-    Collection<DisplayMode> getAvailableDisplayModes();
+    ImmutableCollection<DisplayMode> getAvailableDisplayModes();
 }

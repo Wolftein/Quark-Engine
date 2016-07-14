@@ -17,10 +17,10 @@
  */
 package ar.com.quark.backend.lwjgl.opengl;
 
-import ar.com.quark.render.Render;
+import ar.com.quark.graphic.Graphic;
 
 /**
- * Implementation for {@link Render.GLES31}.
+ * Implementation for {@link Graphic.GLES31}.
  */
-public class DesktopGLES31 extends DesktopGLES30 implements Render.GLES31 {
+public class DesktopGLES31 extends DesktopGLES30 implements Graphic.GLES31 {
 }

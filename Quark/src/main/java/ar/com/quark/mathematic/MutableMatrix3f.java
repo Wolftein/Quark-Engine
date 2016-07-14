@@ -17,7 +17,7 @@
  */
 package ar.com.quark.mathematic;
 
-import ar.com.quark.system.utility.array.Float32Array;
+import ar.com.quark.utility.buffer.Float32Buffer;
 
 /**
  * Represent a mutable {@link Matrix3f}.
@@ -61,24 +61,24 @@ public final class MutableMatrix3f extends Matrix3f {
     }
 
     /**
-     * <p>Set the values of the matrix from a {@link Float32Array}</p>
+     * <p>Set the values of the matrix from a {@link Float32Buffer}</p>
      *
      * @param buffer the buffer
      *
      * @return a reference to <code>this</code>
      */
-    public MutableMatrix3f set(Float32Array buffer) {
+    public MutableMatrix3f set(Float32Buffer buffer) {
         final int offset = buffer.position();
 
-        m00 = buffer.read(offset);
-        m01 = buffer.read(offset + 1);
-        m02 = buffer.read(offset + 2);
-        m10 = buffer.read(offset + 3);
-        m11 = buffer.read(offset + 4);
-        m12 = buffer.read(offset + 5);
-        m20 = buffer.read(offset + 6);
-        m21 = buffer.read(offset + 7);
-        m22 = buffer.read(offset + 8);
+        m00 = buffer.read();
+        m01 = buffer.read();
+        m02 = buffer.read();
+        m10 = buffer.read();
+        m11 = buffer.read();
+        m12 = buffer.read();
+        m20 = buffer.read();
+        m21 = buffer.read();
+        m22 = buffer.read();
         return this;
     }
 

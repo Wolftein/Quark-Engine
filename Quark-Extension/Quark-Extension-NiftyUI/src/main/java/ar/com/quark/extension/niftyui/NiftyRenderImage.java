@@ -17,8 +17,8 @@
  */
 package ar.com.quark.extension.niftyui;
 
+import ar.com.quark.graphic.texture.Texture;
 import de.lessvoid.nifty.spi.render.RenderImage;
-import ar.com.quark.render.texture.Texture;
 
 import static ar.com.quark.Quark.QKResources;
 

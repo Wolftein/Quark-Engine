@@ -19,8 +19,8 @@ package ar.com.quark.backend.lwjgl.input;
 
 import ar.com.quark.input.device.InputKey;
 import ar.com.quark.input.device.InputKeyboard;
-import ar.com.quark.system.utility.array.Int32Array;
-import ar.com.quark.backend.lwjgl.utility.array.DesktopArrayFactory;
+import ar.com.quark.utility.buffer.BufferFactory;
+import ar.com.quark.utility.buffer.Int32Buffer;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -40,7 +40,7 @@ public final class DesktopInputKeyboard implements InputKeyboard {
     /**
      * Hold the device buffer.
      */
-    private Int32Array mBuffer = DesktopArrayFactory.allocateInt32Array(512);
+    private Int32Buffer mBuffer = BufferFactory.allocateInt32(512);
 
     /**
      * <p>Constructor</p>
@@ -62,9 +62,9 @@ public final class DesktopInputKeyboard implements InputKeyboard {
      * {@inheritDoc}
      */
     @Override
-    public void update(Int32Array buffer) {
+    public void update(Int32Buffer buffer) {
         synchronized (mLock) {
-            buffer.write(mBuffer.flip());
+            buffer.copy(mBuffer.flip());
 
             //!
             //! Change the buffer mode to write-mode.
