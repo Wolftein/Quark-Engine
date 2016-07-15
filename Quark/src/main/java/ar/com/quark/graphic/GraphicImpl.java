@@ -766,6 +766,12 @@ public final class GraphicImpl implements Graphic {
                     break;
                 case SERVER:
                     onUpdateStorageAgain(storage);
+
+                    //!
+                    //! Manually remove the memory from the cpu-side.
+                    //!
+                    storage.deleteAllMemory();
+                    break;
             }
             storage.setUpdated();
         }
@@ -1247,7 +1253,7 @@ public final class GraphicImpl implements Graphic {
      */
     private void onUpdateStorageAgain(Storage storage) {
         final Buffer buffer = storage.getData();
-        
+
         switch (storage.getFormat()) {
             case BYTE:
                 mGL.glBufferSubData(storage.getTarget().eValue, buffer.offset(), (Int8Buffer) buffer);
