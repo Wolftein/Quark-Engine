@@ -30,6 +30,7 @@ public interface FontRenderer {
      * @param texture the` texture
      * @param x       the x1 coordinate (in screen coordinates) of the glyph
      * @param y       the y1 coordinate (in screen coordinates) of the glyph
+     * @param z       the z  coordinate (in screen coordinates) of the glyph
      * @param x2      the x2 coordinate (in screen coordinates) of the glyph
      * @param y2      the y2 coordinate (in screen coordinates) of the glyph
      * @param tx1     the x1 texture coordinate (normalised) of the glyph
@@ -38,7 +39,7 @@ public interface FontRenderer {
      * @param ty2     the y2 texture coordinate (normalised) of the glyph
      * @param colour  the colour
      */
-    void drawFontGlyph(Texture texture, float x, float y, float x2, float y2,
+    void drawFontGlyph(Texture texture, float x, float y, float z, float x2, float y2,
             float tx1, float ty1,
             float tx2, float ty2, Colour colour);
 }

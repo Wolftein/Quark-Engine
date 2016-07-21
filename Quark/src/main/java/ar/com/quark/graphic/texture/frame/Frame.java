@@ -218,16 +218,22 @@ public final class Frame extends Manageable implements Disposable {
      * <code>TextureTarget</code> encapsulate a {@link Target} using a texture.
      */
     public final static class TextureTarget implements Target {
-        /**
-         * Hold the texture of the attachment.
-         */
-        public final Texture texture;
+        private final Texture mTexture;
 
         /**
          * <p>Constructor</p>
          */
         public TextureTarget(Texture texture) {
-            this.texture = texture;
+            this.mTexture = texture;
+        }
+
+        /**
+         * <p>Get the texture of the render target</p>
+         *
+         * @return the texture of the render target
+         */
+        public Texture getTexture() {
+            return mTexture;
         }
 
         /**
@@ -243,16 +249,22 @@ public final class Frame extends Manageable implements Disposable {
      * <code>RenderTarget</code> encapsulate a {@link Target} using a render buffer.
      */
     public final static class RenderTarget extends Manageable implements Target {
-        /**
-         * Hold the format of the attachment.
-         */
-        public final TextureFormat format;
+        private final TextureFormat mFormat;
 
         /**
          * <p>Constructor</p>
          */
         public RenderTarget(TextureFormat format) {
-            this.format = format;
+            this.mFormat = format;
+        }
+
+        /**
+         * <p>Get the format of the render target</p>
+         *
+         * @return the format of the render target
+         */
+        public TextureFormat getFormat() {
+            return mFormat;
         }
 
         /**

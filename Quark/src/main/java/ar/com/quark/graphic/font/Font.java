@@ -28,19 +28,8 @@ import org.eclipse.collections.api.map.primitive.ImmutableIntObjectMap;
  * <code>Font</code> encapsulate a font.
  */
 public class Font {
-    /**
-     * Hold all {@link Texture} page(s).
-     */
     protected final ImmutableList<Texture> mPages;
-
-    /**
-     * Hold all {@link FontGlyph}.
-     */
     protected final ImmutableIntObjectMap<FontGlyph> mGlyphFactory;
-
-    /**
-     * Hold the line height of the font.
-     */
     protected final int mLineHeight;
 
     /**
@@ -60,8 +49,8 @@ public class Font {
      * @param x        the x coordinates (in screen coordinates)
      * @param y        the y coordinates (in screen coordinates)
      */
-    public void render(FontRenderer renderer, String text, float x, float y) {
-        render(renderer, text, x, y, 1.0F, 1.0F, Colour.WHITE);
+    public void render(FontRenderer renderer, String text, float x, float y, float z) {
+        render(renderer, text, x, y, z, 1.0F, 1.0F, Colour.WHITE);
     }
 
     /**
@@ -73,8 +62,8 @@ public class Font {
      * @param y        the y coordinates (in screen coordinates)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, float x, float y, Colour colour) {
-        render(renderer, text, x, y, 1.0F, 1.0F, colour);
+    public void render(FontRenderer renderer, String text, float x, float y, float z, Colour colour) {
+        render(renderer, text, x, y, z, 1.0F, 1.0F, colour);
     }
 
     /**
@@ -87,8 +76,8 @@ public class Font {
      * @param scaleX   the x coordinates scale (clamp from 0.1-max)
      * @param scaleY   the y coordinates scale (clamp from 0.1-max)
      */
-    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY) {
-        render(renderer, text, x, y, scaleX, scaleY, Colour.BLACK);
+    public void render(FontRenderer renderer, String text, float x, float y, float z, float scaleX, float scaleY) {
+        render(renderer, text, x, y, z, scaleX, scaleY, Colour.BLACK);
     }
 
     /**
@@ -102,8 +91,9 @@ public class Font {
      * @param scaleY   the y coordinates scale (clamp from 0.1-max)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY, Colour colour) {
-        render(renderer, text, x, y, scaleX, scaleY, 0.0F, colour);
+    public void render(FontRenderer renderer, String text, float x, float y, float z, float scaleX, float scaleY,
+            Colour colour) {
+        render(renderer, text, x, y, z, scaleX, scaleY, 0.0F, colour);
     }
 
     /**
@@ -118,8 +108,8 @@ public class Font {
      * @param border   the x/y coordinates scale (for border)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY, float border,
-            Colour colour) {
+    public void render(FontRenderer renderer, String text, float x, float y, float z, float scaleX, float scaleY,
+            float border, Colour colour) {
         float xPosition = x;
         float yPosition = y;
 
@@ -146,6 +136,7 @@ public class Font {
                 renderer.drawFontGlyph(mPages.get(glyph.getPage()),
                         xPosition + (glyph.getOffsetX() * scaleX),
                         yPosition + (glyph.getOffsetY() * scaleY),
+                        z,
                         glyph.getWidth() * scaleX,
                         glyph.getHeight() * scaleY,
                         glyph.getTextureX1Coordinate(),
