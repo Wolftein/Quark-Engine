@@ -17,10 +17,10 @@
  */
 package ar.com.quark.graphic.font;
 
-import ar.com.quark.mathematic.Colour;
+import ar.com.quark.asset.AssetDescriptor;
 import ar.com.quark.graphic.texture.Texture;
 import ar.com.quark.graphic.texture.TextureFilter;
-import ar.com.quark.asset.AssetDescriptor;
+import ar.com.quark.mathematic.Colour;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.map.primitive.ImmutableIntObjectMap;
 
@@ -60,7 +60,7 @@ public class Font {
      * @param x        the x coordinates (in screen coordinates)
      * @param y        the y coordinates (in screen coordinates)
      */
-    public void render(FontRenderer renderer, String text, int x, int y) {
+    public void render(FontRenderer renderer, String text, float x, float y) {
         render(renderer, text, x, y, 1.0F, 1.0F, Colour.WHITE);
     }
 
@@ -73,7 +73,7 @@ public class Font {
      * @param y        the y coordinates (in screen coordinates)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, int x, int y, Colour colour) {
+    public void render(FontRenderer renderer, String text, float x, float y, Colour colour) {
         render(renderer, text, x, y, 1.0F, 1.0F, colour);
     }
 
@@ -87,7 +87,7 @@ public class Font {
      * @param scaleX   the x coordinates scale (clamp from 0.1-max)
      * @param scaleY   the y coordinates scale (clamp from 0.1-max)
      */
-    public void render(FontRenderer renderer, String text, int x, int y, float scaleX, float scaleY) {
+    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY) {
         render(renderer, text, x, y, scaleX, scaleY, Colour.BLACK);
     }
 
@@ -102,7 +102,7 @@ public class Font {
      * @param scaleY   the y coordinates scale (clamp from 0.1-max)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, int x, int y, float scaleX, float scaleY, Colour colour) {
+    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY, Colour colour) {
         render(renderer, text, x, y, scaleX, scaleY, 0.0F, colour);
     }
 
@@ -118,9 +118,10 @@ public class Font {
      * @param border   the x/y coordinates scale (for border)
      * @param colour   the text's colour
      */
-    public void render(FontRenderer renderer, String text, int x, int y, float scaleX, float scaleY, float border, Colour colour) {
-        int xPosition = x;
-        int yPosition = y;
+    public void render(FontRenderer renderer, String text, float x, float y, float scaleX, float scaleY, float border,
+            Colour colour) {
+        float xPosition = x;
+        float yPosition = y;
 
         for (int i = 0, j = text.length(); i < j; ) {
             final int c1 = text.codePointAt(i);
@@ -343,7 +344,7 @@ public class Font {
          * <p>Constructor</p>
          */
         public Descriptor(String filename, TextureFilter filter) {
-            super(filename, true, true, true);
+            super(filename, true, true, false);
 
             mFilter = filter;
         }

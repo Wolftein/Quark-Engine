@@ -37,7 +37,7 @@ import java.io.InputStream;
 /**
  * <code>FontAssetLoader</code> encapsulate an {@link AssetLoader} for loading angel code font(s).
  */
-public final class FontAngelBinaryAssetLoader implements AssetLoader<Font, Font.Descriptor> {
+public final class FontAssetLoader implements AssetLoader<Font, Font.Descriptor> {
     /**
      * <code>FontHeader</code> represent the file format of a angel code file format.
      */

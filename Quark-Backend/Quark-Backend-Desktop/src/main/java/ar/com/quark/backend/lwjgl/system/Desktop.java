@@ -175,7 +175,7 @@ public final class Desktop {
         mResources.registerAssetLoader(new TextureDDSAssetLoader(), "dds", "s3tc");
         mResources.registerAssetLoader(new AudioWAVAssetLoader(), "wav");
         mResources.registerAssetLoader(new AudioOGGAssetLoader(), "ogg");
-        mResources.registerAssetLoader(new FontAngelBinaryAssetLoader(), "fnt");
+        mResources.registerAssetLoader(new FontAssetLoader(), "fnt");
         mResources.registerAssetLoader(new ShaderBinaryAssetLoader(QKGraphic.getCapabilities()), "shader");
 
         //!
