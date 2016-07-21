@@ -1454,7 +1454,7 @@ public final class GraphicImpl implements Graphic {
      * <p>Update {@link Frame.TextureTarget}</p>
      */
     private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.TextureTarget target) {
-        final Texture texture = target.texture;
+        final Texture texture = target.getTexture();
 
         //!
         //! Create the texture (if not created)
@@ -1488,6 +1488,8 @@ public final class GraphicImpl implements Graphic {
      * <p>Update {@link Frame.RenderTarget}</p>
      */
     private void onUpdateFrameTarget(Frame frame, FrameAttachment attachment, Frame.RenderTarget target) {
+        final TextureFormat format = target.getFormat();
+
         //!
         //! Create the render buffer.
         //!
@@ -1505,11 +1507,11 @@ public final class GraphicImpl implements Graphic {
             //!
             //! Requires FRAME_BUFFER_MULTIPLE_SAMPLE extension.
             //!
-            mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, target.format.eValue,
+            mGL.glRenderbufferStorageMultisample(GLES2.GL_RENDERBUFFER, samples, format.eValue,
                     frame.getWidth(),
                     frame.getHeight());
         } else {
-            mGL.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, target.format.eValue, frame.getWidth(), frame.getHeight());
+            mGL.glRenderbufferStorage(GLES2.GL_RENDERBUFFER, format.eValue, frame.getWidth(), frame.getHeight());
         }
     }
 
@@ -1528,7 +1530,7 @@ public final class GraphicImpl implements Graphic {
      * <p>Delete {@link Frame.TextureTarget}</p>
      */
     private void onDeleteFrameTarget(Frame frame, Frame.TextureTarget target) {
-        target.texture.delete();
+        target.getTexture().delete();
     }
 
     /**
