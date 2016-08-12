@@ -80,7 +80,7 @@ public final class ShaderParser {
     }
 
     /**
-     * <p>Generate the byte-code of the parser/p>
+     * <p>Generate the byte-code of the parser</p>
      *
      * @return an {@link Int8Array} that contain(s) the byte-code(s) generated
      */
