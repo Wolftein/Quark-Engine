@@ -262,7 +262,7 @@ public final class NiftyRenderDevice implements RenderDevice {
 
         mColour.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-        internal.render(mRender, text, x, y, sizeX, sizeY, mColour);
+        internal.render(mRender, text, x, y, 0.0F, sizeX, sizeY, mColour);
     }
 
     /**
