@@ -244,6 +244,7 @@ public final class NiftyRender extends Mesh implements FontRenderer {
     public void drawFontGlyph(Texture texture,
             float x1, float y1,
             float x2, float y2,
+            float z,
             float tx1, float ty1,
             float tx2, float ty2, Colour colour) {
         final float c0 = colour.toPackedFloat32FormatABGR();
