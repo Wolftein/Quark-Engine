@@ -19,4 +19,5 @@ dependencies {
     compile group: 'org.lwjgl', name: 'lwjgl-platform', version: '3.0.1-SNAPSHOT',  classifier: 'natives-windows'
     compile group: 'org.lwjgl', name: 'lwjgl-platform', version: '3.0.1-SNAPSHOT',  classifier: 'natives-linux'
     compile group: 'org.lwjgl', name: 'lwjgl-platform', version: '3.0.1-SNAPSHOT',  classifier: 'natives-osx'
+    compile group: 'org.lwjgl', name: 'lwjgl-glfw', version: '3.0.1-SNAPSHOT'
 }
