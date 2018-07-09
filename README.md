@@ -15,14 +15,6 @@ Quark is a cross-platform java framework based on OpenGL that works on desktop a
   * Support for .PNG, .DDS, .OGG, .WAV file format
   * Support for .FNT format
   * Support for custom binary shader format
- 
-## Showcase
-
-Currently there are two simple showcase made with an older version of the engine.
-
-[Simple 3D](http://www.tecno-store.com.ar/LordFers/1/)
-
-[Simple 2D + Normal Mapping](http://www.tecno-store.com.ar/LordFers/2/)
 
 ## Get started
 
